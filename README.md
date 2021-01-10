@@ -5,7 +5,24 @@
 __1. UI as code (Widget)__   
 __2. CrossFlatform__   
 __3. Dart(OOP)__   
-   
+
+## tips for development    
+- *Widgets info : flutter 공식문서*   
+- *같은 폴더 내 파일 import시 import './aa.dart';*    
+- *함수, 변수 trl+click : 해당 함수or변수가 포함된 파일 열기*    
+- *ctrl + . : 빠른 수정(위젯을 다른 위젯으로 감쌀때)*    
+- *debugging*    
+syntax Error : 빌드에러/ runtime Error(Invalid Index) : check problems console/ logical Error : use print() or debugger /   
+- *Dev tools*   
+debug시 명령창에 dart:Open devtoools 입력하여 app의 Widget tree, UI details, performance details확인 가능  
+Select Widget Mode: UI를 클릭하면 dev tools의 트리에서 찾아 띄워주는 helper   
+Debug Paint: Widget UI가 설정된 방식을 보여주는 helper   
+Paint Baselines: text 등의 높낮이를 보여주는 helper   
+Repaint Rainbow: UI상에서 위젯이 repaint되면 rainbow색상순으로 표시해줌.   
+Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능   
+
+***   
+
 ## Dart
 - *arrow function*    
 한줄 함수(함수의 명령이 한줄)이면 =>로 표현가능. ex) void main() => runApp(myApp());  ( 반환값이 있다면 결과값을 return )    
@@ -44,23 +61,35 @@ Map의 val이 서로 다른 클래스인 경우, 해당 map의 특정 key에 대
 ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};   
 위 선언에서 qa['answers'].map() 불가능. List의 map()사용시, (qa['answers'] as List< String >).map(); 처럼 as로 List를 명시해야함.    
 
+***   
 
 ## Flutter (추후: widget, class, rule 등 구분해서 나눌것!)    
+
+## Function, Class   
+
+***   
+
+
+## Widgets   
+
+
 - *runAPP()*    
 widget인스턴스를 받아 build를 호출하여 실행해 화면에 띄어주는 함수. main()에서 메인widget실행   
 
 - *Build(Buildcontext context)*   
 위젯의 생성함수. 위젯(trees)을 필수로 return. 모든 위젯은 반드시 @override. Buildcontext는 메타정보를 담은 객체로, 자동 전달됨.   
 
-- *MateriaApp위젯*    
-Material theme의 widget클래스, named aurgments를 받아 인스턴스화.   
+- *MateriaApp(Cupertino)위젯*    
+app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스턴스화.   
 
-- *Scaffold*   
-기본페이지구성(스타일링) 위젯   
+- *Scaffold(CupertinoPageScaffold)*   
+페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
 
 - *Column/Row*   
 여러 위젯을 열/행으로 묶은 Layout위젯, children 인자: list<widgets>형태로 여러 위젯을 입력받음 (children: [ ... ],)   
  
+ -*Flexible/Expanded*   
+   Column/Row의 child를 warp하여 위젯간 차지하는 공간 등 지정 가능.   
  - *RaisedButton위젯*   
 버튼을 생성하는 위젯
 child : Widget 버튼내부에 표현되는 위젯(text, image등) 입력   
@@ -89,6 +118,7 @@ ex) onPreesed : () => answerQuestion(answer['score']),
  (build()/UI에 영향이 있는)state내의 변수를 변경하는 anonymous함수를 argument로 받음.   
  호출시 변경한 값에 맞는 현위젯 UI를 re-build. ex) setState( ( ) { idx++; } );      
 (변경된 변수로 인해 위젯build내의 UI가 바뀌는 자식위젯만 re-build, Stateless위젯의 input data가 변경되면 해당위젯도 re-build)    
+(build내의 변하지 않는 위젯은 re-paint. 새로 생성은 안하지만 다시 표시하는작업.)   
 
 - *rule: use final for Stateless*   
 Stateless내 (final이 아닌) 변수를 생성,변경가능. but. 객체 재생성이 아니면 UI 반영(rebuild)불가. 즉 관용적으로 모든 변수 final로 사용(stateless는 한번 생성해 보여주는위젯. EX)text )    
@@ -110,6 +140,9 @@ child: Widget (감쌀 위젯),
 width: double (UI공간에서 할당받을 너비) (tip: double.infinity로 화면너비전체를 할당가능),   
 margin: EdgeInsetGeometry (주변 margin의 길이)   
 ( EdgeInset: container의 margin정보를 표현한 class. 여러 named constructor로 생성 가능. ex) EdgeInset.all(20) :모든방향 20)     
+
+- *Stack/Card위젯*   
+특정 style로 위젯을 배치하는 content container위젯   
 
 - *Color & Colors*   
 Color: 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
@@ -135,3 +168,13 @@ widthFactor : double (자식위젯의 너비에 대한 위젯의 너비 비율, 
 위젯 trees 생성시 여러 logic이 포함된 complex한 큰 custom위젯을 분리하여 작은 sub-Widge(class) & file로 나누어 관리.      
 main.dart는 깔끔한게 좋으며, 모든 위젯을 더 readable한 코드로 관리 가능. 한 코드에 나열하는것보다 실제 performance도 상승.(???)   
 
+- *ListView위젯*   
+scrollable한 위젯list.   
+
+- *GridView*   
+scrollable + grid. grid형으로 위젯 배치   
+
+- *ListTile*   
+
+- *GestureDetector/Inkwell*   
+user input
