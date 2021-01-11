@@ -15,6 +15,8 @@ __3. Dart(OOP)__
 
 - *같은 폴더 내 파일 import시 import './aa.dart';*    
 
+- *현폴더 상위폴더로 이동시 import '../aa.dart';*     
+
 - *함수, 변수 trl+click : 해당 함수or변수가 포함된 파일 열기*    
 
 - *ctrl + . : 빠른 수정(위젯을 다른 위젯으로 감쌀때)*    
@@ -38,6 +40,10 @@ Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능
  관용적으로 1위젯당 1파일(무조건 같이쓰는경우 등은 예외)쓰는게 권장.   
  복잡합 위젯일수록 한 파일&클래스로 묶어 한 위젯으로 만들어 관리하는게 유리.   
 
+- *UI상 노란색bar error*   
+devie의 page boundary밖으로 위젯 UI가 빠져나옴을 의미. UI설정을 수정해야함.     
+
+
 --------------------------------------------------------------------------------------------------------
 ## Dart
 
@@ -48,7 +54,7 @@ Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능
 익명함수, 재사용하지 않는 함수에 활용. ( arguments ) { body }로 표현가능. ex) (value) { print(value); };    
 
 - *final/const*   
-final: runtime시에 initialized된 이후 변경x (run time constant)   
+final: runtime시에 initialized된 이후부터 변경x (run time constant)   
 const: compile단계에서 변경x (compile time constant)    
 주의) const a = [1,2,3]; : object의 포인터를 저장하는 a 및 a의 object인 [1,2,3] 변경불가   
 var a = const [1,2,3]; : object [1,2,3] 변경불가. but, a에 다른 포인터값 저장 가능.   
@@ -80,6 +86,7 @@ ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};
 
 - *DateTime*   
 날짜,시간을 저장할수있는 dart의 buil-in class. DateTime.now() : 현재 timestamp로 생성하는 생성자.     
+tip: now()를 debug시 간편하게 unique한 id생성할때 사용가능.   
 
 - *toString()*    
 모든 object에 암묵적으로 포함된 메소드. object를 String으로 변환. double, DateTime등을 String으로 바꿀때 유용.    
@@ -91,6 +98,12 @@ ex) double a; a.toString(), Datetime b; b.toString()
 - *String interpolation $*   
 $뒤의 변수를 String으로 변형. 만약 객체 내의 변수에 접근한다면 ${Abc.a}와 같이 {}로 묶어줘야한다.    
 
+- *(List.)add()*    
+List뒤에 원소 하나를 추가하는 메소드.    
+tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List객체의 포인터로 a값 변경 불가지만 객체 수정가능.)    
+
+- *(double.)parse(String)*   
+String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
 
 -------------------------------------------------------------------------------------------------------------
 ## Flutter  
@@ -187,6 +200,7 @@ app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스
 - *Column/Row*   
 여러 위젯을 열/행으로 묶어 배치를 도와주는 위젯. Column(Row) 위젯의 좌우너비(높이)는 child의 너비(높이)중 가장 큰 값을 따름.    
 column(Row)의 높이(너비)는 default로 double.infinity(가능한 최대). Column/Row는 겹치거나(row안의 row) mix해서 사용가능.   
+? 부모column내의 여러 child와 같이 있는 자식column을 설정할 경우 높이는 자식column내의 children 높이와 fit하게 설정됨.   
 Column(Row)의 mainAxis는 top to bottom(left to right), crossAxis는 left to right(top to bottom)    
 children:: list<widgets> (child위젯 입력)    
 MainAxisAlignment: MainAxisAlignment, (column의 배정된 UI내 각child의 mainAxis상 배치형태를 결정하는 enum, default는 start)   
@@ -209,9 +223,20 @@ onPressed 인자: 버튼 터치시 수행하는 함수(_void_)의 포인터 입�
 - *Text위젯*   
 positional arguments로 String을 받음. named arguments로 여러 인자를 받음.      
 style : TextStyle(fontSize: 28, fontWeight: Fontweight.bold) (문자의 style결정)   
-(TextStyle은 문자Style의정보들을 담은 class(위젯x), Fontweight은 Font크기 값을 표현하고 static값을 묶어둔 utility class)   
-textAlign: TextAlign.center (문자열의 배치결정. 단, text위젯이 차지하는 공간기준.) (TextAlign은 enum. center,left,right등 포함) //  
-(tip: Text위젯은 UI에서 text크기만큼 공간을 할당받음. 즉, TextAlign.center로 화면 가운데 배치하고싶다면 Text를 Container에 담고 UI공간을 설정해 사용.)   
+(TextStyle은 문자Style의정보들을 담은 class(위젯x), Fontweight은 Font크기 값을 표현하고 static값을 묶어둔 utility class)    
+textAlign: TextAlign.center (문자열의 배치결정. 단, text위젯이 차지하는 공간기준.) (TextAlign은 enum. center,left,right등 포함) //   
+(tip: Text위젯은 UI에서 text크기만큼 공간을 할당받음. 즉, TextAlign.center로 화면 가운데 배치하고싶다면 Text를 Container에 담고 UI공간을 설정해 사용.)    
+
+- *TextField*    
+user로부터 text input을 String으로 입력 받을 수 있는 위젯. 모든 입력은 String. 입력을 숫자로 변경할시 수동변경 필요.      
+decoration: InputDecoration (textfield의 꾸밈효과 지정. InputDecoration은 꾸밈 정보를 포함한 객체)     
+( InputDecoration의 arguments에는  labelText: String (field위에 어떤칸인지 정보(String)표시?)  )    
+field의 input을 저장하는 두가지 방법: Listener(ex)onChanged) 사용(logic이 complex할때 추천??) / controller 사용     
+Lister를 사용하여 함수를 호출해 직접 별도의 변수(String)에 입력값을 저장. / Controller를 연결해 TextEditingController에 자동 저장.      
+onChanged: (String){} (모든 keyStroke마다 함수 호출. 현재 field에 있는 String을 인자로 받음.)    
+onEditingComplete/onSubmitted/onTap:     
+controller : TextEditingController(-> keyStroke마다 Field의 입력을 저장해두는 객체. 객체 내 변수 .text로 저장된 String접근 가능)     
+(final myController = TextEditingController()처럼 controller객체를 생성해두고 사용!)    
 
 - *Container위젯*   
 위젯을 담아 UI에 표현시 보이지않는 공간(Layout)관리 및 꾸밈효과를 돕는 위젯. named arguments를 받아 생성.   
@@ -239,6 +264,13 @@ margin: EdgeInsetsGeometry (위젯 margin지정)
 child : Widget (감쌀 위젯)   
 heightFactor : double (자식위젯의 높이에 대한 위젯의 높이 비율, null일 경우 화면에서 차지할수있는 만큼할당)   
 widthFactor : double (자식위젯의 너비에 대한 위젯의 너비 비율, null일 경우 화면에서 차질할수있을만큼 할당)    
+margin : EdgeInsetsGeometry (card의 margin.)
+(tip : card에 padding 설정 불가능. padding을 주고싶으면 car의 child를 container로 wrap하여 margin or padding입력)    
+
+- *SingleChildScrollView위젯*   
+위젯의 크기가 해당 위젯이 표현될수있는 할당된 UI밖을 벗어나도라도 scrollable하게 표현할수 있게 도와주는 위젯.   
+child: Widgetd (위젯 하나를 감싸, 그 위젯이 기존 표현가능 범위에서 scrollable하게 해줌.)    
+ex) column을 특정 크기 내에서 scrollable하게 하려면 : Container( height:300, child: SingleChildScrollView(child: Column(..)), ),
 
 - *ListView위젯*   
 scrollable한 위젯list.   
@@ -251,4 +283,4 @@ scrollable + grid. grid형으로 위젯 배치
 - *GestureDetector/Inkwell*   
 user input   
 
-
+- *dedicated padding()*
