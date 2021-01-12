@@ -36,13 +36,15 @@ Paint Baselines: text 등의 높낮이를 보여주는 helper
 Repaint Rainbow: UI상에서 위젯이 repaint되면 rainbow색상순으로 표시해줌.   
 Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능   
       
- -*file per widget*   
+ - *file per widget*   
  관용적으로 1위젯당 1파일(무조건 같이쓰는경우 등은 예외)쓰는게 권장.   
  복잡합 위젯일수록 한 파일&클래스로 묶어 한 위젯으로 만들어 관리하는게 유리.   
 
-- *UI상 노란색bar error*   
-devie의 page boundary밖으로 위젯 UI가 빠져나옴을 의미. UI설정을 수정해야함.     
+- *secreen상 노란색bar error*   
+위젯 UI가 빠져나옴가 devie의 page boundary를 침범했음을 의미. UI설정을 수정해야함.     
 
+- *_*    
+관용적으로, 함수 호출시 인자로 받지만, 사용안할 변수의 이름으로 _ 사용.   
 
 --------------------------------------------------------------------------------------------------------
 ## Dart
@@ -88,9 +90,10 @@ ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};
 날짜,시간을 저장할수있는 dart의 buil-in class. DateTime.now() : 현재 timestamp로 생성하는 생성자.     
 tip: now()를 debug시 간편하게 unique한 id생성할때 사용가능.   
 
-- *toString()*    
+- *(object.)toString()*    
 모든 object에 암묵적으로 포함된 메소드. object를 String으로 변환. double, DateTime등을 String으로 바꿀때 유용.    
 ex) double a; a.toString(), Datetime b; b.toString()    
+(num.)toStringAsFixed(int) (num을 decimal뒤 숫자갯수를 지정해서 String으로 변환.)     
 
 -*Dart syntax를 character로 명시할때*   
 '나 $같은 charcter를 print할시 feature syntax로 인식하지 않으려면 \을 앞에 붙인다. ex) print(' \$ ');   
@@ -104,6 +107,10 @@ tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List�
 
 - *(double.)parse(String)*   
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
+
+- *(object.)isEmpty*   
+해당 오브젝트에 값이 있는지 확인.   
+
 
 -------------------------------------------------------------------------------------------------------------
 ## Flutter  
@@ -196,11 +203,20 @@ app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스
 
 - *Scaffold(CupertinoPageScaffold)*   
 페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
+appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)
+body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)   
+floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
+floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
+
+- *AppBar*   
+AppBar로 지정할수 있는 material(종속적?) 위젯.   
+title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
+actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
 
 - *Column/Row*   
 여러 위젯을 열/행으로 묶어 배치를 도와주는 위젯. Column(Row) 위젯의 좌우너비(높이)는 child의 너비(높이)중 가장 큰 값을 따름.    
-column(Row)의 높이(너비)는 default로 double.infinity(가능한 최대). Column/Row는 겹치거나(row안의 row) mix해서 사용가능.   
-? 부모column내의 여러 child와 같이 있는 자식column을 설정할 경우 높이는 자식column내의 children 높이와 fit하게 설정됨.   
+column(Row)의 UI높이(너비)는 default로 double.infinity(가능한 최대). Column/Row는 겹치거나(row안의 row) mix해서 사용가능.   
+? 부모column내의 여러 child와 같이 있는 자식column을 설정할 경우 높이는 자식column내의 children 높이와 fit하게 설정됨.?   
 Column(Row)의 mainAxis는 top to bottom(left to right), crossAxis는 left to right(top to bottom)    
 children:: list<widgets> (child위젯 입력)    
 MainAxisAlignment: MainAxisAlignment, (column의 배정된 UI내 각child의 mainAxis상 배치형태를 결정하는 enum, default는 start)   
@@ -220,6 +236,21 @@ onPressed 인자: 버튼 터치시 수행하는 함수(_void_)의 포인터 입�
  - *FlatButton위젯*      
 배경이 없는 버튼. 나머지는 동일.  
 
+- *IconButton위젯*   
+icon모양의 버튼.    
+icon : Widget(버튼에 들어갈 icon모양 지정. Icon Widget을 받음.)   
+onPressed : (){} (Listner, 다른 버튼과 동일)    
+
+- *floatingActionButton*   
+scafold의 floatingActionBUtton에 optimized된 버튼. body를 덮는 버튼.   
+child: Widget(버튼이 감쌀 위젯. 일반적으로 Icon)   
+onPressed: (){} (Listner, 다른 버튼과 동일)
+
+- *Icon/Icons*    
+Icon은 Icon의 정보를 포함하는 위젯. positional 인자로 IconData를 받음.   
+Icons는 여러 icon의 IconData를 지정해놓은 class.   
+즉, Icon(Icons.add)처럼 생성. 다른 argument로 색깔,사이즈 등을 지정가능, default값은 선택된 아이콘의 theme를 따라 결정.   
+
 - *Text위젯*   
 positional arguments로 String을 받음. named arguments로 여러 인자를 받음.      
 style : TextStyle(fontSize: 28, fontWeight: Fontweight.bold) (문자의 style결정)   
@@ -237,6 +268,8 @@ onChanged: (String){} (모든 keyStroke마다 함수 호출. 현재 field에 있
 onEditingComplete/onSubmitted/onTap:     
 controller : TextEditingController(-> keyStroke마다 Field의 입력을 저장해두는 객체. 객체 내 변수 .text로 저장된 String접근 가능)     
 (final myController = TextEditingController()처럼 controller객체를 생성해두고 사용!)    
+keyboardType: TextInputType (field를 선택할시 나오는 soft keyboard의 종류 명시. TextInputType은 static값 선언된 class)   
+
 
 - *Container위젯*   
 위젯을 담아 UI에 표현시 보이지않는 공간(Layout)관리 및 꾸밈효과를 돕는 위젯. named arguments를 받아 생성.   
@@ -264,16 +297,25 @@ margin: EdgeInsetsGeometry (위젯 margin지정)
 child : Widget (감쌀 위젯)   
 heightFactor : double (자식위젯의 높이에 대한 위젯의 높이 비율, null일 경우 화면에서 차지할수있는 만큼할당)   
 widthFactor : double (자식위젯의 너비에 대한 위젯의 너비 비율, null일 경우 화면에서 차질할수있을만큼 할당)    
-margin : EdgeInsetsGeometry (card의 margin.)
+margin : EdgeInsetsGeometry (card의 margin.)   
 (tip : card에 padding 설정 불가능. padding을 주고싶으면 car의 child를 container로 wrap하여 margin or padding입력)    
 
 - *SingleChildScrollView위젯*   
-위젯의 크기가 해당 위젯이 표현될수있는 할당된 UI밖을 벗어나도라도 scrollable하게 표현할수 있게 도와주는 위젯.   
-child: Widgetd (위젯 하나를 감싸, 그 위젯이 기존 표현가능 범위에서 scrollable하게 해줌.)    
-ex) column을 특정 크기 내에서 scrollable하게 하려면 : Container( height:300, child: SingleChildScrollView(child: Column(..)), ),
+위젯의 크기가 해당 위젯이 표현될수있는 할당된 UI범위를 벗어나도라도 scrollable하게 표현할수 있게 도와주는 위젯.   
+child: Widgetd (위젯 하나를 감싸, 그 위젯이 기존 표현가능(할당된 UI) 범위에서 넘어가더라도 scrollable하게 해줌.)     
+ex) column을 특정 크기 내에서 scrollable하게 하려면 : Container( height:300, child: SingleChildScrollView(child: Column(..)), ),   
 
 - *ListView위젯*   
 scrollable한 위젯list.   
+ListView의 UI크기는 default로 infinity. 즉, container와 같은 부모위젯으로 감싸 크기를 지정해 UI공간을 할당 받아야 함.    
+사용하는 2가지 방법: children : []으로 arguments전달 / named생성자인 (ListView.)builder() 사용   
+children전달하면, column + scrollView처럼 작동. 전부 widget을 생성해 column을 만들고 scrollable하게 표시.    
+builder사용시 UI에 표시되는 위젯만 rendering. (lazily-rendering.) long List일때 더 좋은 performance(memory)   
+scrollaDirection: Axis(column/row 지정(scroll방향)(default: vertical, column))   
+itemBuilder: (BuildContext, int(index번호))->Widget (ListView의 새로운 아이템을 생성해야할때마다 호출하는 위젯 생성 함수 명시.)   
+(자동적으로 buildcontext(메타정보)와 int(index,몇번째 아이템인지)를 선언한 함수에 인자로 전달해줌.)   
+(함수에선 아이템으로 표시할 위젯을 반환하도록 작성. index를 이용해 각종 정보에 접근하여 생성가능.)      
+itemCount: int (현재 ListView에 포함할 아이템의 갯수 명시.)   
 
 - *GridView*   
 scrollable + grid. grid형으로 위젯 배치   
