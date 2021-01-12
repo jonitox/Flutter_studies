@@ -87,13 +87,17 @@ ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};
 위 선언에서 qa['answers'].map() 불가능. List의 map()사용시, (qa['answers'] as List< String >).map(); 처럼 as로 List를 명시해야함.    
 
 - *DateTime*   
-날짜,시간을 저장할수있는 dart의 buil-in class. DateTime.now() : 현재 timestamp로 생성하는 생성자.     
+날짜,시간을 저장할수있는 dart의 buil-in class. DateTime.now() : 현재 timestamp로 DateTime객체 생성하는 생성자.     
 tip: now()를 debug시 간편하게 unique한 id생성할때 사용가능.   
+(DateTime.)(day,month,year) / 해당 dateTime이 나타내는 년,월,일 참조.   
+(DateTime.)subract(Duration) / DateTime의 시간에서 Duration만큼의 시간을 빼주는 메소드.   
+(DateTime).isAfter(Datetime2) / 다른 DateTime과 비교하여 그 이후인지를 bool로 반환해주는 메소드.   
+Duration() / 시간의 duration값을 나타내는 클래스. 생성자에 named argument전달.(days: int, hours: int 등으로 duration의 길이 지정.)      
 
 - *(object.)toString()*    
 모든 object에 암묵적으로 포함된 메소드. object를 String으로 변환. double, DateTime등을 String으로 바꿀때 유용.    
 ex) double a; a.toString(), Datetime b; b.toString()    
-(num.)toStringAsFixed(int) (num을 decimal뒤 숫자갯수를 지정해서 String으로 변환.)     
+(num.)toStringAsFixed(int) (num을 decimal뒤 숫자갯수를 지정해서 반올림하여 String으로 변환.)     
 
 -*Dart syntax를 character로 명시할때*   
 '나 $같은 charcter를 print할시 feature syntax로 인식하지 않으려면 \을 앞에 붙인다. ex) print(' \$ ');   
@@ -105,13 +109,30 @@ $뒤의 변수를 String으로 변형. 만약 객체 내의 변수에 접근한�
 List뒤에 원소 하나를 추가하는 메소드.    
 tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List객체의 포인터로 a값 변경 불가지만 객체 수정가능.)    
 
+- *(List).where((var)->bool)*   
+현 List의 특정조건을 만족하는 원소들만 iterable을 생성해 반환하는 메소드.   
+인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument에 기존 List의 각 원소 전달.   
+
+- *List.generate(int, (index){})*   
+List 클래스에 선언되있는 메소드. 특정 조건으로 List를 생성해 반환.   
+첫번째 인자로 List의 길이, 두번째 인자로 (index){}함수를 받음. index는 List길이만큼 0부터 매 원소 생성시마다 1씩 증가해 함수에 전달.   
+함수body에서 List의 각 원소로 들어갈 object반환.   
+
 - *(double.)parse(String)*   
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
 
 - *(object.)isEmpty*   
 해당 오브젝트에 값이 있는지 확인.   
 
+- *(String.)subString(i,j)*   
+String [i..j)까지의 String을 반환.   
 
+- *(List).fold(<T>first, (<T>sum, item)-> <T>)*   
+ list의 각 원소를 순회하여 특정값을 계산해서 반환하는 메소드.   
+ 첫번째 인자로, 계산할 값의 초기값 지정. (일반적으로, totalSum을 구할때, 0으로 입력)     
+두번째 인자로, 각 원소의 아이템으로 계산할 값을 수정하는 함수 입력. 입력할수 있는 함수의 조건은,   
+계산할 값의 현재값(sum)과, 현재 사용할 List의 원소(item)을 전달받아, 함수body에서 새로 덮어씌울 계산할값을 return해야함.    
+ 
 -------------------------------------------------------------------------------------------------------------
 ## Flutter  
 
@@ -119,8 +140,22 @@ String을 받아 double로 변환해주는 메소드. 입력String이 double로 
 프로젝트의 set-up과 dependencies설정. 파일을 저장하면 자동으로 필요한 파일 및 패키지를 install & get.    
 indent로 항목을 구분하기때문에 indent를 잘 지킬 것!    
 
+- *pubspec.yaml: assets*
+프로젝트에 사용할 font를 제외한 asset파일(이미지 등) 명시. 당연히, 모든 파일은 프로젝트 폴더 내에 저장되있어야함.     
+assets: / 사용될 파일들 명시   
+    -파일위치 및 이름    
+  
+- *pubspec.yaml: fonts*   
+프로젝트에 사용할(다운받은) font를 명시. (당연히, assets/fonts/...등에 저장되있어야함.)    
+pubspec.yaml에 font 영역 수정.   
+fonts:   
+   family: '사용할 폰트그룹명' / 한 폰트 그룹 (bold,regular..)의 이름(직접 입력)    
+     fonts: / 그룹이 포함할 폰트 파일들을 명시.   
+        assets: '파일위치 및 이름'   
+        (해당 파일 폰트에 대한 정보를 추가. 다운받은 폰트의 info확인!    
+        ex) 특정폰트의 bold 버전은 weight: 700 으로 지정해야 FontWeight.bold로 해당 패밀리의 bold버전 접근가능.)        
 
-
+- *프로젝트 폴더변경시 hot reload,restart에 적용안됨. restart해야함*   
 ----------------------------------------------------------------------------------------------------------------
 
 ## Function, Class, Rules  
@@ -135,14 +170,16 @@ widget인스턴스를 받아 build를 호출하여 실행해 화면에 띄어주
 위젯의 생성함수. 위젯(trees)을 필수로 return. 모든 위젯은 반드시 @override. Buildcontext는 메타정보를 담은 객체로, 자동 전달됨.   
 
 - *State 클래스*     
- attatched: Stateful위젯에 대응쌍관계인 class   
- generic: extends State<StatefulWidget(대응하는 Statefulwidget 객체입력)>로 생성   
- persistent: Stateful위젯이 re-build되어도 객체가 다시생성되지않음. data를 유지하며 Stateful위젯의 상태 저장.   
- role: 값이 변동되는 변수와 위젯의 build함수를 포함. Stateful위젯 첫 생성시뿐만 아니라 state가 변해 UI를 다시 표시할때도 build함수가 실행돼 위젯을 다시 생성.   
+Stateful위젯에 대응쌍관계인 class. extends State<StatefulWidget(대응하는 Statefulwidget 객체입력)>로 생성(generic)    
+Stateful위젯이 re-build되어도 객체가 다시생성되지않음. data를 유지하며 Stateful위젯의 상태 저장.   
+값이 변동되는 변수와 위젯의 build함수를 포함. Stateful위젯 첫 생성시뿐만 아니라 state가 변해 UI를 다시 표시할때도 build함수가 실행돼 위젯을 다시 생성.   
+getter인 widget.()로 대응되는 stateful위젯의 멤버에 접근가능.    
 
 - *Color & Colors*   
-Color: 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
-Colors: 여러 Color객체을 static으로 선언해둔 utility class. 즉, 객체화 없이 Colors.black 등으로 여러색의 Color객체 사용 가능.    
+Color / 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
+Color.fromRGBO(r,g,b,opacity) / Color 객체를 r,g,b값으로 생성. 직접 색상의 rgb값 찾아서 생성할때 사용.      
+Colors / 여러 Color객체을 static으로 선언해둔 utility class. 즉, 객체화 없이 Colors.black 등으로 여러색의 Color객체 사용 가능.    
+
 
 - *rule: lifting state up*    
 서로 다른 위젯에서 한 state를 변경,사용할떄, 그 state를 두 위젯의 부모 위젯에서 관리함. state는 가능한 higest level의 위젯에서 관리.   
@@ -187,19 +224,59 @@ flutter가 제공하는 함수의 각 argument에 대한 decorator로 호출시 
 - *rule: styling*   
 전부 basic 위젯의 argument로 처리. 특정 argument가 없는 위젯이라면 container같은 위젯으로 wrap하여 styling한다.   
 
+- *showModalBottomSheet()*   
+현 화면에서 다른 위젯을 modalBottomSheet으로 띄워주는 함수.   
+@required context: BuildContext(현 화면에서의 메타정보를 전달해주어야함. 함수를 호출하는부분의 BuildContext를 전달)   
+@required builder: (BuildContext)->Widget (띄울 위젯을 생성하는 함수, 이 함수의 argument로 modalSheet(?)의 context가 전달됨.)    
+TextField를 modalBottomSheet으로 생성시 인풋이 다른 field로 넘어가면 사라짐. => TextField를 stateful로 ($$$$$)
+TextField에서 onSubmitted 등으로 입력을 완료했을때 자동적으로 modalSheet가 꺼지게 하려면, Naviagor.of(context).pop(); 사용
+
+- *ThemeData*    
+Material App의 Theme에 대한 정보를 저장하는 클래스.    
+primaryColor: Color / theme의 default로 쓰일 color. 다른 위젯에서 이 색상만 지정가능.    
+primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으로 사용. 위젯에서 theme색 참조시 여러버전으로 참조가능.     
+accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
+fontFamiliy: String / app의 global폰트family 지정     
+textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
+(TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.     
+appBarTheme: AppBarTheme / appBar에 사용될 별도의 theme지정. appBarTheme정보를 나타내는 객체. textTheme등 지정 가능.       
+ThemeData.light() / 모든 값이 default setting으로 이루어진 ThemeData 반환.      
+여러 theme을 나타내는 객체는 (theme.)copyWith({})로 특정 named argument를 overwrite하여 그대로 사용 가능.    
+ex) 기본 설정의 textTheme을 수정해서 사용할시, themeData.light().textTheme.copyWith(...)처럼 사용.   
+
+- *BoxDecoration*   
+container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.
+border : BoxBoarder / 일반적으로, 상속한 Boarder객체 입력. Boarder의 정보를 다음 class    
+color: Color / 컨테이너의 background color지정.    
+borderRadius: BorderRadiusGeometry / 일반적으로, 상속한 BorderRadius객체 입력. BorderRadius의 정보를 담은 class.    
+
+- *Border*   
+BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표현한 클래스.   
+Border.all() / Border의 named생성자. color, width등 지정 가능. border의 모든 방향으로 같은 값 적용.   
+ 
+- *BorderRadius*   
+BoxDecoration의 bolderRadius 인자로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
+BorderRadius.circular(double) / BorderRadius의 named생성자, 반지름 값을 지정해 원형의 곡면 반지름 지정 가능.    
+
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
 - *intl*   
 help internationalization and localization facilities, including message translation, plurals and genders, date/number formatting and parsing, and bidirectional text.    
-DateFormat.yMMd.format(date) (DateTime객체를 pattern에 맞게 formatting하여 String으로 반환.    
-DateFormat은 class로서 생성자로 패턴(ex)yyyy-MM-dd)을 받거나 여러 pre-configured pattern을 named생성자(ex)yMMD)로 지정.   
+DateFormat.yMMd().format(dateTime) / DateTime객체를 pattern에 맞게 formatting하여 String으로 반환.    
+DateFormat은 class로서 생성자 인자로 패턴(ex)yyyy-MM-dd)을 받거나 여러 pre-configured pattern을 named생성자(ex).yMMD())로 지정.   
+DateFormat.E().format(dateTime) / DateTime을 요일만 표시(Mon,Tue,...).      
 format은 class내부 메소드. date를 해당 패턴을 가진 String으로 반환.    
+
 
 --------------------------------------------------------------------------------------------------------------------------
 ## Widgets   
 
 - *MateriaApp(Cupertino)위젯*    
 app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스턴스화.   
+title:    
+theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.    
+(각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
+
 
 - *Scaffold(CupertinoPageScaffold)*   
 페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
@@ -277,11 +354,13 @@ child: Widget (감쌀 위젯),
 width: double (UI공간에서 할당받을 너비) (tip: double.infinity로 화면상 가능한 최대너비를 할당가능, 다른 UI가 안겹칠때까지),   
 margin: EdgeInsetGeometry (boarder바깥쪽인 margin 설정)   
 (> EdgeInset: 위젯의 margin길이 정보를 표현한 class. 여러 named constructor로 생성 가능. ex) EdgeInset.all(20) :모든방향 20)     
-decoration: Decoration (Decoration을 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient같은 위젯을 꾸미는 정보를 담은 클래스)   
-(> BoxDecoration()의 arguments에는 ,border : Boxboarder(를상속하는 Boarder객체 입력)(Boarder의 정보를 다음 class))    
+decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)   
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)
 
 -*Stack위젯*   
+여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯.   
+children: [] / 포갤 위젯목록 지정. 첫번째 원소가 가장 아래에 배치.   
+
 
 - *Card위젯*   
 위젯을 담아 shadow를 주어 배치하는 content container위젯. UI공간은 default로 child크기만큼 할당. 
@@ -322,7 +401,27 @@ scrollable + grid. grid형으로 위젯 배치
 
 - *ListTile*   
 
-- *GestureDetector/Inkwell*   
-user input   
+- *GestureDetector*    
+감싼 위젯에 발생하는 User input을 제어하기 위한 위젯.   
+behavior: HitTestBehavior (특정 동작을 제어하기위해 필수?)
+
+- *InkWell*   
 
 - *dedicated padding()*
+
+- *Image*     
+Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성.   
+(Image.)asset('파일경로 및 이름', fit: BoxFit.cover) / pubspec.yaml에 명시된 asset 내의 파일인 경우.   
+(Image.)network() / 웹상의 이미지를 가져올 경우.   
+(Image.)file() / file에서 stream을 가져오는 경우?    
+각 constructor내의 name argument   
+fit: BoxFit / 이미지가 (크기가 define된 부모위젯)Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
+
+- *sizedBox*   
+특정 크기의 layout을 줄때 사용하는 위젯. child를 가질수 있지만(container처럼 작동), child없이 크기를 줘서 공백을 줄때 자주 사용.   
+height: double   
+
+- *FractionallySizedBox*   
+부모위젯의 크기에 대한 비율로 전체 위젯의 크기를 지정해줄때 사용하는 위젯.     
+child: Widget / Box가 감쌀 위젯. 이 위젯의 크기를 비율에 맞게 생성.   
+heightFactor: 0~1 / 부모위젯의 크기에 대한 비율 지정. 1이면 부모위젯 전체공간 차지.   
