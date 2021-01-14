@@ -87,7 +87,9 @@ ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};
 위 선언에서 qa['answers'].map() 불가능. List의 map()사용시, (qa['answers'] as List< String >).map(); 처럼 as로 List를 명시해야함.    
 
 - *DateTime*   
-날짜,시간을 저장할수있는 dart의 buil-in class. DateTime.now() : 현재 timestamp로 DateTime객체 생성하는 생성자.     
+날짜,시간을 저장할수있는 dart의 buil-in class. DateTime(year,hours, ..)처럼 생성. positional argument로 날짜 입력.   
+years를 제외한 인자는 defautl값(1) 존재. 즉, DateTime(2021)처럼 생성시 해당 년도의 1월 1일 00시 .. 로 초기화.    
+DateTime.now() : 현재 timestamp로 DateTime객체 생성하는 생성자.   
 tip: now()를 debug시 간편하게 unique한 id생성할때 사용가능.   
 (DateTime.)(day,month,year) / 해당 dateTime이 나타내는 년,월,일 참조.   
 (DateTime.)subract(Duration) / DateTime의 시간에서 Duration만큼의 시간을 빼주는 메소드.   
@@ -111,12 +113,19 @@ tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List�
 
 - *(List).where((var)->bool)*   
 현 List의 특정조건을 만족하는 원소들만 iterable을 생성해 반환하는 메소드.   
-인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument에 기존 List의 각 원소 전달.   
+인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument에 기존 List의 각 원소 전달. 이 함수의 return값이 true인 원소들로만 채움.     
+
+- *(List.)removeWhere((var)->bool)*   
+현 리스트의 원소들중 특정 조건을 만족하는 원소를 지우는 메소드(남은 원소들은 다시 첫원소부터 인접하게 채워짐.)    
+인자로 (va)->bool의 함수를 받음. 받은 함수의 argument에 List의 각 원소 전달. 함수 body에서 return하는 값이 true인 원소들을 지움.   
 
 - *List.generate(int, (index){})*   
 List 클래스에 선언되있는 메소드. 특정 조건으로 List를 생성해 반환.   
 첫번째 인자로 List의 길이, 두번째 인자로 (index){}함수를 받음. index는 List길이만큼 0부터 매 원소 생성시마다 1씩 증가해 함수에 전달.   
 함수body에서 List의 각 원소로 들어갈 object반환.   
+
+- *(List).reversed*     
+현 List의 원소 순서를 뒤집어 iterable로 반환. List로 변환하려면 reversed.toList() 사용.        
 
 - *(double.)parse(String)*   
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
@@ -133,6 +142,11 @@ String [i..j)까지의 String을 반환.
 두번째 인자로, 각 원소의 아이템으로 계산할 값을 수정하는 함수 입력. 입력할수 있는 함수의 조건은,   
 계산할 값의 현재값(sum)과, 현재 사용할 List의 원소(item)을 전달받아, 함수body에서 새로 덮어씌울 계산할값을 return해야함.    
  
+ - *Future<T>*    
+ <T>형 객체를 비동기적으로 저장하는 객체. 해당 변수가 저장되길 기다린다.
+  (Future.)then((var) {}) / 변수가 저장될때, 실행하는 함수 선언. 실행 함수의 인자로 저장된 객체를 전달    
+ then? wait? await?    
+  
 -------------------------------------------------------------------------------------------------------------
 ## Flutter  
 
@@ -226,19 +240,21 @@ flutter가 제공하는 함수의 각 argument에 대한 decorator로 호출시 
 
 - *showModalBottomSheet()*   
 현 화면에서 다른 위젯을 modalBottomSheet으로 띄워주는 함수.   
-@required context: BuildContext(현 화면에서의 메타정보를 전달해주어야함. 함수를 호출하는부분의 BuildContext를 전달)   
+@required context: BuildContext(현 클래스의 메타정보를 전달해주어야함. 함수를 호출하는부분(?)의 BuildContext를 전달)   
 @required builder: (BuildContext)->Widget (띄울 위젯을 생성하는 함수, 이 함수의 argument로 modalSheet(?)의 context가 전달됨.)    
 TextField를 modalBottomSheet으로 생성시 인풋이 다른 field로 넘어가면 사라짐. => TextField를 stateful로 ($$$$$)
 TextField에서 onSubmitted 등으로 입력을 완료했을때 자동적으로 modalSheet가 꺼지게 하려면, Naviagor.of(context).pop(); 사용
 
 - *ThemeData*    
-Material App의 Theme에 대한 정보를 저장하는 클래스.    
+Material App의 Theme에 대한 정보를 저장하는 클래스. material Theme에 지정시 다른 위젯에서 Theme.of(context).(label)로 참조해서 사용.          
 primaryColor: Color / theme의 default로 쓰일 color. 다른 위젯에서 이 색상만 지정가능.    
 primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으로 사용. 위젯에서 theme색 참조시 여러버전으로 참조가능.     
 accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
+errorColor: Color / 에러에 쓰일 색상 지정. default는 red.   
 fontFamiliy: String / app의 global폰트family 지정     
 textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
-(TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.     
+(TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.   
+style: Theme.of(context).textTheme.title) 혹은 color : Theme.of(context).textTheme.button.color 와 같이)    
 appBarTheme: AppBarTheme / appBar에 사용될 별도의 theme지정. appBarTheme정보를 나타내는 객체. textTheme등 지정 가능.       
 ThemeData.light() / 모든 값이 default setting으로 이루어진 ThemeData 반환.      
 여러 theme을 나타내는 객체는 (theme.)copyWith({})로 특정 named argument를 overwrite하여 그대로 사용 가능.    
@@ -249,6 +265,7 @@ container의 decoration 인자로 들어가는 decoration에 관한 정보를 �
 border : BoxBoarder / 일반적으로, 상속한 Boarder객체 입력. Boarder의 정보를 다음 class    
 color: Color / 컨테이너의 background color지정.    
 borderRadius: BorderRadiusGeometry / 일반적으로, 상속한 BorderRadius객체 입력. BorderRadius의 정보를 담은 class.    
+shape: BoxShape / 컨테이너의 모양 결정 BoxShape은 enum으로 circle, rectangle(default)등 가능.    
 
 - *Border*   
 BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표현한 클래스.   
@@ -257,6 +274,17 @@ Border.all() / Border의 named생성자. color, width등 지정 가능. border�
 - *BorderRadius*   
 BoxDecoration의 bolderRadius 인자로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
 BorderRadius.circular(double) / BorderRadius의 named생성자, 반지름 값을 지정해 원형의 곡면 반지름 지정 가능.    
+
+- *showDatePicker() -> future<DateTime>*    
+현재 화면에서 달력의 날짜를 선택할수 있는 overlay창(datePicker)을 띄워주는 flutter내의 함수. (다른 package?)       
+입력을 받기위해 대기하며 입력을 받으면 저장하는 future객체를 반환. 즉, 입력을 저장할 객체(d)를 하나 선언해두고,    
+showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전달하는 함수의 body에서 입력을 저장하는 방식으로 사용.    
+@required context: BuildContext / 현 클래스의 메타정보를 전달해주어야함.    
+@required initialDate: DateTime / 창을 띄웠을떄 선택되어있을 날짜 지정. 일반적으로, datetIme.now()   
+@required firstDate: DateTime / 선택할수 있는 가장 빠른 날짜 지정.    
+@required lastDate: DateTime / 선택할수 있는 가장 느린 날짜 지정.   
+
+
 
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
@@ -321,7 +349,7 @@ onPressed : (){} (Listner, 다른 버튼과 동일)
 - *floatingActionButton*   
 scafold의 floatingActionBUtton에 optimized된 버튼. body를 덮는 버튼.   
 child: Widget(버튼이 감쌀 위젯. 일반적으로 Icon)   
-onPressed: (){} (Listner, 다른 버튼과 동일)
+onPressed: (){} (Listner, 다른 버튼과 동일)    
 
 - *Icon/Icons*    
 Icon은 Icon의 정보를 포함하는 위젯. positional 인자로 IconData를 받음.   
@@ -390,20 +418,26 @@ ListView의 UI크기는 default로 infinity. 즉, container와 같은 부모위�
 사용하는 2가지 방법: children : []으로 arguments전달 / named생성자인 (ListView.)builder() 사용   
 children전달하면, column + scrollView처럼 작동. 전부 widget을 생성해 column을 만들고 scrollable하게 표시.    
 builder사용시 UI에 표시되는 위젯만 rendering. (lazily-rendering.) long List일때 더 좋은 performance(memory)   
-scrollaDirection: Axis(column/row 지정(scroll방향)(default: vertical, column))   
+scrollaDirection: Axis(column/row 지정(scroll방향)(default: vertical =column))   
 itemBuilder: (BuildContext, int(index번호))->Widget (ListView의 새로운 아이템을 생성해야할때마다 호출하는 위젯 생성 함수 명시.)   
 (자동적으로 buildcontext(메타정보)와 int(index,몇번째 아이템인지)를 선언한 함수에 인자로 전달해줌.)   
 (함수에선 아이템으로 표시할 위젯을 반환하도록 작성. index를 이용해 각종 정보에 접근하여 생성가능.)      
 itemCount: int (현재 ListView에 포함할 아이템의 갯수 명시.)   
 
+- *ListTile*   
+List Tile(네모난 카드 모양)형태로 표현할수 있는 위젯. ListView내의 한 원소를 표현할떄 자주 쓰인다.(필수 x, 따로도 사용 가능)   
+leading: Widget / title왼쪽에 표시할 위젯(보통 이미지나 가격, circleAvatar등)    
+title: Widget / List Tile의 주된 정보를 나타내는 위젯. 주로 Text    
+subtitle: Widget / 추가적인 정보를 나타내는 위젯. title밑에 표시. 주로 Text
+trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정 같은 버튼)    
+
 - *GridView*   
 scrollable + grid. grid형으로 위젯 배치   
-
-- *ListTile*   
 
 - *GestureDetector*    
 감싼 위젯에 발생하는 User input을 제어하기 위한 위젯.   
 behavior: HitTestBehavior (특정 동작을 제어하기위해 필수?)
+onTap: (){}
 
 - *InkWell*   
 
@@ -418,10 +452,48 @@ Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named const
 fit: BoxFit / 이미지가 (크기가 define된 부모위젯)Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
 
 - *sizedBox*   
-특정 크기의 layout을 줄때 사용하는 위젯. child를 가질수 있지만(container처럼 작동), child없이 크기를 줘서 공백을 줄때 자주 사용.   
-height: double   
+특정 크기의 layout을 줄때 사용하는 위젯. child를 가질수 있지만(container처럼 작동), child없이 크기를 줘서 공백을 줄때 자주 사용.    
+height: double    
 
 - *FractionallySizedBox*   
-부모위젯의 크기에 대한 비율로 전체 위젯의 크기를 지정해줄때 사용하는 위젯.     
+부모위젯의 크기에 대한 비율로 전체 위젯의 크기를 지정해줄때 사용하는 위젯.    
+차트바 등을 표현할때 (외부패키지를 사용하지 않을때) Stack과 함께 사용하면 유용.         
 child: Widget / Box가 감쌀 위젯. 이 위젯의 크기를 비율에 맞게 생성.   
 heightFactor: 0~1 / 부모위젯의 크기에 대한 비율 지정. 1이면 부모위젯 전체공간 차지.   
+
+- *FittedBox*    
+감쌀 위젯의 크기가 해당 위젯이 차지 가능한 영역을 벗어나지않도록 강제할때(shrink) 사용하는 위젯.   
+ex) Container 내의 Text를 감쌀 경우, 문자열 길이가 Container 밖으로 넘어가면 자동으로 Text를 shrink(높이,너비 동시에)하여 한줄로 맞춰줌.       
+chld: Widget / 감쌀 위젯   
+fit: BoxFit /
+
+- *Padding*   
+padding값만 부여가능한 container와 동일한 위젯. 감싼 위젯에 Padding값만 줄 경우 쓰는 위젯.    
+Padding: EdgeInsetsGeometry / 일반적으로, 상속한 EdgeInsets.all(10)등으로 생성해 입력. .all()은 named 생성자./ padding에 대한 정보 명시.    
+child: Widget/ 감쌀 위젯   
+
+-*Flexible*     
+감싼 위젯이 column(row) 내에서 차지할 공간을 특정 조건에 맞게 지정해주는 위젯.   
+fit: FlexFit / Flexfit은 enum으로 loose,tight 존재. child위젯이 차지할 공간을 어떻게 설정한지 지정.    
+(FLexFit.)loose / 위젯의 디폴트 값으로, explicitly 사용할 필요x. child위젯이 기존 위젯이 필요한 공간만큼만 차지하게 설정.    
+(flexFit.)tight / cihld위젯이 column내 차지할 수 있는 최대 공간을 차지하도록 설정.    
+tight로 설정된 column의 원소끼리는 전체에서 loose인(flex가 없는) 원소 제외 남는 가능한 공간을 일정 비율로 배정.    
+flex : int=1 / 해당 child가 다른 tight로 설정된 child와 비교했을때 차지할 공간의 비율 설정. default는 1.   
+tight한 원소끼리 flex가 같다면 위젯의 기존 크기와 상관없이 크기 동일. 즉, 한 위젯의 크기가 다른 위젯에 비해 유동적으로 커지는 것을 방지 가능.        
+(loose인 원소에도 flex값을 줄 수있는데, 이 값이 남은 공간을 계산할 flex합에 포함되어, 다른 tight한 원소들이 그외 남은 공간을 최대로 차지.    
+하지만 여전히, loose인 원소는 자신이 기존에 필요한 공간만큼만 표시. 즉, tight한 원소들이 있더라도 column내 공백이 생기게됨.)    
+
+- *Expanded*   
+fit: FlexFit.tight으로 고정되있는 Flexible위젯. column(row)내 원소의 fit을 tight으로 할시 fit 인자를 생략하고 Expanded를 사용 가능.    
+tip: Expanded를 ListView와 같은 infinity height을 같는 위젯에 씌울 경우 error. ?    
+
+
+- *CircleAvatar*   
+원형의 컨테이너와 동일한 위젯. 감싸는 위젯을 원형의 공간 내에 배치.    
+radius: double / 원의 반지름 지정.    
+child: Widget / 감쌀 위젯    
+backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
+backgoundImage:    /      
+ 
+
+
