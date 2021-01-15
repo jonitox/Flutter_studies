@@ -147,6 +147,10 @@ String [i..j)까지의 String을 반환.
   (Future.)then((var) {}) / 변수가 저장될때, 실행하는 함수 선언. 실행 함수의 인자로 저장된 객체를 전달    
  then? wait? await?    
   
+  - *if in List*   
+  [if(a>1) B, C, ]처럼  if문이 성립할시 직후(괄호{}는 쓰지 않음.)의 원소를 포함하도록 선언 가능.    
+  (flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
+  
 -------------------------------------------------------------------------------------------------------------
 ## Flutter  
 
@@ -170,6 +174,18 @@ fonts:
         ex) 특정폰트의 bold 버전은 weight: 700 으로 지정해야 FontWeight.bold로 해당 패밀리의 bold버전 접근가능.)        
 
 - *프로젝트 폴더변경시 hot reload,restart에 적용안됨. restart해야함*   
+
+- *portrait mode만 지원하고싶은 경우*    
+'package:flutter/services.dart'를 import한 후,
+WidgetsFlutterBinding.ensureInitialized();
+SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown,]);   
+(WidgetsFlutterBinding.ensureInitialized()은 다음줄인 Orientation설정 함수가 정상적으로 작동하도록 설정.)   
+(SystemCrhome은 system wide한 설정 가능하도록 하는 클래스, setPreferredOrientation()으로 앱의 지원 mode 설정.      
+mode목록을 List로 전달.  DeviceOrientation은 여러 모드를 지정가능한 enum.)
+
+- *hey*   
+asdf 
+
 ----------------------------------------------------------------------------------------------------------------
 
 ## Function, Class, Rules  
@@ -239,11 +255,12 @@ flutter가 제공하는 함수의 각 argument에 대한 decorator로 호출시 
 전부 basic 위젯의 argument로 처리. 특정 argument가 없는 위젯이라면 container같은 위젯으로 wrap하여 styling한다.   
 
 - *showModalBottomSheet()*   
-현 화면에서 다른 위젯을 modalBottomSheet으로 띄워주는 함수.   
+현 화면에서 다른 위젯을 modalBottomSheet으로 띄워주는 함수. 
 @required context: BuildContext(현 클래스의 메타정보를 전달해주어야함. 함수를 호출하는부분(?)의 BuildContext를 전달)   
 @required builder: (BuildContext)->Widget (띄울 위젯을 생성하는 함수, 이 함수의 argument로 modalSheet(?)의 context가 전달됨.)    
 TextField를 modalBottomSheet으로 생성시 인풋이 다른 field로 넘어가면 사라짐. => TextField를 stateful로 ($$$$$)
 TextField에서 onSubmitted 등으로 입력을 완료했을때 자동적으로 modalSheet가 꺼지게 하려면, Naviagor.of(context).pop(); 사용
+ModalSheet이 가지는 maxHeight존재.(tip: 위젯의 크기가 modalSheet의 크기보다 커지는 경우 scrollable하게, 위젯을 scrollView로 선언가능.)    
 
 - *ThemeData*    
 Material App의 Theme에 대한 정보를 저장하는 클래스. material Theme에 지정시 다른 위젯에서 Theme.of(context).(label)로 참조해서 사용.          
@@ -284,7 +301,25 @@ showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전
 @required firstDate: DateTime / 선택할수 있는 가장 빠른 날짜 지정.    
 @required lastDate: DateTime / 선택할수 있는 가장 느린 날짜 지정.   
 
+- *MediaQuery*    
+실행되고 있는 device에 대한 정보들을 참조할수 있는 클래스. Theme과 같이 .of(context)로 메타 정보를 사용해 연결.    
+(tip: 한 build내에서 MediaQuery.of(context)를 자주 생성해 참조하는 경우, build함수 내 final로 객체를 생성해 사용하면 performance증가)   
+(MediaQuery.of(context).)size / device의 size를 나타내는 객체. size내에 height,weight등 참조 가능.    
+(tip1: 위젯의 layout을 device에 "Responsive"하게 지정하려면, device의 크기에서 각종 디폴트 크기(상태바 높이, appBar높이)를 빼준 값에    
+0~1사이의 값을 곱해 위젯의 크기로 지정해줌. (전체 채울수 있는 공간에 비례하여 위젯크기 지정).      
+(tip2: device의 크기에따라 위젯을 띄우거나 일부만 띄우거나 등등 유동적인 build가능. ex) width > 300 ? text+icon : icon) )    
+(MediaQuery.of(context).)padding / app을 감싸는 system UI(status Bar등)의 정보를 나타내는 객체. top(상태바 높이)등 참조 가능.   
+(MediaQuery.of(context).)textScaleFactor / 사용자가 device내에서 설정한 text크기(default:1)에 접근 가능.(즉, 이값을 저장해(final변수)  
+(tip: 텍스트 폰트 크기에 곱해서 설정해주면, (ex) Fontsize: 20* curSaleFactor) 사용자가 지정한 텍스트설정에 따른 텍스트 표현 가능.)    
+(MediaQuery.of(context).)orientation / 현재 device의 orientation(portrait,landsacpe)참조. 현재 Orientation(enum)값 반환.   
+(MediaQuery.of(context).)viewInsets / device에 종속적인 display에 대한 정보 참조가능. (일반적으로, keyboard에 해당하는 정보)    
+(tip: viewInsets.)bottom을 통해 keyboard가 켜졌을때, keyboard의 길이를 참조할 있음. keyboard가 올라오면 해당 값이 변경.    
+즉, stateful내의 TextField내에서 해당값에 따라 padding을 주도록 설정하면 keyBoard가 올라올때 그에 맞게끔 UI를 변경 가능.)         
 
+- *BoxContstraints*    
+모든 위젯이 가지는 객체로서, 위젯이 redering되는 범위의 constraint에 대한 정보 저장. 
+모든 위젯에 직접 설정해줄 수있으며, 많은 basic 위젯들은 default값을 설정되있음.(ex)ListView의 height은 infinity)    
+Height은 minHeight, maxHeight를 가지며, 해당 범위 내에서 rendering 가능. (Weight도 동일)       
 
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
@@ -314,9 +349,10 @@ floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 �
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
 
 - *AppBar*   
-AppBar로 지정할수 있는 material(종속적?) 위젯.   
+AppBar로 지정할수 있는 material 위젯.   
 title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
 actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
+(Appbar.)preferredSize / appBar의 크기를 저장해놓은 객체. (preferredSize.)height으로 appBar의 높이 참고가능.
 
 - *Column/Row*   
 여러 위젯을 열/행으로 묶어 배치를 도와주는 위젯. Column(Row) 위젯의 좌우너비(높이)는 child의 너비(높이)중 가장 큰 값을 따름.    
@@ -337,9 +373,12 @@ crossAxisAlignment: CrossAxisAlignment, (각 child의 corssAxis상에서의 배�
 버튼을 생성하는 위젯
 child : Widget 버튼내부에 표현되는 위젯(text, image등) 입력   
 onPressed 인자: 버튼 터치시 수행하는 함수(_void_)의 포인터 입력 null이면 button이 enabled.   
-
+(RaisedButon.)icon() / icon과 label로 이루어진 버튼을 생성하는 named생성자. (named argument로는    
+onPressed: (){}, icon: Icon(표시될 icon위젯), label: Widget(표시될 label, 일반적으로 text), color:, textColor: 등       
+ 
  - *FlatButton위젯*      
-배경이 없는 버튼. 나머지는 동일.  
+배경이 없는 버튼. 나머지는 동일.    
+(FlatButton.)icon() / raisedButton의 icon생성자와 동일. icon+label형태 버튼 생성.    
 
 - *IconButton위젯*   
 icon모양의 버튼.    
@@ -495,5 +534,14 @@ child: Widget / 감쌀 위젯
 backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
 backgoundImage:    /      
  
+- *LayoutBuilder*   
+위젯을 기존 부모 위젯의 constraints에 responsive하게 크기를 지정해주려할때 사용하는 위젯. 부모위젯의 크기가 유동적이어도 사용 가능.       
+builder: (BuildContext, BoxConstraints)-> Widget / 부모위젯의 크기를 참고해 자식위젯을 생성해서 반환하는 함수를 builder에 명시.       
+builder의 함수에 context와 현재 부모위젯의 BoxContraint를 인자로 전달. 이 constraint를 참고해 자식위젯의 크기를 설정할 수 있음.    
+ex) (생성할 자식위젯의) height: constraints.MaXheight*0.7,     
 
-
+- *Switch*    
+toggle할 수 있는 switch버튼 위젯. 클릭시마다 switch를 toggle에 UI상에서 보여줘야하므로 현재switch value값 저장할 변수와 stateful 필요.     
+value: bool / UI상 Switch가 표시할 상태(toggle의 on/off값, true면 켜진 switch.)(일반적으로, 따로 선언한 현재 switch값 변수 전달)    
+onChanged: (bool){} / Switch를 눌러서 값을 toggle할때 실행할 함수. 함수의 인자로 변화된 toggle의 value값을 전달해줌.     
+(일반적으로, 함수 body의 setState내부에서 전달받은 bool값을 state내의 변수에 저장. Switch의 value값이 변해 switch re-rendered)      
