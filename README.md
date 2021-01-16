@@ -183,20 +183,36 @@ SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrien
 (SystemCrhome은 system wide한 설정 가능하도록 하는 클래스, setPreferredOrientation()으로 앱의 지원 mode 설정.      
 mode목록을 List로 전달.  DeviceOrientation은 여러 모드를 지정가능한 enum.)
 
-- *hey*   
-asdf 
+- *adaptive by flutter*     
+특정 위젯들은 OS에 맞는 style로 adaptive하게 생성될 수 있도록, (widget.)adaptive() 형태로 특별한 named 생성자 제공.    
+해당 위젯이 build되는 os에 맞게끔 style이 설정되어 rendering된다. os에 맞게끔 생성하되 특정 부분만 메인 색상 등으로    
+별도로 지정하는 방법도 가능. 가능한 위젯 목록 : switch,      
+
+- *Platform 참조*    
+dart가 제공하는 'dart:io'를 import하면, 해당 파일이 실행되는 os를 참조할수있는 객체인 Platform에 접근가능.   
+(Platform.)isIOS/isAndroid 등으로 현재 os가 IOS인지 확인 가능. 해당 값들은 bool.        
+
+- *변수에 Widget을 ternary expression으로 저장시 참조문제*    
+상황에 따라 다른 위젯을 렌더링하기 위해 변수에 위젯을 ternary expression으로 선언할 시, 같은 위젯이 아니라면    
+변수 type을 Widget으로 인식. 즉, 두 위젯이 비슷한 위젯으로 공통된 property를 갖더라도 해당 property는 변수를 통해 참조 불가능.    
+이런 경우, 변수의 type을 explicitly 명시해준다.   
+ex) final PreferredSizeWidget appBar = Platform.isIOS? CupertinoNavigationBar() : AppBar(); / appBar.preferredSized 참조가능.   
+
+- *material/Cupertino theme 종속성*   
+mateiral 기반 위젯은 다른 material 위젯만을 조상 위젯으로 가질 수 있음.    
+ex) IconButton은 mateiral디자인으로, cupertino디자인 위젯에서 쓰러면 custon Icon Button을 생성해야함.      
 
 ----------------------------------------------------------------------------------------------------------------
 
 ## Function, Class, Rules  
 
-- *package:flutter/material.dart*   
+- *package:flutter/material.dart*    
 flutter 여러 base위젯 및 함수 등이 포함된 flutter패키지   
 
-- *runAPP()*    
+- *runAPP()*     
 widget인스턴스를 받아 build를 호출하여 실행해 화면에 띄어주는 함수. main()에서 메인widget실행   
 
-- *Build(Buildcontext context)*   
+- *Build(Buildcontext context)*    
 위젯의 생성함수. 위젯(trees)을 필수로 return. 모든 위젯은 반드시 @override. Buildcontext는 메타정보를 담은 객체로, 자동 전달됨.   
 
 - *State 클래스*     
@@ -321,6 +337,7 @@ showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전
 모든 위젯에 직접 설정해줄 수있으며, 많은 basic 위젯들은 default값을 설정되있음.(ex)ListView의 height은 infinity)    
 Height은 minHeight, maxHeight를 가지며, 해당 범위 내에서 rendering 가능. (Weight도 동일)       
 
+
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
 - *intl*   
@@ -341,30 +358,43 @@ theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.
 (각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
 
 
-- *Scaffold(CupertinoPageScaffold)*   
-페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
+- *Scaffold*   
+material style의 페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
 appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)
 body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)   
 floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
 
+- *CupertinoPageScaffold*
+cupertino style 페이지 Setup 위젯   
+child: Widget / scaffold의 body와 동일.   
+navigationBar: preferredSizedWidget(ex)CupertinoNavigationBar) /  scaffold의 appbar와 동일     
+(아이폰의 상단에 notch가 있는(device status가 양옆에 표시.) 모델 등의 경우, navigationBar는 os UI를 respect해 자동적으로 밑에       
+rendering되지만 child는 해당 부분까지 available한 영역으로 인식해 Bar와 겹쳐서 rendering됨. body부분의 위젯을 safeArea()로 씌워 해결.)    
+
 - *AppBar*   
-AppBar로 지정할수 있는 material 위젯.   
+scaffold의 AppBar로 지정할수 있는 material 위젯.   
 title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
 actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
 (Appbar.)preferredSize / appBar의 크기를 저장해놓은 객체. (preferredSize.)height으로 appBar의 높이 참고가능.
 
+- *CupertinoNavigationBar*   
+cupertinoScaffold의 navigationBar로 지정할 수 있는 위젯.    
+middle: Widget / AppBar의 title과 유사.   
+
+
 - *Column/Row*   
 여러 위젯을 열/행으로 묶어 배치를 도와주는 위젯. Column(Row) 위젯의 좌우너비(높이)는 child의 너비(높이)중 가장 큰 값을 따름.    
-column(Row)의 UI높이(너비)는 default로 double.infinity(가능한 최대). Column/Row는 겹치거나(row안의 row) mix해서 사용가능.   
-? 부모column내의 여러 child와 같이 있는 자식column을 설정할 경우 높이는 자식column내의 children 높이와 fit하게 설정됨.?   
+column(Row)의 maxHeight(maxWidth)은 default로 double.infinity(가능한 최대). minHeight은 자식위젯의 높이합으로 설정됨.    
+Column/Row는 겹치거나(row안의 row) mix해서 사용가능.      
+부모column내의 여러 child와 같이 있는 자식column을 설정할 경우 높이는 자식column내의 children 높이와 fit하게 설정됨.?   
 Column(Row)의 mainAxis는 top to bottom(left to right), crossAxis는 left to right(top to bottom)    
 children:: list<widgets> (child위젯 입력)    
 MainAxisAlignment: MainAxisAlignment, (column의 배정된 UI내 각child의 mainAxis상 배치형태를 결정하는 enum, default는 start)   
 (MainAxisAlignment./  center:중앙, end: 밑, spaceAround :각 child위아래로 일정공간 추가)   
 crossAxisAlignment: CrossAxisAlignment, (각 child의 corssAxis상에서의 배치형태를 결정하는 enum, default는 center)    
 (CrossAxisAlignment./ end: 오른쪽끝, stretch: column의 너비만큼 늘여서 채워 배치.(child가 card등이면 너비를 define해줄수있음.))   
-  
+mainAxisSize:  MainAxisSize / mainAxis의 Size 지정. MainAxisSize는 enum으로 max(double.infinity)와 min(children에 fit) 존재.     
  
  -*Flexible/Expanded*   
    Column/Row의 child를 warp하여 위젯간 차지하는 공간 등 지정 가능.    
@@ -391,9 +421,9 @@ child: Widget(버튼이 감쌀 위젯. 일반적으로 Icon)
 onPressed: (){} (Listner, 다른 버튼과 동일)    
 
 - *Icon/Icons*    
-Icon은 Icon의 정보를 포함하는 위젯. positional 인자로 IconData를 받음.   
-Icons는 여러 icon의 IconData를 지정해놓은 class.   
-즉, Icon(Icons.add)처럼 생성. 다른 argument로 색깔,사이즈 등을 지정가능, default값은 선택된 아이콘의 theme를 따라 결정.   
+Icon은 Icon을 나타낼수 있는 위젯. positional 인자로 IconData를 받음.       
+Icons는 여러 icon(material style)의 IconData를 static으로 지정해놓은 class. cupertino모양은 CupertinoIcons에 존재.     
+즉, Icon(Icons.add)처럼 생성. 다른 argument로 색깔,사이즈 등을 지정가능, default값은 선택된 아이콘의 theme를 따라 결정.    
 
 - *Text위젯*   
 positional arguments로 String을 받음. named arguments로 여러 인자를 받음.      
@@ -477,6 +507,8 @@ scrollable + grid. grid형으로 위젯 배치
 감싼 위젯에 발생하는 User input을 제어하기 위한 위젯.   
 behavior: HitTestBehavior (특정 동작을 제어하기위해 필수?)
 onTap: (){}
+child: Widget / 감쌀 위젯   
+tip: GestureDetector를 사용하여 custom Button 위젯 생성 가능. child를 버튼모양, onTap을 listner로 구성     
 
 - *InkWell*   
 
@@ -543,5 +575,11 @@ ex) (생성할 자식위젯의) height: constraints.MaXheight*0.7,
 - *Switch*    
 toggle할 수 있는 switch버튼 위젯. 클릭시마다 switch를 toggle에 UI상에서 보여줘야하므로 현재switch value값 저장할 변수와 stateful 필요.     
 value: bool / UI상 Switch가 표시할 상태(toggle의 on/off값, true면 켜진 switch.)(일반적으로, 따로 선언한 현재 switch값 변수 전달)    
-onChanged: (bool){} / Switch를 눌러서 값을 toggle할때 실행할 함수. 함수의 인자로 변화된 toggle의 value값을 전달해줌.     
+onChanged: (bool){} / Switch를 눌러서 값을 toggle할때 실행할 함수. 함수의 인자로 변화된 toggle의 value값을 전달해줌.    
+activeColor: Color / on되었을때 switch색상 설정.    
 (일반적으로, 함수 body의 setState내부에서 전달받은 bool값을 state내의 변수에 저장. Switch의 value값이 변해 switch re-rendered)      
+
+- *SafeArea*   
+위젯을 감싸 OS 인터페이스 영역(status Bar 등)을 피해서 해당 위젯 생성.     
+ex) cupertinioScaffold의 child부분을 감싸 notch부분 피해 생성.     
+child: Widget
