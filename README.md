@@ -19,7 +19,7 @@ __3. Dart(OOP)__
 
 - *함수, 변수 trl+click : 해당 함수or변수가 포함된 파일 열기*    
 
-- *ctrl + . : 빠른 수정(위젯을 다른 위젯으로 감쌀때)*    
+- *ctrl + . : 빠른 수정(위젯을 다른 위젯으로 감싸거나 custom 위젯으로 추출할때)*    
 
 - *ctrl + space : 입력가능함 named arguments목록 출력*   
 
@@ -45,6 +45,11 @@ Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능
 
 - *_*    
 관용적으로, 함수 호출시 인자로 받지만, 사용안할 변수의 이름으로 _ 사용.   
+
+- *good code*    
+readable / split widgets, use builder method(긴 코드의 자식위젯을 생성하는 함수를 클래스내에 따로 선언해 build에서 호출)              
+performance / use const widget,
+
 
 --------------------------------------------------------------------------------------------------------
 ## Dart
@@ -188,6 +193,10 @@ mode목록을 List로 전달.  DeviceOrientation은 여러 모드를 지정가�
 해당 위젯이 build되는 os에 맞게끔 style이 설정되어 rendering된다. os에 맞게끔 생성하되 특정 부분만 메인 색상 등으로    
 별도로 지정하는 방법도 가능. 가능한 위젯 목록 : switch,      
 
+- *OS != Theme*   
+특정 Theme이 해당 os에서 자주쓰이는 style일 순 있어도, 반드시 IOS에서는 Cupertino 위젯을 써야한다는 것은 아님.    
+말그대로 style이기 때문에, theme은 optional. IOS사용자에게 cupertino가 익숙한 style인 것은 사실.       
+
 - *Platform 참조*    
 dart가 제공하는 'dart:io'를 import하면, 해당 파일이 실행되는 os를 참조할수있는 객체인 Platform에 접근가능.   
 (Platform.)isIOS/isAndroid 등으로 현재 os가 IOS인지 확인 가능. 해당 값들은 bool.        
@@ -199,8 +208,27 @@ dart가 제공하는 'dart:io'를 import하면, 해당 파일이 실행되는 os
 ex) final PreferredSizeWidget appBar = Platform.isIOS? CupertinoNavigationBar() : AppBar(); / appBar.preferredSized 참조가능.   
 
 - *material/Cupertino theme 종속성*   
-mateiral 기반 위젯은 다른 material 위젯만을 조상 위젯으로 가질 수 있음.    
-ex) IconButton은 mateiral디자인으로, cupertino디자인 위젯에서 쓰러면 custon Icon Button을 생성해야함.      
+material 기반으로 작성된 위젯중 일부는 다른 material 위젯만을 조상 위젯으로 가질 수 있음.    
+ex) IconButton은 mateiral디자인으로, cupertino디자인 위젯에서 쓰려면 custon Icon Button을 생성해야함.      
+ex) 반대로, 강제성이 없는 일부 Cupertino위젯을 MaterialApp+ Scaffold에서 사용 가능.   
+
+- *adaptive한 위젯들은 custom으로 관리해 code 간결화*    
+adaptive하게 비슷한 위젯을 여러번 사용할시 매번 ternary expression쓰는 것보다 adaptive custom 위젯 클래스를 만들어 사용.     
+ex) theme에 맞는 flat Button 생성시 매번 os확인하여 생성하는 코드를 복사하는 것보단, adaptive_flat_button클래스를 만들어     
+위젯 내에서 OS를 확인하고 필요한 정보를 받아 버튼을 렌더링하는 것이 코드관리에 효율적.   
+
+- *rebuilding Widget tree는 비효율적이지 않음. How flutter is.*          
+Widget tree는 단순히 configuration tree. render object를 전부 rebuild하는것은 inefficien하지만     
+Widet tree을 rebuild하는 것은 괜찮음. render object는 element를 통해 바뀐 widget을 확인해 rendering 중 바뀐 부분만 수정.    
+그래도, 큰 app에서는 최대한 바뀌는 부분의 위젯 트리만 rebulid하도록 위젯들을 적당히 split하는게 좋음.    
+
+- *const Widget*    
+Widget tree의 모든 위젯은 property가 전부 final이라면 const 생성자를 붙일수 있음. (정확히는 dart의 featurue)    
+(ex) class Abc{ final a; final b; const Abc(this.a,this.b);}) (위젯의 경우 생성이후 변하지 않는 immutable이라는 의미)    
+또한, const 생성자를 가진 클래스는 const 객체를 생성할 수있음. (단, 생성자에 전달할 argument가 dynamic이 아닌 const인 경우.)     
+즉, widget도 const로 생성할 수 있는데, 이런 경우 해당 위젯을 생성하는 부모 위젯가 re-build되더라도, 해당 위젯은 re-build되지 않음.    
+(위젯트리에서 새로 instantiation되지 않음.) 즉, 큰 performance향상은 아니지만, 큰 app에서 사소한 차이는 보일 수 있기때문에,        
+const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추천. app을 완성하고 추가하는 방식으로.       
 
 ----------------------------------------------------------------------------------------------------------------
 
@@ -219,7 +247,7 @@ widget인스턴스를 받아 build를 호출하여 실행해 화면에 띄어주
 Stateful위젯에 대응쌍관계인 class. extends State<StatefulWidget(대응하는 Statefulwidget 객체입력)>로 생성(generic)    
 Stateful위젯이 re-build되어도 객체가 다시생성되지않음. data를 유지하며 Stateful위젯의 상태 저장.   
 값이 변동되는 변수와 위젯의 build함수를 포함. Stateful위젯 첫 생성시뿐만 아니라 state가 변해 UI를 다시 표시할때도 build함수가 실행돼 위젯을 다시 생성.   
-getter인 widget.()로 대응되는 stateful위젯의 멤버에 접근가능.    
+getter인 widget.()로 현재 대응되는 stateful위젯에 접근가능.    
 
 - *Color & Colors*   
 Color / 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
@@ -318,7 +346,7 @@ showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전
 @required lastDate: DateTime / 선택할수 있는 가장 느린 날짜 지정.   
 
 - *MediaQuery*    
-실행되고 있는 device에 대한 정보들을 참조할수 있는 클래스. Theme과 같이 .of(context)로 메타 정보를 사용해 연결.    
+실행되고 있는 device에 대한 정보들을 참조할수 있는 클래스. Theme과 같이 .of(context)로 메타 정보를 사용해 연결하면 MediaQueryData객체 반환.    
 (tip: 한 build내에서 MediaQuery.of(context)를 자주 생성해 참조하는 경우, build함수 내 final로 객체를 생성해 사용하면 performance증가)   
 (MediaQuery.of(context).)size / device의 size를 나타내는 객체. size내에 height,weight등 참조 가능.    
 (tip1: 위젯의 layout을 device에 "Responsive"하게 지정하려면, device의 크기에서 각종 디폴트 크기(상태바 높이, appBar높이)를 빼준 값에    
@@ -331,6 +359,7 @@ showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전
 (MediaQuery.of(context).)viewInsets / device에 종속적인 display에 대한 정보 참조가능. (일반적으로, keyboard에 해당하는 정보)    
 (tip: viewInsets.)bottom을 통해 keyboard가 켜졌을때, keyboard의 길이를 참조할 있음. keyboard가 올라오면 해당 값이 변경.    
 즉, stateful내의 TextField내에서 해당값에 따라 padding을 주도록 설정하면 keyBoard가 올라올때 그에 맞게끔 UI를 변경 가능.)         
+MediaQuery도 object로 MediaQuery를 호출해 참조하는 모든 build는 orientation, viewInsets등이 변하면 re-build.    
 
 - *BoxContstraints*    
 모든 위젯이 가지는 객체로서, 위젯이 redering되는 범위의 constraint에 대한 정보 저장. 
@@ -351,12 +380,16 @@ format은 class내부 메소드. date를 해당 패턴을 가진 String으로 �
 --------------------------------------------------------------------------------------------------------------------------
 ## Widgets   
 
-- *MateriaApp(Cupertino)위젯*    
-app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스턴스화.   
+- *MateriaApp 위젯*    
+app을 Material theme으로 Setup하는 widget,named aurgments를 받아 인스턴스화. 여러 Theme을 지정 가능.     
+이 위젯 트리 내의 위젯들은 해당 theme을 따름.      
 title:    
 theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.    
 (각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
 
+- *CupertinoApp*     
+app을 Cupertino Theme으로 set up     
+theme: CupertinoThemeData /
 
 - *Scaffold*   
 material style의 페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
@@ -410,6 +443,10 @@ onPressed: (){}, icon: Icon(표시될 icon위젯), label: Widget(표시될 label
 배경이 없는 버튼. 나머지는 동일.    
 (FlatButton.)icon() / raisedButton의 icon생성자와 동일. icon+label형태 버튼 생성.    
 
+- *CupertinoButton*    
+cupertino theme의 버튼. default는 flatButton형태.     
+color: Colors / background color 지정. 지정해줄시 raisedButton형태로 표현 가능.     
+
 - *IconButton위젯*   
 icon모양의 버튼.    
 icon : Widget(버튼에 들어갈 icon모양 지정. Icon Widget을 받음.)   
@@ -431,6 +468,10 @@ style : TextStyle(fontSize: 28, fontWeight: Fontweight.bold) (문자의 style결
 (TextStyle은 문자Style의정보들을 담은 class(위젯x), Fontweight은 Font크기 값을 표현하고 static값을 묶어둔 utility class)    
 textAlign: TextAlign.center (문자열의 배치결정. 단, text위젯이 차지하는 공간기준.) (TextAlign은 enum. center,left,right등 포함) //   
 (tip: Text위젯은 UI에서 text크기만큼 공간을 할당받음. 즉, TextAlign.center로 화면 가운데 배치하고싶다면 Text를 Container에 담고 UI공간을 설정해 사용.)    
+Text의 theme의 default는 현재 부모페이지의 theme을 따름. 즉, mateiral App 내에서, cupertinoScaffold를 선언해 Text를 추가하면,    
+부모인 cupertino Theme을 따르므로,  mateirial App내에 설정해둔 theme을 가져오지 못함. 이런 경우, page를 CupertinoApp에 선언하거나,    
+(CupertinoApp의 Theme목록은 mateirial 보다 제한적이므로) material App에 선언하되, text에 직접 style을 Theme.of(context)로 지정.       
+
 
 - *TextField*    
 user로부터 text input을 String으로 입력 받을 수 있는 위젯. 모든 입력은 String. 입력을 숫자로 변경할시 수동변경 필요.      
@@ -444,6 +485,8 @@ controller : TextEditingController(-> keyStroke마다 Field의 입력을 저장�
 (final myController = TextEditingController()처럼 controller객체를 생성해두고 사용!)    
 keyboardType: TextInputType (field를 선택할시 나오는 soft keyboard의 종류 명시. TextInputType은 static값 선언된 class)   
 
+- *CupertinoTextField*   
+placeHolder : / label Text지정    
 
 - *Container위젯*   
 위젯을 담아 UI에 표현시 보이지않는 공간(Layout)관리 및 꾸밈효과를 돕는 위젯. named arguments를 받아 생성.   
