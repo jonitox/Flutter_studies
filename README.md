@@ -296,7 +296,7 @@ getter인 widget.()로 현재 대응되는 stateful위젯에 접근가능.
 Color / 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
 Color.fromRGBO(r,g,b,opacity) / Color 객체를 r,g,b값으로 생성. 직접 색상의 rgb값 찾아서 생성할때 사용.      
 Colors / 여러 Color객체을 static으로 선언해둔 utility class. 즉, 객체화 없이 Colors.black 등으로 여러색의 Color객체 사용 가능.    
-
+(Color.)withOpacity(double) // 해당 Color의 불투명도를 바꾼 Color 반환     
 
 - *rule: lifting state up*    
 서로 다른 위젯에서 한 state를 변경,사용할떄, 그 state를 두 위젯의 부모 위젯에서 관리함. state는 가능한 higest level의 위젯에서 관리.   
@@ -368,8 +368,19 @@ ex) 기본 설정의 textTheme을 수정해서 사용할시, themeData.light().t
 container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.
 border : BoxBoarder / 일반적으로, 상속한 Boarder객체 입력. Boarder의 정보를 다음 class    
 color: Color / 컨테이너의 background color지정.    
-borderRadius: BorderRadiusGeometry / 일반적으로, 상속한 BorderRadius객체 입력. BorderRadius의 정보를 담은 class.    
+borderRadius: BorderRadiusGeometry / 일반적으로, BorderRadius객체 입력. BorderRadius의 정보를 담은 class.   
+(BorderRadius.circular(double), BorderRadius.all(), BorderRadius.vertical(), ...)    
 shape: BoxShape / 컨테이너의 모양 결정 BoxShape은 enum으로 circle, rectangle(default)등 가능.    
+gradient: Gradient / background를 gradient있는 색상으로 지정. 
+
+- *Gradient*    
+gradient를 표현한 객체. 상속하는 여러 class존재.
+LinearGradient( // linear한 gradient생성.    
+colors: List<Color> // gradient하게 표현될 색상들 지정.    
+begin: AlignmentGeometry // 시작 색상 위치 지정. 일반적으로, Alignment객체 사용.    
+end: AlignmentGeomtery // 마지막 색상 위치 지정. Alignment는 여러 static값도 저장되있는 클래스로, Alignment.topLeft 등을 포함.    
+ 
+)    
 
 - *Border*   
 BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표현한 클래스.   
@@ -542,9 +553,10 @@ placeHolder : / label Text지정
 child: Widget (감쌀 위젯),   
 width: double (UI공간에서 할당받을 너비) (tip: double.infinity로 화면상 가능한 최대너비를 할당가능, 다른 UI가 안겹칠때까지),   
 margin: EdgeInsetGeometry (boarder바깥쪽인 margin 설정)   
-(> EdgeInset: 위젯의 margin길이 정보를 표현한 class. 여러 named constructor로 생성 가능. ex) EdgeInset.all(20) :모든방향 20)     
+(> EdgeInset: 위젯의 margin길이 정보를 표현한 class. 여러 named constructor로 생성 가능. ex) EdgeInset.all(20) :모든방향 20)   
+color: Color / 단순 background color지정. 좀더 디테일한 설정 필요시, decoration인자 사용.   
 decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)   
-Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)
+Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
 
 -*Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯.   
@@ -594,6 +606,15 @@ trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정
 
 - *GridView*   
 scrollable + grid. grid형으로 위젯 배치   
+children: [],   
+gridDelegate: SliverGridDelegate // grid의 child간의 layout을 지정하는 deligate설정, SliverGridDelegate은 클래스.        
+SliverGridDelegateWithMaxCrossAxisExtent(  // 그리드의 가로폭을 지정해 설정하는 deligate을 나타내는 SliverGridDelegate 객체.     
+maxCrossAxisExtent : double, // grid의 전체 가로폭 지정.    
+childAspectRatio : double, // 각 child위젯의 세로/가로 비율 지정.    
+crossAxisSpacing : double, // 인접한 child간 가로(?) 거리.   
+mainAxisSpacing : double, // 인접한 child간 세로 거리.   
+)
+
 
 - *GestureDetector*    
 감싼 위젯에 발생하는 User input을 제어하기 위한 위젯.   
@@ -675,3 +696,5 @@ activeColor: Color / on되었을때 switch색상 설정.
 위젯을 감싸 OS 인터페이스 영역(status Bar 등)을 피해서 해당 위젯 생성.     
 ex) cupertinioScaffold의 child부분을 감싸 notch부분 피해 생성.     
 child: Widget
+
+
