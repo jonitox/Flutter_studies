@@ -396,8 +396,9 @@ BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표�
 Border.all() / Border의 named생성자. color, width등 지정 가능. border의 모든 방향으로 같은 값 적용.   
  
 - *BorderRadius*   
-BoxDecoration의 bolderRadius 인자로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
-BorderRadius.circular(double) / BorderRadius의 named생성자, 반지름 값을 지정해 원형의 곡면 반지름 지정 가능.    
+BoxDecoration의 bolderRadius 인자 등으로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
+BorderRadius.circular(double) / BorderRadius의 named생성자, 반지름 값을 지정해 원형의 곡면 반지름 지정 가능.      
+BorderRadius.all() //
 
 - *showDatePicker() -> future<DateTime>*    
 현재 화면에서 달력의 날짜를 선택할수 있는 overlay창(datePicker)을 띄워주는 flutter내의 함수. (다른 package?)       
@@ -689,11 +690,13 @@ borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 �
 
 - *Image*     
 Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성.   
-(Image.)asset('파일경로 및 이름', fit: BoxFit.cover) / pubspec.yaml에 명시된 asset 내의 파일인 경우.   
-(Image.)network() / 웹상의 이미지를 가져올 경우.   
+(Image.)asset('파일경로 및 이름', height:200, width:double.infinity,fit: BoxFit.cover) / pubspec.yaml에 명시된 asset 내의 파일인 경우.   
+(Image.)network(String, fit: ,fit: BoxFit.cover) / 웹상의 이미지를 가져올 경우. positional 인자로 Url(String)입력      
 (Image.)file() / file에서 stream을 가져오는 경우?    
 각 constructor내의 name argument   
-fit: BoxFit / 이미지가 (크기가 define된 부모위젯)Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
+fit: BoxFit / 이미지가 Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
+(Box는 image에 지정된 height,width거나 미지정시 크기가 define된 부모위젯)         
+
 
 - *sizedBox*   
 특정 크기의 layout을 줄때 사용하는 위젯. child를 가질수 있지만(container처럼 작동), child없이 크기를 줘서 공백을 줄때 자주 사용.    
@@ -757,4 +760,8 @@ activeColor: Color / on되었을때 switch색상 설정.
 ex) cupertinioScaffold의 child부분을 감싸 notch부분 피해 생성.     
 child: Widget
 
+- *ClipRRect*    
+위젯을 감싸 rounded-rectangle형태의 clip으로 강제 하는 위젯. image등이 (별도의 shape 인자를 지정할 수 없는 위젯) rounded하게끔 변형할때 사용.    
+child: Widget    
+borderRadius: BorderRadius // 각 원형 모서리의 반지름 지정.
 
