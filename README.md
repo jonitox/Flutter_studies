@@ -118,7 +118,11 @@ tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List�
 
 - *(List).where((var)->bool)*   
 현 List의 특정조건을 만족하는 원소들만 iterable을 생성해 반환하는 메소드.   
-인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument에 기존 List의 각 원소 전달. 이 함수의 return값이 true인 원소들로만 채움.     
+인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument(var)에 기존 List의 각 원소 전달. 이 함수의 return값이 true인 원소들로만 채움.     
+
+- *(List).contains(Object)*     
+현 리스트내에 특정 원소(Object)가 있는지 확인해주는 bool 반환 메소드.     
+리스트 내에 인자로 전달한 Object와 같은 객체가 있다면 true반환. 없으면 false반환.    
 
 - *(List.)removeWhere((var)->bool)*   
 현 리스트의 원소들중 특정 조건을 만족하는 원소를 지우는 메소드(남은 원소들은 다시 첫원소부터 인접하게 채워짐.)    
@@ -458,6 +462,13 @@ fullScreenDialog: bool // 페이지를 디폴트값인 slide 애니메이션으�
 ex)MaterialPageRoute(builder: (ctx) { return CategoryMealsScreen(id,title); }, ),
 (불러올 새로운 페이지의 생성자를 통해 데이터도 전달 가능.)    
 
+- *ShapeBorder*    
+card의 shape인자로 들어가는 Border의 shape에 대한 정보를 표현한 클래스.    
+RoundedRectangleBorder( // 모서리가 둥근 shape을 나타내는 일종의 shapeBorder클래스.     
+borderRadius : BorderRadiusGeometry // 각 모서리의 반지름 지정.    
+),     
+
+
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
 - *intl*   
@@ -477,11 +488,18 @@ app을 Material theme으로 Setup하는 widget,named aurgments를 받아 인스�
 title:    
 theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.    
 (각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
-home: Widget / app의 첫화면으로 띄어질 스크린(위젯) 지정.
+home: Widget / app의 첫화면으로 띄어질 스크린(위젯) 지정.    
 routes: Map<String,WidgetBuilder> // 라우팅할 페이지들의 목록및 builder를 지정된 name으로 참조할수있도록 목록 생성.     
+initialRoute: String // app의 첫화면으로 띄어질 스크린을 라우팅name으로 지정.(home과 동일, default는 '/')     
 (WidgetBuilder는 (BuildContext)=>Widget 형태의 위젯 생성함수.) (Naviagor의 pushNamed에서 이름으로 참조될때 사용.)         
-ex) routes: { '/category-meals': (ctx) => CategoryMealsScreen(), },    
-  
+ex) routes: {'/': (ctx)=>CategoriesScreen(), '/category-meals': (ctx) => CategoryMealsScreen(),  },    
+(모든 name을 사용자지정. 단, '/'는 initialRoute에서 default로 사용되는 첫화면의 위젯의 이름.)       
+(tip: 모든 이름은 '/../'처럼 web의 convention을  자주 사용. 이때, 해당 이름들을 호출시 미세한 오타방지를 위해,     
+각 라우팅의 이름을 해당 위젯 클래스 내에 static const로 선언하여, 클래스에 직접 접근해 이름을 참조해 호출 가능.     
+ex) 페이지 위젯 내에, static const routeName = '/category-meals'; 선언 후, (모든 라우팅 이름을 클래스의 routeName으로 참조)      
+route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(),},로 테이블 작성,    
+pushNamed(CategoryMealsScreen.routeNamed), 로 페이지 생성.     
+
 
 - *CupertinoApp*     
 app을 Cupertino Theme으로 set up     
@@ -525,8 +543,8 @@ crossAxisAlignment: CrossAxisAlignment, (각 child의 corssAxis상에서의 배�
 (CrossAxisAlignment./ end: 오른쪽끝, stretch: column의 너비만큼 늘여서 채워 배치.(child가 card등이면 너비를 define해줄수있음.))   
 mainAxisSize:  MainAxisSize / mainAxis의 Size 지정. MainAxisSize는 enum으로 max(double.infinity)와 min(children에 fit) 존재.     
  
- -*Flexible/Expanded*   
-   Column/Row의 child를 warp하여 위젯간 차지하는 공간 등 지정 가능.    
+ -*Flexible/Expanded*    
+ Column/Row의 child를 warp하여 위젯간 차지하는 공간 등 지정 가능.    
    
  - *RaisedButton위젯*   
 버튼을 생성하는 위젯
@@ -607,6 +625,8 @@ child : Widget(감쌀위젯)
 elevation: double (shadow의 세기 조절)     
 color: Color(background color지정)   
 margin: EdgeInsetsGeometry (위젯 margin지정)   
+shape: ShapeBorder // Card의 shape지정. ShapeBorder는 Border의 모양을 지정할 수 있는 객체.    
+
 
 - *Center위젯*   
 자식위젯을 자신이 차지하는 공간 가운데에 배치하는 layout위젯. named arguments를 받아 생성.   
