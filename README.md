@@ -268,6 +268,10 @@ item에 직접 해당하는 topmost의 stateful위젯의 생성자에 전달받�
 각 item에 다시 새로운 key를 입력하므로, element들이 기존에 대응되는 위젯을 찾지못해, 새로운 위젯을 매번 다시 생성.       
 따라서, ValueKey(..)를 씀. ValueKey의 인자로는 unique한 key인 id등을 쓰면 유용.     
  
+ - *pages as a stack*    
+ page들은 stack으로 관리됨. topmost Page가 화면에 표시. stack은 현 페이지에서 push(), pop() 등으로 관리.          
+push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, topmost페이지에 뒤로가기버튼 자동생성.       
+
 ----------------------------------------------------------------------------------------------------------------
 
 ## Function, Class, Rules  
@@ -354,6 +358,7 @@ Material App의 Theme에 대한 정보를 저장하는 클래스. material Theme
 primaryColor: Color / theme의 default로 쓰일 color. 다른 위젯에서 이 색상만 지정가능.    
 primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으로 사용. 위젯에서 theme색 참조시 여러버전으로 참조가능.     
 accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
+canvasColor: Color /    
 errorColor: Color / 에러에 쓰일 색상 지정. default는 red.   
 fontFamiliy: String / app의 global폰트family 지정     
 textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
@@ -426,6 +431,32 @@ Height은 minHeight, maxHeight를 가지며, 해당 범위 내에서 rendering �
 UniqueKey() / 매 호출시 unique한 key생성.      
 ValueKey(String) / String에 따라 서로 다른 key생성. String이 다르면 다른 key가 생성됨.     
 
+- *Navigator*    
+flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리의 구조를 알기 위해 Navigator.of(context)로 호출.     
+(Navigator.of(ctx).)push(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음.
+(Navigator.of(ctx).)pushReplancement(Route) // 현 스크린을 스택에서 제거하며 다른 페이지를 추가 및 이동.
+(Navigator.of(ctx).)pushNamed(String, aruments: Object) // 다른페이지의 라우팅을 미리 선언해놓은 이름으로 참조해 추가 및 이동.    
+
+- *Navigator:pushNamed*
+arguments: String
+Navigator의 pushNamed로 페이지를 라우팅할시, 같이 전달할 객체들을 명시 가능.(list,map 등)      
+(일반적으로, app(main.dart)의 routes에 각 이름으로 선언해놓은 페이지 builder들은 생성할 위젯의 생성자에 전달할값을 미리 알수가 없으므로,    
+해당 페이지 생성시 생성자를 사용해 값을 받지않고, 해당페이지를 생성하는 pushNamed 함수와 argument를 통해 값을 전달받는다.)       
+이때, 각 페이지 위젯에서는, MordalRoute객체를 통해 페이지를 라우팅하며 전달된 argument을 저장해 사용.     
+
+- *MordalRoute*     
+ 현위젯(페이지)의 라우팅정보를 참조할수있는 클래스. 현 위젯의 정보를 알기위해 Mordal.of(context)로 사용.     
+ MordalRoute.of(ctx).settings.arguments // 현 페이지 라우팅시에 같이 전달된 세팅 중 argument의 값 참조.    
+ pushNamed로 해당 페이지가 생성되고 argument로 필요한 데이터가 전달된 경우 MordalRoute를 사용해 데이터를 저장할 수 있음.     
+ ex) 위젯의 build내에서, final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>; 
+ (arguments는 일반 Object로 특정 type만 전달할시, 해당 type을 알수있게끔 따로 명시)       
+ 
+- *Route*    
+새로운 스크린 위젯(페이지)를 빌드해주는 클래스. MaterialPageRoute, CupertinoPageRoute 등이 있음.    
+builder: (BuildContext ctx) => Widget // 빌드할 위젯(페이지)을 반환하는 함수인 builder 지정. 빌더에 현위젯의 ctx를 자동으로 전달.   
+fullScreenDialog: bool // 페이지를 디폴트값인 slide 애니메이션으로 불러올지, 전체화면에 바로 띄울지를 결정.     
+ex)MaterialPageRoute(builder: (ctx) { return CategoryMealsScreen(id,title); }, ),
+(불러올 새로운 페이지의 생성자를 통해 데이터도 전달 가능.)    
 
 -------------------------------------------------------------------------------------------------------------------------
 ## Packages   
@@ -446,15 +477,20 @@ app을 Material theme으로 Setup하는 widget,named aurgments를 받아 인스�
 title:    
 theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.    
 (각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
+home: Widget / app의 첫화면으로 띄어질 스크린(위젯) 지정.
+routes: Map<String,WidgetBuilder> // 라우팅할 페이지들의 목록및 builder를 지정된 name으로 참조할수있도록 목록 생성.     
+(WidgetBuilder는 (BuildContext)=>Widget 형태의 위젯 생성함수.) (Naviagor의 pushNamed에서 이름으로 참조될때 사용.)         
+ex) routes: { '/category-meals': (ctx) => CategoryMealsScreen(), },    
+  
 
 - *CupertinoApp*     
 app을 Cupertino Theme으로 set up     
 theme: CupertinoThemeData /
 
 - *Scaffold*   
-material style의 페이지 Setup(스타일링) 위젯, 배경 색 등 지정 가능.      
-appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)
-body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)   
+material style의 페이지 Setup(스타일링)을 도와주는 스크린 위젯, 배경 색 등 지정 가능.      
+appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)     
+body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)       
 floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
 
@@ -617,13 +653,17 @@ mainAxisSpacing : double, // 인접한 child간 세로 거리.
 
 
 - *GestureDetector*    
-감싼 위젯에 발생하는 User input을 제어하기 위한 위젯.   
+감싼 위젯에 발생하는 User input(tap, double tap, ..)을 제어하기 위한 위젯.       
 behavior: HitTestBehavior (특정 동작을 제어하기위해 필수?)
 onTap: (){}
 child: Widget / 감쌀 위젯   
 tip: GestureDetector를 사용하여 custom Button 위젯 생성 가능. child를 버튼모양, onTap을 listner로 구성     
 
 - *InkWell*   
+GestureDetector + riffle effect
+onTap: (){} //   
+splashColor: Color // 물결의 색깔   
+borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 있다면, 값을 똑같이 지정해주면 같은 형태의 물결 생성.       
 
 - *dedicated padding()*
 
