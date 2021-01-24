@@ -285,7 +285,22 @@ item에 직접 해당하는 topmost의 stateful위젯의 생성자에 전달받�
  
  - *pages as a stack*    
  page들은 stack으로 관리됨. topmost Page가 화면에 표시. stack은 현 페이지에서 push(), pop() 등으로 관리.          
-push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, topmost페이지에 뒤로가기버튼 자동생성.       
+push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, topmost페이지에 뒤로가기버튼 자동생성.(버튼은 단순 Navigator.of(context).pop()실행)          
+
+- *initState & context*    
+staeful위젯의 state를 처음 생성시 필요한 변수의 초기화를 initState내에서 진행하는 경우.    
+(생성자가 아니라, initState에서 초기화할 필요가 있는 경우, 예를들어, mordalRoute.of(context)로 argument를 받아 스크린 생성하는데,    
+argument로 state내의 변수를 build함수 내에서 초기화하지않고(stateful이라서), 첫 위젯 생성시에 한번만 초기화하고 싶은 경우)    
+해당 초기화에 위젯의 context값을 사용한다면, error발생. 그 이유는, initState가 state위젯이 fully create되기 전(context가 생성되기 전)에 실행되기 떄문.     
+해결법: didChangeDependencies에서 초기화    
+state처음 생성시 필요하나 변수를 initState가 아닌 didChangeDependencies에서 초기화(모든 변수(context포함)가 초기화되었을때마다 호출되므로).      
+단, didChangeDependencies는 매 state dependency가 변할때마다 호출되므로, state의 생존 동안 초기화를 매번 진행하지않기 위해,    
+bool _loadedInitData =false; 와 같이 bool면수를 사용. didChangeDependencies내에서 _loadedInitData가 false일때만 초기화를 진행하고 bool값을 true로 바꾸고,    
+그 이후에 다시 호출되더라도, bool값이 true이므로 초기화를 진행하지않도록 구현.       
+
+
+- *didChangeDependencies*    
+sateful위젯의 state객체의 dependency(reference)가 변할때마다 호출되는 함수. state내 모든 위젯 및 변수가 처음 initialized되었을 때도 호출.    
 
 
 ----------------------------------------------------------------------------------------------------------------
@@ -453,6 +468,13 @@ flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리
 (Navigator.of(ctx).)push(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음.     
 (Navigator.of(ctx).)pushReplancement(Route) // 현 스크린을 스택에서 제거하며 다른 페이지를 추가 및 이동.(즉, 이전화면으로 갈수없음. login page->main page이동 같은 경우 사용)     
 (Navigator.of(ctx).)pushNamed(String, aruments: Object) // 다른페이지의 라우팅을 미리 선언해놓은 이름으로 참조해 추가 및 이동.    
+(모든 push함수는 future객체를 반환. 즉, 해당 push가 종료된 이후(push만이 아니라 추가된 페이지가 종료되어 현재 페이지로 돌아오는것까지.) 실행할 루틴을 지정 가능.)      
+(Navigator.of(ctx).)pop(Object) // 현재 페이지를 스택에서 제거. 이전 페이지(현재 페이지를 push한)를 다시 띄움.     
+(dialog나 modalSheet과 같은 스크린에서도 pop으로 탈출 가능. 두 경우 모두 내부적으로 스크린으로 다뤄짐.)     
+(이때 이전 페이지로 돌아가는 과정에서 Object전달 가능. 해당 Object는 이전페이지의 push에서 생성한 future객체의 then()으로 받을수 있음.     
+ex) 이전페이지에서 push시 pushNamed(..).then ((ret){});로 push가 완전히 끝난후(pop된 후), ret(Object)를 받아 실행할 함수 명시 가능.    
+해당 함수에 pop의 object전달. pop으로부터 전달된 객체가 없다면(단순 back버튼과 같이), ret == null. 여러 경우가 있다면, 함수내에 필요한 logic구현.)           
+(Navigator.of(ctx).)canPop() -> bool // 현재 페이지를 pop할수있는지를 반환. 즉, 현재 페이지 말고 밑에 다른 페이지가 남아있는지 확인가능.    
 
 - *Navigator:pushNamed*
 pushNamed(String,arguments: Object)    
