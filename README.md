@@ -37,7 +37,7 @@ Repaint Rainbow: UI상에서 위젯이 repaint되면 rainbow색상순으로 표�
 Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능   
       
  - *file per widget*   
- 관용적으로 1위젯당 1파일(무조건 같이쓰는경우 등은 예외)쓰는게 권장.   
+ 관용적으로 1위젯당 1파일(무조건 같이쓰는 위젯끼리는 1파일에 묶어도 괜찮음.)쓰는게 권장.   
  복잡합 위젯일수록 한 파일&클래스로 묶어 한 위젯으로 만들어 관리하는게 유리.   
 
 - *secreen상 노란색bar error*   
@@ -50,6 +50,10 @@ Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능
 readable / split widgets, use builder method(긴 코드의 자식위젯을 생성하는 함수를 클래스내에 따로 선언해 build에서 호출, 비슷한 위젯을 여러번 만들때도 유용)                   
 performance / use const widget,
 
+- *split Widgets vs use Builder method* (정확히 예를들면?)        
+한 위젯 내에서 긴 코드의 자식 위젯을 분리하거나, 클래스 내에 builder method를 쓰는 것은 큰 차이는 없음.    
+다만, 만일, 해당 자식 위젯이, state나 theme,mediaQuery 등을 변경해, 다시 build된다면, 해당 위젯만 다시 build되는(부모 위젯 build는 호출하지않음.)    
+split Widgets가 builder함수 사용보다 좀더 optimize가능함.    
 
 --------------------------------------------------------------------------------------------------------
 ## Dart
@@ -283,6 +287,7 @@ item에 직접 해당하는 topmost의 stateful위젯의 생성자에 전달받�
  page들은 stack으로 관리됨. topmost Page가 화면에 표시. stack은 현 페이지에서 push(), pop() 등으로 관리.          
 push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, topmost페이지에 뒤로가기버튼 자동생성.       
 
+
 ----------------------------------------------------------------------------------------------------------------
 
 ## Function, Class, Rules  
@@ -445,8 +450,8 @@ ValueKey(String) / String에 따라 서로 다른 key생성. String이 다르면
 
 - *Navigator*    
 flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리의 구조를 알기 위해 Navigator.of(context)로 호출.     
-(Navigator.of(ctx).)push(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음.
-(Navigator.of(ctx).)pushReplancement(Route) // 현 스크린을 스택에서 제거하며 다른 페이지를 추가 및 이동.
+(Navigator.of(ctx).)push(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음.     
+(Navigator.of(ctx).)pushReplancement(Route) // 현 스크린을 스택에서 제거하며 다른 페이지를 추가 및 이동.(즉, 이전화면으로 갈수없음. login page->main page이동 같은 경우 사용)     
 (Navigator.of(ctx).)pushNamed(String, aruments: Object) // 다른페이지의 라우팅을 미리 선언해놓은 이름으로 참조해 추가 및 이동.    
 
 - *Navigator:pushNamed*
@@ -525,7 +530,8 @@ appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지�
 body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)       
 floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
-bottomNavigationBar: BottomNavigationBar // 화면 하단에 표시될 NavigationBar(TabBar)지정. 하단 tab구성시 사용.    
+bottomNavigationBar: BottomNavigationBar // 화면 하단에 표시될 NavigationBar(TabBar)지정. ((하단 tab스타일 구성시 사용.)    
+drawer: Widget // 화면 왼쪽(or오른쪽)에 숨겨져있다가 표시될 위젯(일반적으로, Drawer)명시. Drawer사용시, appBar에 drawer(햄버거)버튼 생성.     
 
 - *CupertinoPageScaffold*
 cupertino style 페이지 Setup 위젯   
@@ -539,7 +545,7 @@ scaffold의 AppBar로 지정할수 있는 material 위젯.
 title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
 actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
 (Appbar.)preferredSize / appBar의 크기를 저장해놓은 객체. (preferredSize.)height으로 appBar의 높이 참고가능.
-bottom: PreferredSizedWidget // AppBar의 title밑 하단부분에 들어갈 위젯 명시. 일반적으로, tabBar(안드로이드 스타일의 탭 구성)     
+bottom: PreferredSizedWidget // AppBar의 title밑 하단부분에 들어갈 위젯 명시. 일반적으로, tabBar(안드로이드 스타일의 탭 구성시)     
 
 - *CupertinoNavigationBar*   
 cupertinoScaffold의 navigationBar로 지정할 수 있는 위젯.    
@@ -630,6 +636,7 @@ margin: EdgeInsetGeometry (boarder바깥쪽인 margin 설정)
 color: Color / 단순 background color지정. 좀더 디테일한 설정 필요시, decoration인자 사용.(decoration의 color와 동일, decoration이 있다면 에러발생.)         
 decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)    
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
+alignment: AlignmentGeometry // child의 
 
 -*Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
@@ -836,3 +843,8 @@ title: Text // tab버튼에 표시되는 title(일반적으로, text)
 backgroundColor: Color // 버튼의 bacgkround Color지정.(일반적으로 tab의 bg색은 네비게이션바의 bg색을 따르지만,      
 바의 type이 shift면, 버튼색이 표시되므로 따로 명시 필요.)      
 
+- *Drawer*    
+scaffod의 drawer인자에 사용되는 drawer위젯 클래스.    
+child: Widget // drawer에 표시될 위젯.(ex)여러 개의 링크 목록을 배치시, 여러 ListTile(onTap 포함, drawer에 적절한 스타일)을    
+자식위젯으로 하는 Column을 사용 가능, onTap에서 navigator로 페이지 이동.)            
+elevation: double // drawer 뒤의 backdrop(어두워지는 배경)의 정도 지정.      
