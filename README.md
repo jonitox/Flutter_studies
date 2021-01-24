@@ -793,7 +793,8 @@ color: Color //
 - *DefaultTabController*    
 Tab screen을 컨트롤하는 위젯. child로 screen위젯(scaffold등)을 가짐. screen내의 TabBar()와 TabBarView()간의 작동을 조절.       
 Screen내의 TabBar와 TabBarView와 자동적으로 연결되어, TabBar에 선택된 tab에 따라 TabBarView의 child중 하나를 선택.     
-(일반적으로 컨트롤러가 screen을 감싸고, TabBar는 AppBar의 bottom에, TabBarView는 scaffold의 body에 사용.)(stateful,stateless 모두에서 사용 가능.)    
+(일반적으로 컨트롤러가 screen을 감싸고, TabBar는 AppBar의 bottom에, TabBarView는 scaffold의 body에 사용하는 안드로이드스타일 탭 구성.)      
+(stateful,stateless 모두에서 사용 가능.)    
 length: int // screen내의 tab수 명시. 해당 값은 TabBar.tabs와 TabBarView.children의 길이와 같아야함.     
 child: Widget // 감쌀 tab을 포함하는 screen위젯.     
 
@@ -811,3 +812,19 @@ TabBar와 연동하여, 각 tab이 선택되었을때 표시할 페이지뷰(혹
 children: List<Widget> // 페이지로 표시될 위젯의 List. 길이가 controller의 length값과 같아야함.     
  (TabBarView가 scaffold의 body로 들어가는 일반적인 경우, 각 child는 (scaffold와 같은) 페이지가 아니어도 가능. body부분에 들어갈 위젯이면 충분.)           
  
+
+- *BottomNavigationBar*     
+scaffold의 BottomNavigationBar에 들어가는 일종의 TabBar위젯. 아래쪽탭 스타일을 구성할때 사용.      
+NavigtaionBar를 이용하여 tab_screen을 구성하는 경우, screen을 수동으로(onTap) 바꾸기위해 반드시 stateful위젯에서 사용해야함.    
+items: List<BottomNavigationBarItem> // tab의 각 버튼 리스트.    
+onTap : (int){} // 각 tab버튼이 눌렸을때 호출하는 함수 명시. 눌려진 버튼의 index를 함수에 전달함. 이 함수에서 setState를 호출해 화면을 바꿔줌.    
+ (ex) void _selectPage(int index) { setState(() { _selectedPageIndex = index;}); }를 onTap에 명시,    
+ final _pages = [Screen1(),Screen2()];와 같이 page에 들어갈 위젯 목록을 미리 선언해두고, scaffold의 body에 _pages[_selectedPageIndex]로 선언하면,    
+ 자동으로, 화면이 tab될떄마다 rendering되어짐.  )     
+currentIndex: int // 눌려진 버튼의 index를 명시. (일반적으로, 버튼의 index를 저장하는 변수를 생성해두고,     
+ Tab될때마다(state이 바뀔때마다) 변화된 index를 명시해줘야, navigationBar도 해당 index의 tab이 눌려진 상태를 표시해줌.)     
+(un)selectedItemColor : Color // (미)선택된 아이템의 색깔 지정.    
+(un)selectedFontSize : double // (미)선택된 아이템의 폰트사이즈 지정.    
+ type: BottomNavigationBarType // 네비게이션 바의 타입 지정. BottomNavigationBarType는 enum으로 default는 fixed(버튼들이 고정.). 이 외에 shifting(누르는쪽으로 shift, 나머지는 아이콘만.) 등 존재.      
+ 
+ - *BottomNavigationBarItem*      
