@@ -47,7 +47,7 @@ Performance/memory: 퍼포먼스, 메모리 사용량 등 확인 가능
 관용적으로, 함수 호출시 인자로 받지만, 사용안할 변수의 이름으로 _ 사용.   
 
 - *good code*    
-readable / split widgets, use builder method(긴 코드의 자식위젯을 생성하는 함수를 클래스내에 따로 선언해 build에서 호출)              
+readable / split widgets, use builder method(긴 코드의 자식위젯을 생성하는 함수를 클래스내에 따로 선언해 build에서 호출, 비슷한 위젯을 여러번 만들때도 유용)                   
 performance / use const widget,
 
 
@@ -78,6 +78,8 @@ ex) class AAA { String name; int age; AAA({this.name, this.age}); }
 - *map method*   
 
 - *getter/setter*   
+getter // 클래스 내에서, 변수를 이용해 특정 값들을 도출해 반환할시. (ex) enum변수를 적절한 String으로 변환할때 등)     
+
 
 - *...*   
 List b; List a = [1,2, ...b]; : b의 각원소를 나누어 a에 이어 붙임. (List a = [1,2,b] : b가 nested list로 선언됨)   
@@ -119,6 +121,11 @@ tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List�
 - *(List).where((var)->bool)*   
 현 List의 특정조건을 만족하는 원소들만 iterable을 생성해 반환하는 메소드.   
 인자로 (var)-> bool의 함수를 받음. 받은 함수의 argument(var)에 기존 List의 각 원소 전달. 이 함수의 return값이 true인 원소들로만 채움.     
+
+- *(List.)firstWhere((var)->bool)*    
+현 List의 원소들 중 특정 조건을 만족하는 순서상에서 첫 원소를 반환하는 메소드.     
+전체원소 중 특정 조건을 만족하는 여러 원소 중 하나만 찾거나, 딱 하나의 특정 원소만 찾을 때 유용       
+(var)->bool의 함수를 받음. 함수의 argument로 각 원소 전달. 해당 함수의 return값이 true인 첫 원소를 반환.    
 
 - *(List).contains(Object)*     
 현 리스트내에 특정 원소(Object)가 있는지 확인해주는 bool 반환 메소드.     
@@ -443,17 +450,18 @@ flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리
 (Navigator.of(ctx).)pushNamed(String, aruments: Object) // 다른페이지의 라우팅을 미리 선언해놓은 이름으로 참조해 추가 및 이동.    
 
 - *Navigator:pushNamed*
-arguments: String
-Navigator의 pushNamed로 페이지를 라우팅할시, 같이 전달할 객체들을 명시 가능.(list,map 등)      
+pushNamed(String,arguments: Object)    
+미리 선언해놓은 빌더 name으로 라우팅(materialApp(cupertinoApp)의 routes테이블에 선언.)     
+Navigator의 pushNamed로 페이지를 라우팅할시, 같이 전달할 객체들을 명시 가능.(list,map 등)        
 (일반적으로, app(main.dart)의 routes에 각 이름으로 선언해놓은 페이지 builder들은 생성할 위젯의 생성자에 전달할값을 미리 알수가 없으므로,    
-해당 페이지 생성시 생성자를 사용해 값을 받지않고, 해당페이지를 생성하는 pushNamed 함수와 argument를 통해 값을 전달받는다.)       
+pushNamed로 해당 페이지 생성시 생성자를 사용해 값을 받지않고, 해당페이지를 생성하는 pushNamed 함수와 argument를 통해 값을 전달받는다.)       
 이때, 각 페이지 위젯에서는, MordalRoute객체를 통해 페이지를 라우팅하며 전달된 argument을 저장해 사용.     
 
 - *MordalRoute*     
  현위젯(페이지)의 라우팅정보를 참조할수있는 클래스. 현 위젯의 정보를 알기위해 Mordal.of(context)로 사용.     
  MordalRoute.of(ctx).settings.arguments // 현 페이지 라우팅시에 같이 전달된 세팅 중 argument의 값 참조.    
  pushNamed로 해당 페이지가 생성되고 argument로 필요한 데이터가 전달된 경우 MordalRoute를 사용해 데이터를 저장할 수 있음.     
- ex) 위젯의 build내에서, final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>; 
+ ex) 위젯의 build내에서(항상?), final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>; 
  (arguments는 일반 Object로 특정 type만 전달할시, 해당 type을 알수있게끔 따로 명시)       
  
 - *Route*    
@@ -491,15 +499,20 @@ theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.
 (각 위젯들에서 app의 theme을 적용할때 Theme.of(context).(..)로 참조해서 쉽게 main Theme을 사용.)      
 home: Widget / app의 첫화면으로 띄어질 스크린(위젯) 지정.    
 routes: Map<String,WidgetBuilder> // 라우팅할 페이지들의 목록및 builder를 지정된 name으로 참조할수있도록 목록 생성.     
-initialRoute: String // app의 첫화면으로 띄어질 스크린을 라우팅name으로 지정.(home과 동일, default는 '/')     
+initialRoute: String // app의 첫화면으로 띄어질 스크린을 라우팅name으로 지정.(home과 동일, default는 '/'.)             
 (WidgetBuilder는 (BuildContext)=>Widget 형태의 위젯 생성함수.) (Naviagor의 pushNamed에서 이름으로 참조될때 사용.)         
 ex) routes: {'/': (ctx)=>CategoriesScreen(), '/category-meals': (ctx) => CategoryMealsScreen(),  },    
 (모든 name을 사용자지정. 단, '/'는 initialRoute에서 default로 사용되는 첫화면의 위젯의 이름.)       
 (tip: 모든 이름은 '/../'처럼 web의 convention을  자주 사용. 이때, 해당 이름들을 호출시 미세한 오타방지를 위해,     
 각 라우팅의 이름을 해당 위젯 클래스 내에 static const로 선언하여, 클래스에 직접 접근해 이름을 참조해 호출 가능.     
 ex) 페이지 위젯 내에, static const routeName = '/category-meals'; 선언 후, (모든 라우팅 이름을 클래스의 routeName으로 참조)      
-route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(),},로 테이블 작성,    
-pushNamed(CategoryMealsScreen.routeNamed), 로 페이지 생성.     
+route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(),},로 테이블 작성, pushNamed(CategoryMealsScreen.routeName), 로 페이지 생성.)      
+onGenerateRoute: (RouteSettings) =>Route // app내에서 pushNamed로 라우팅 시도 시, route테이블에 없는 이름으로 라우팅하는 경우 실행되는 네비게이션 액션 명시.     
+(해당 라우팅 시도의 setting을 인자로 전달. 실행할 라우팅객체를 반환. 라우팅테이블이 app사용 동안 dynamic하게 변경 및 결정되는 경우 등에 사용 가능.)     
+onUnknownRoute: (RouteSettings)=>Route // 모든 다른 알수 없는 라우팅에 대해 실행할 라우팅 명시.            
+(invalid한 라우팅이거나 pushNamed로 테이블에 없는 이름으로 라우팅하는데, onGenerateRoute가 명시되있지않는 경우 등.)       
+(일반적으로, web의 존재하지 않는페이지 접속 등의 fallback을 처리하는 것과 비슷한 역할. 에러페이지를 보여주거나, 초기화면으로 돌려줄수있음.)          
+( ex) onUnknownRoute: (settings) { return MaterialPageRoute( builder: (ctx) => CategoryMealsScreen(),  ); }, )    
 
 
 - *CupertinoApp*     
@@ -525,6 +538,7 @@ scaffold의 AppBar로 지정할수 있는 material 위젯.
 title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
 actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
 (Appbar.)preferredSize / appBar의 크기를 저장해놓은 객체. (preferredSize.)height으로 appBar의 높이 참고가능.
+bottom: PreferredSizedWidget // AppBar의 title밑 하단부분에 들어갈 위젯 명시. 일반적으로, tabBar(안드로이드 스타일의 탭 구성)     
 
 - *CupertinoNavigationBar*   
 cupertinoScaffold의 navigationBar로 지정할 수 있는 위젯.    
@@ -586,6 +600,9 @@ textAlign: TextAlign.center (문자열의 배치결정. 단, text위젯이 차�
 Text의 theme의 default는 현재 부모페이지의 theme을 따름. 즉, mateiral App 내에서, cupertinoScaffold를 선언해 Text를 추가하면,    
 부모인 cupertino Theme을 따르므로,  mateirial App내에 설정해둔 theme을 가져오지 못함. 이런 경우, page를 CupertinoApp에 선언하거나,    
 (CupertinoApp의 Theme목록은 mateirial 보다 제한적이므로) material App에 선언하되, text에 직접 style을 Theme.of(context)로 지정.       
+softWrap: bool // text가 지정된 라인(가로길이)을 벗어나면, 줄바꿈을할지 여부.    
+overflow: TextOverFlow // text가 할당된 공간보다 길어질때 overflow를 어떻게 처리할지 결정.    
+(TextOverFlow는 enum으로 ellipsis(...표기), clip(자름), fade(끝부분 fade처리) 등 존재)    
 
 
 - *TextField*    
@@ -614,9 +631,12 @@ decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
 
 -*Stack위젯*   
-여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯.   
+여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
 children: [] / 포갤 위젯목록 지정. 첫번째 원소가 가장 아래에 배치.   
 
+- "Positioned위젯"    
+Stack내에서만 사용할 수 있는 위젯으로, 감싼 위젯이 전체 Stack 공간 내에서 특정 위치에 배치될수 있게 돕는 위젯.     
+top(bottom,right,left): double // 전체 stack 기준으로 위(아래,오른쪽,왼쪽)로부터 얼만큼 떨어져있는지 지정.     
 
 - *Card위젯*   
 위젯을 담아 shadow를 주어 배치하는 content container위젯. UI공간은 default로 child크기만큼 할당. 
@@ -765,3 +785,29 @@ child: Widget
 child: Widget    
 borderRadius: BorderRadius // 각 원형 모서리의 반지름 지정.
 
+- *Divider*    
+divider line을 만들어주는 위젯.    
+thickness: double // 
+color: Color //
+
+- *DefaultTabController*    
+Tab screen을 컨트롤하는 위젯. child로 screen위젯(scaffold등)을 가짐. screen내의 TabBar()와 TabBarView()간의 작동을 조절.       
+Screen내의 TabBar와 TabBarView와 자동적으로 연결되어, TabBar에 선택된 tab에 따라 TabBarView의 child중 하나를 선택.     
+(일반적으로 컨트롤러가 screen을 감싸고, TabBar는 AppBar의 bottom에, TabBarView는 scaffold의 body에 사용.)(stateful,stateless 모두에서 사용 가능.)    
+length: int // screen내의 tab수 명시. 해당 값은 TabBar.tabs와 TabBarView.children의 길이와 같아야함.     
+child: Widget // 감쌀 tab을 포함하는 screen위젯.     
+
+- *TabBar*    
+material design의 TabBar. 일반적으로, scaffold AppBar의 bottom에 사용.       
+tabs: List<Widget> // 일반적으로, 2개 이상의 tab의 List명시    
+
+- *Tab*    
+TabBar에 사용되는 각 Tab위젯. tab내에 icon, text등을 포함 가능.    
+icon: Icon //
+text: String //
+
+- *TabBarView*     
+TabBar와 연동하여, 각 tab이 선택되었을때 표시할 페이지뷰(혹은 위젯)를 명시하는 위젯. 선택된 tab에따라 다른 위젯을 표시.     
+children: List<Widget> // 페이지로 표시될 위젯의 List. 길이가 controller의 length값과 같아야함.     
+ (TabBarView가 scaffold의 body로 들어가는 일반적인 경우, 각 child는 (scaffold와 같은) 페이지가 아니어도 가능. body부분에 들어갈 위젯이면 충분.)           
+ 
