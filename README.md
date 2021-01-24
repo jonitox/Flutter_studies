@@ -196,7 +196,7 @@ fonts:
      fonts: / 그룹이 포함할 폰트 파일들을 명시.   
         assets: '파일위치 및 이름'   
         (해당 파일 폰트에 대한 정보를 추가. 다운받은 폰트의 info확인!    
-        ex) 특정폰트의 bold 버전은 weight: 700 으로 지정해야 FontWeight.bold로 해당 패밀리의 bold버전 접근가능.)        
+        ex) 특정폰트의 bold 버전은 weight: 700 으로 지정해야 fontWeight: FontWeight.bold로 해당 패밀리의 bold버전 접근(지정된게 없다면?)가능.)        
 
 - *프로젝트 폴더변경시 hot reload,restart에 적용안됨. restart해야함*   
 
@@ -371,7 +371,7 @@ primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으�
 accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
 canvasColor: Color /    
 errorColor: Color / 에러에 쓰일 색상 지정. default는 red.   
-fontFamiliy: String / app의 global폰트family 지정     
+fontFamiliy: String / app의 global폰트family 지정(text의 default폰트?)     
 textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
 (TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.   
 style: Theme.of(context).textTheme.title) 혹은 color : Theme.of(context).textTheme.button.color 와 같이)    
@@ -525,6 +525,7 @@ appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지�
 body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)       
 floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
+bottomNavigationBar: BottomNavigationBar // 화면 하단에 표시될 NavigationBar(TabBar)지정. 하단 tab구성시 사용.    
 
 - *CupertinoPageScaffold*
 cupertino style 페이지 Setup 위젯   
@@ -626,8 +627,8 @@ child: Widget (감쌀 위젯),
 width: double (UI공간에서 할당받을 너비) (tip: double.infinity로 화면상 가능한 최대너비를 할당가능, 다른 UI가 안겹칠때까지),   
 margin: EdgeInsetGeometry (boarder바깥쪽인 margin 설정)   
 (> EdgeInset: 위젯의 margin길이 정보를 표현한 class. 여러 named constructor로 생성 가능. ex) EdgeInset.all(20) :모든방향 20)   
-color: Color / 단순 background color지정. 좀더 디테일한 설정 필요시, decoration인자 사용.   
-decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)   
+color: Color / 단순 background color지정. 좀더 디테일한 설정 필요시, decoration인자 사용.(decoration의 color와 동일, decoration이 있다면 에러발생.)         
+decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)    
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
 
 -*Stack위젯*   
@@ -815,7 +816,7 @@ children: List<Widget> // 페이지로 표시될 위젯의 List. 길이가 contr
 
 - *BottomNavigationBar*     
 scaffold의 BottomNavigationBar에 들어가는 일종의 TabBar위젯. 아래쪽탭 스타일을 구성할때 사용.      
-NavigtaionBar를 이용하여 tab_screen을 구성하는 경우, screen을 수동으로(onTap) 바꾸기위해 반드시 stateful위젯에서 사용해야함.    
+NavigtaionBar를 이용하여 tab_screen을 구성하는 경우, screen을 수동으로(onTap) 바꾸기위해 "반드시 stateful위젯과 함께 사용."    
 items: List<BottomNavigationBarItem> // tab의 각 버튼 리스트.    
 onTap : (int){} // 각 tab버튼이 눌렸을때 호출하는 함수 명시. 눌려진 버튼의 index를 함수에 전달함. 이 함수에서 setState를 호출해 화면을 바꿔줌.    
  (ex) void _selectPage(int index) { setState(() { _selectedPageIndex = index;}); }를 onTap에 명시,    
@@ -828,3 +829,10 @@ currentIndex: int // 눌려진 버튼의 index를 명시. (일반적으로, 버�
  type: BottomNavigationBarType // 네비게이션 바의 타입 지정. BottomNavigationBarType는 enum으로 default는 fixed(버튼들이 고정.). 이 외에 shifting(누르는쪽으로 shift, 나머지는 아이콘만.) 등 존재.      
  
  - *BottomNavigationBarItem*      
+BottomNavigationBar의 items 리스트에 포함되는 각 item(tab)에 대응하는 클래스.    
+material design내에서 BottomNavigationBar사용시 icon, text는 not-null이어야함.    
+icon: Icon // tab버튼에 표시되는 아이콘 지정.    
+title: Text // tab버튼에 표시되는 title(일반적으로, text)     
+backgroundColor: Color // 버튼의 bacgkround Color지정.(일반적으로 tab의 bg색은 네비게이션바의 bg색을 따르지만,      
+바의 type이 shift면, 버튼색이 표시되므로 따로 명시 필요.)      
+
