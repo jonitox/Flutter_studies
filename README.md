@@ -256,8 +256,8 @@ const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추�
 
 - *Widget state(lifecycle)*    
 Stateful위젯은 생성자를 통해 첫 생성시, state객체를 생성 -> state객체에서 initState()를 호출 후, build()      
--> setState(), build()를 호출하며 위젯 유지. 이때, stateful위젯이 다시 생성될때마다 didUpdateWidget()호출 후, build()     
--> Stateful위젯이 변경이 아닌 소멸될때, dispose() 호출.
+-> setState(), build()를 호출하며 위젯 유지. 이때, stateful위젯이 다시 생성될때마다 state에서 didUpdateWidget()호출 후, build()     
+-> Stateful위젯이 변경이 아닌 소멸될때,state의 dispose() 호출.
 (initState, didUpdateWidget, dispose()를 override하여 사용시, 함수내에서 super.initState()를 선언해 상속한 state객체의 동작을    
 명시해줘야함.)
 
@@ -528,12 +528,13 @@ home: Widget / app의 첫화면으로 띄어질 스크린(위젯) 지정.
 routes: Map<String,WidgetBuilder> // 라우팅할 페이지들의 목록및 builder를 지정된 name으로 참조할수있도록 목록 생성.     
 initialRoute: String // app의 첫화면으로 띄어질 스크린을 라우팅name으로 지정.(home과 동일, default는 '/'.)             
 (WidgetBuilder는 (BuildContext)=>Widget 형태의 위젯 생성함수.) (Naviagor의 pushNamed에서 이름으로 참조될때 사용.)         
-ex) routes: {'/': (ctx)=>CategoriesScreen(), '/category-meals': (ctx) => CategoryMealsScreen(),  },    
+ex) routes: {'/': (ctx)=>CategoriesScreen(_availableMeals), '/category-meals': (ctx) => CategoryMealsScreen(),  },    
 (모든 name을 사용자지정. 단, '/'는 initialRoute에서 default로 사용되는 첫화면의 위젯의 이름.)       
 (tip: 모든 이름은 '/../'처럼 web의 convention을  자주 사용. 이때, 해당 이름들을 호출시 미세한 오타방지를 위해,     
 각 라우팅의 이름을 해당 위젯 클래스 내에 static const로 선언하여, 클래스에 직접 접근해 이름을 참조해 호출 가능.     
 ex) 페이지 위젯 내에, static const routeName = '/category-meals'; 선언 후, (모든 라우팅 이름을 클래스의 routeName으로 참조)      
-route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(),},로 테이블 작성, pushNamed(CategoryMealsScreen.routeName), 로 페이지 생성.)      
+route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(_availableMeals),},로 테이블 작성, pushNamed(CategoryMealsScreen.routeName), 로 페이지 생성.)   
+(또한, 위와 같이 main.dart의 변수(_availableMeals)를 route테이블에서 라우팅할 위젯의 생성자에 전달 가능. 즉, main에서 state관리를 하는경우, 다른곳에서 라우팅을하더라도 main의 변수를 route테이블을 통해 전달가능.)        
 onGenerateRoute: (RouteSettings) =>Route // app내에서 pushNamed로 라우팅 시도 시, route테이블에 없는 이름으로 라우팅하는 경우 실행되는 네비게이션 액션 명시.     
 (해당 라우팅 시도의 setting을 인자로 전달. 실행할 라우팅객체를 반환. 라우팅테이블이 app사용 동안 dynamic하게 변경 및 결정되는 경우 등에 사용 가능.)     
 onUnknownRoute: (RouteSettings)=>Route // 모든 다른 알수 없는 라우팅에 대해 실행할 라우팅 명시.            
@@ -705,12 +706,20 @@ itemBuilder: (BuildContext, int(index번호))->Widget (ListView의 새로운 아
 itemCount: int (현재 ListView에 포함할 아이템의 갯수 명시.)   
 
 - *ListTile*   
-List Tile(네모난 카드 모양)형태로 표현할수 있는 위젯. ListView내의 한 원소를 표현할떄 자주 쓰인다.(필수 x, 따로도 사용 가능)   
+List Tile(네모난 카드 모양)형태로 표현할수 있는 위젯. ListView내의 한 원소를 표현할떄 자주 쓰임.(필수 x, 따로도 사용 가능)   
 leading: Widget / title왼쪽에 표시할 위젯(보통 이미지나 가격, circleAvatar등)    
 title: Widget / List Tile의 주된 정보를 나타내는 위젯. 주로 Text    
 subtitle: Widget / 추가적인 정보를 나타내는 위젯. title밑에 표시. 주로 Text
 trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정 같은 버튼)    
 
+- *SwitchListTile*     
+ListTile형태의 switch 위젯. ListView내의 원소로 switch를 표현하고자할때 자주 쓰임. (app의 설정, 필터 등을 구현 할때)     
+named argument는 일반적은 switch와 비슷.    
+value: bool // switch에 표시될 bool값. (on,off)     
+onChanged : (newvalue){} // switch가 toggle될때 실행될 함수.    
+title:  Widget // 스위치 타일에 표시할 주된 내용. 일반적으로 Text    
+subTitle: Widget // title밑에 표시될 부가적인 내용. 일반적으로 Text
+ 
 - *GridView*   
 scrollable + grid. grid형으로 위젯 배치   
 children: [],   
