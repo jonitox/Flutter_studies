@@ -298,7 +298,7 @@ push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, to
 
 - *initState & context*    
 staeful위젯의 state를 처음 생성시 필요한 변수의 초기화를 initState내에서 진행하는 경우.    
-(생성자가 아니라, initState에서 초기화할 필요가 있는 경우 중에, 예를들어, mordalRoute.of(context)로 argument를 받아 스크린 생성하는데,    
+(생성자가 아니라, initState에서 초기화할 필요가 있는 경우 중에, 예를들어, modalRoute.of(context)로 argument를 받아 스크린 생성하는데,    
 argument로 state내의 변수를 build함수 내에서 초기화하지않고(stateful이라서), 첫 위젯 생성시에 한번만 초기화하고 싶은 경우)    
 해당 초기화에 위젯의 context값을 사용한다면, error발생. 그 이유는, initState가 state위젯이 fully create되기 전(context가 생성되기 전)에 실행되기 떄문.     
 (initState에서 다른 일반 property나 widget(대응stateful객체)들은 사용가능. context는 아직 미생성.)          
@@ -491,12 +491,12 @@ pushNamed(String,arguments: Object)
 Navigator의 pushNamed로 페이지를 라우팅할시, 같이 전달할 객체들을 명시 가능.(list,map 등)        
 (일반적으로, app(main.dart)의 routes에 각 이름으로 선언해놓은 페이지 builder들은 생성할 위젯의 생성자에 전달할값을 미리 알수가 없으므로,    
 pushNamed로 해당 페이지 생성시 생성자를 사용해 값을 받지않고, 해당페이지를 생성하는 pushNamed 함수와 argument를 통해 값을 전달받는다.)       
-이때, 각 페이지 위젯에서는, MordalRoute객체를 통해 페이지를 라우팅하며 전달된 argument을 저장해 사용.     
+이때, 각 페이지 위젯에서는, ModalRoute객체를 통해 페이지를 라우팅하며 전달된 argument을 저장해 사용.     
 
-- *MordalRoute*     
- 현위젯(페이지)의 라우팅정보를 참조할수있는 클래스. 현 위젯의 정보를 알기위해 Mordal.of(context)로 사용.     
- MordalRoute.of(ctx).settings.arguments // 현 페이지 라우팅시에 같이 전달된 세팅 중 argument의 값 참조.    
- pushNamed로 해당 페이지가 생성되고 argument로 필요한 데이터가 전달된 경우 MordalRoute를 사용해 데이터를 저장할 수 있음.     
+- *ModalRoute*     
+ 현위젯(페이지)의 라우팅정보를 참조할수있는 클래스. 현 위젯의 정보를 알기위해 Modal.of(context)로 사용.     
+ ModalRoute.of(ctx).settings.arguments // 현 페이지 라우팅시에 같이 전달된 세팅 중 argument의 값 참조.    
+ pushNamed로 해당 페이지가 생성되고 argument로 필요한 데이터가 전달된 경우 ModalRoute를 사용해 데이터를 저장할 수 있음.     
  ex) 위젯의 build내에서(항상?), final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>; 
  (arguments는 일반 Object로 특정 type만 전달할시, 해당 type을 알수있게끔 따로 명시)       
  
