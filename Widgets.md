@@ -70,9 +70,7 @@ crossAxisAlignment: CrossAxisAlignment, (각 child의 corssAxis상에서의 배�
 (CrossAxisAlignment./ end: 오른쪽끝, stretch: column의 너비만큼 늘여서 채워 배치.(child가 card등이면 너비를 define해줄수있음.))   
 mainAxisSize:  MainAxisSize / mainAxis의 Size 지정. MainAxisSize는 enum으로 max(double.infinity)와 min(children에 fit) 존재.     
  
- -*Flexible/Expanded*    
- Column/Row의 child를 warp하여 위젯간 차지하는 공간 등 지정 가능.    
-   
+
  - *RaisedButton위젯*   
 버튼을 생성하는 위젯
 child : Widget 버튼내부에 표현되는 위젯(text, image등) 입력   
@@ -154,7 +152,7 @@ Stack내에서만 사용할 수 있는 위젯으로, 감싼 위젯이 전체 Sta
 top(bottom,right,left): double // 전체 stack 기준으로 위(아래,오른쪽,왼쪽)로부터 얼만큼 떨어져있는지 지정.     
 
 - *Card위젯*   
-위젯을 담아 shadow를 주어 배치하는 content container위젯. UI공간은 default로 child크기만큼 할당. 
+위젯을 담아 shadow를 주어 배치하는 content container위젯. UI공간은 default로 child크기만큼 할당.   
 card의 부모 위젯이 child(card)의 UI공간을 define한다면 부모 위젯을 따름.   
 즉, parent로 container같은 위젯을 써 할당하거나, child의 UI크기를 변경.      
 child : Widget(감쌀위젯)   
@@ -297,6 +295,7 @@ value: bool / UI상 Switch가 표시할 상태(toggle의 on/off값, true면 켜�
 onChanged: (bool){} / Switch를 눌러서 값을 toggle할때 실행할 함수. 함수의 인자로 변화된 toggle의 value값을 전달해줌.    
 activeColor: Color / on되었을때 switch색상 설정.    
 (일반적으로, 함수 body의 setState내부에서 전달받은 bool값을 state내의 변수에 저장. Switch의 value값이 변해 switch re-rendered)      
+Switch.adaptive : Switch 렌더링시 Platform.IsIos를 확인하여, android/ios style에 맞는 디자인의 스위치 생성.    
 
 - *SafeArea*   
 위젯을 감싸 OS 인터페이스 영역(status Bar 등)을 피해서 해당 위젯 생성.     
