@@ -106,6 +106,7 @@ Icons는 여러 icon(material style)의 IconData를 static으로 지정해놓은
 - *Text위젯*   
 positional arguments로 String을 받음. named arguments로 여러 인자를 받음.      
 style : TextStyle(fontSize: 28, fontWeight: Fontweight.bold) (문자의 style결정)   
+(null시 app의 theme을 따름. 단,Text는 material위젯으로 cupertinoApp내에서 Text사용시 theme을 불러올수 없음.)    
 (TextStyle은 문자Style의정보들을 담은 class(위젯x), Fontweight은 Font크기 값을 표현하고 static값을 묶어둔 utility class)    
 textAlign: TextAlign.center (문자열의 배치결정. 단, text위젯이 차지하는 공간기준.) (TextAlign은 enum. center,left,right등 포함) //   
 (tip: Text위젯은 UI에서 text크기만큼 공간을 할당받음. 즉, TextAlign.center로 화면 가운데 배치하고싶다면 Text를 Container에 담고 UI공간을 설정해 사용.)    
