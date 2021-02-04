@@ -127,7 +127,8 @@ onChanged: (String){} (모든 keyStroke마다 함수 호출. 현재 field에 있
 onEditingComplete/onSubmitted/onTap:     
 controller : TextEditingController(-> keyStroke마다 Field의 입력을 저장해두는 객체. 객체 내 변수 .text로 저장된 String접근 가능)     
 (final myController = TextEditingController()처럼 controller객체를 생성해두고 사용!)    
-keyboardType: TextInputType (field를 선택할시 나오는 soft keyboard의 종류 명시. TextInputType은 static값 선언된 class)   
+keyboardType: TextInputType (field를 선택할시 나오는 soft keyboard의 종류 명시. TextInputType은 static값 선언된 class)
+(IOS에서 소수점을 포함한 숫자키보드: TextInputType.numberWithOptions(decimal:true))    
 
 - *CupertinoTextField*   
 placeHolder : / label Text지정    
