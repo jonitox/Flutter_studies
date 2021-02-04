@@ -431,11 +431,13 @@ end: AlignmentGeomtery // 마지막 색상 위치 지정. Alignment는 여러 st
 - *Border*   
 BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표현한 클래스.   
 Border.all() / Border의 named생성자. color, width등 지정 가능. border의 모든 방향으로 같은 값 적용.   
+(예: 예제코드 Meals의 chart_bar에 자세히 구현.)    
+ 
  
 - *BorderRadius*   
 BoxDecoration의 bolderRadius 인자 등으로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
 BorderRadius.circular(double) / BorderRadius의 named생성자, 반지름 값을 지정해 원형의 곡면 반지름 지정 가능.      
-BorderRadius.all() //
+BorderRadius.all() //    
 
 - *showDatePicker() -> future<DateTime>*    
 현재 화면에서 달력의 날짜를 선택할수 있는 overlay창(datePicker)을 띄워주는 flutter내의 함수. (다른 package?)       
