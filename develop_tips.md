@@ -1,7 +1,7 @@
 ## tips for development    
 
 - *flutter docs/ widget catalog*     
-위젯의 정보 및 자세한 사용법에 관한       
+위젯의 정보 및 자세한 사용법에 관한 문서.         
 
 - *pub.dev : packages info*    
 플러터 패키지 문서. 각 패키지에서 API reference를 누르면 사용법, 기능 등이 적힌 문서 확인 가능.    
