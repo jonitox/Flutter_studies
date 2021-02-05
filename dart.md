@@ -20,8 +20,11 @@ contructor에서 클래스 내의 property의 이름으로 named arguments를 �
 ex) class AAA { String name; int age; AAA({this.name, this.age}); }
 
 - *named constructor*   
+객체를 특정조건으로 생성하고자할떄, 일반 생성자가 아닌 이름이 지정된 생성자로 생성.       
+ex) Abc.withNum(3,4);     
 
-- *map method*   
+- *(List.)map*       
+List의 각 원소를 다른 원소로 mappingg하여 새로운 iterable반환. 리스트로 변환하려면 .toList() 추가     
 
 - *getter/setter*   
 getter // 클래스 내에서, 변수를 이용해 특정 값들을 도출해 반환할시. (ex) enum변수를 적절한 String으로 변환할때 등)     
@@ -41,9 +44,9 @@ ex) map qa = {question: 'what's your favorite color?', 'answers': [..]};
 
 - *DateTime*   
 날짜,시간을 저장할수있는 dart의 buil-in class. DateTime(year,hours, ..)처럼 생성. positional argument로 날짜 입력.   
-years를 제외한 인자는 defautl값(1) 존재. 즉, DateTime(2021)처럼 생성시 해당 년도의 1월 1일 00시 .. 로 초기화.    
+years를 제외한 인자의 defautl값(1). 즉, DateTime(2021)처럼 생성시 해당 년도의 1월 1일 00시 .. 로 초기화.    
 DateTime.now() : 현재 timestamp로 DateTime객체 생성하는 생성자.   
-tip: now()를 debug시 간편하게 unique한 id생성할때 사용가능.   
+tip: now()를 debug시 간편하게 unique한 객체의 id로 사용가능.   
 (DateTime.)(day,month,year) / 해당 dateTime이 나타내는 년,월,일 참조.   
 (DateTime.)subract(Duration) / DateTime의 시간에서 Duration만큼의 시간을 빼주는 메소드.   
 (DateTime).isAfter(Datetime2) / 다른 DateTime과 비교하여 그 이후인지를 bool로 반환해주는 메소드.   
@@ -54,8 +57,8 @@ Duration() / 시간의 duration값을 나타내는 클래스. 생성자에 named
 ex) double a; a.toString(), Datetime b; b.toString()    
 (num.)toStringAsFixed(int) (num을 decimal뒤 숫자갯수를 지정해서 반올림하여 String으로 변환.)     
 
-- *Dart syntax를 character로 명시할때*   
-'나 $같은 charcter를 print할시 feature syntax로 인식하지 않으려면 \을 앞에 붙인다. ex) print(' \$ ');   
+- *Dart syntax를 print내에서 character로 명시할때*   
+',$같은 charcter를 print할시 feature syntax로 인식하지 않으려면 \을 앞에 붙인다. ex) print(' \$ ');   
 
 - *String interpolation $*   
 $뒤의 변수를 String으로 변형. 만약 객체 내의 변수에 접근한다면 ${Abc.a}와 같이 {}로 묶어줘야한다.    
@@ -92,7 +95,7 @@ List내에 특정 조건을 만족하는 원소가 하나라도 있을시, true�
 
 - *List.generate(int, (index){})*   
 List 클래스에 선언되있는 메소드. 특정 조건으로 List를 생성해 반환.   
-첫번째 인자로 List의 길이, 두번째 인자로 (index){}함수를 받음. index는 List길이만큼 0부터 매 원소 생성시마다 1씩 증가해 함수에 전달.   
+첫번째 인자로 List의 길이, 두번째 인자로 (index){}함수를 받음. index에는 List길이만큼 0부터 매 원소 생성시마다 1씩 증가해서 전달.   
 함수body에서 List의 각 원소로 들어갈 object반환.   
 
 - *(List).reversed*     
@@ -102,15 +105,15 @@ List 클래스에 선언되있는 메소드. 특정 조건으로 List를 생성�
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
 
 - *(object.)isEmpty*   
-해당 오브젝트에 값이 있는지 확인.   
+해당 오브젝트에 값이 있는지(null) 확인.   
 
 - *(String.)subString(i,j)*   
-String [i..j)까지의 String을 반환.   
+String [i..j)까지의 subString을 반환.   
 
 - *(List).fold(<T>first, (<T>sum, item)-> <T>)*   
  list의 각 원소를 순회하여 특정값을 계산해서 반환하는 메소드.   
- 첫번째 인자로, 계산할 값의 초기값 지정. (일반적으로, totalSum을 구할때, 0으로 입력)     
-두번째 인자로, 각 원소의 아이템으로 계산할 값을 수정하는 함수 입력. 입력할수 있는 함수의 조건은,   
+ 첫번째 인자로, 계산할 값의 초기값 지정. (일반적으로, totalSum을 구하면, 0으로 입력)     
+두번째 인자로, 각 원소의 아이템으로 계산할 값을 수정하는 함수 입력.   
 계산할 값의 현재값(sum)과, 현재 사용할 List의 원소(item)을 전달받아, 함수body에서 새로 덮어씌울 계산할값을 return해야함.    
  
  - *Future<T>*    
@@ -123,8 +126,8 @@ String [i..j)까지의 String을 반환.
   (flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
   
   - *mixin*    
-  한 클래스에서 다른 클래스를 상속하지않고, 클래스의 몇가지 feature를 사용하고자할때, with키워들 사용.    
-  클래스명과 상속한 클래스명 뒤에 with (...)와 같이 명시.    
+  한 클래스에서 다른 클래스를 직접 상속하지않고, 클래스의 몇가지 feature를 사용하고자할때, with키워들 사용.    
+ex) class Abc extends Def with Ghi와 같이 명시.    
   
   - *Random*     
   random수를 생성할수있게 돕는 클래스. 특정 조건으로 난수를 생성. import 'dart:math' 필요.       
