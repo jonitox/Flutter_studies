@@ -54,7 +54,7 @@ Duration() / 시간의 duration값을 나타내는 클래스. 생성자에 named
 ex) double a; a.toString(), Datetime b; b.toString()    
 (num.)toStringAsFixed(int) (num을 decimal뒤 숫자갯수를 지정해서 반올림하여 String으로 변환.)     
 
--*Dart syntax를 character로 명시할때*   
+- *Dart syntax를 character로 명시할때*   
 '나 $같은 charcter를 print할시 feature syntax로 인식하지 않으려면 \을 앞에 붙인다. ex) print(' \$ ');   
 
 - *String interpolation $*   
