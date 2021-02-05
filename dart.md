@@ -1,4 +1,4 @@
-## Dart
+## Dart문법
 
 - *arrow function*    
 한줄 함수(함수의 명령이 한줄)이면 =>로 표현가능. ex) void main() => runApp(myApp());  ( 반환값이 있다면 결과값을 return )    
@@ -28,7 +28,7 @@ List의 각 원소를 다른 원소로 mappingg하여 새로운 iterable반환. 
 
 - *getter/setter*   
 getter // 클래스 내에서, 변수를 이용해 특정 값들을 도출해 반환할시. (ex) enum변수를 적절한 String으로 변환할때 등)     
-
+setter // private변수를 외부에서 접근, 초기화할시.  
 
 - *...*   
 List b; List a = [1,2, ...b]; : b의 각원소를 나누어 a에 이어 붙임. (List a = [1,2,b] : b가 nested list로 선언됨)   
