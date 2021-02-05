@@ -141,7 +141,7 @@ margin: EdgeInsetGeometry (boarder바깥쪽인 margin 설정)
 color: Color / 단순 background color지정. 좀더 디테일한 설정 필요시, decoration인자 사용.(decoration의 color와 동일, decoration이 있다면 에러발생.)         
 decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)    
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
-alignment: AlignmentGeometry // child의 
+alignment: AlignmentGeometry / container내 child의 배치를 지정.    
 
 -*Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
@@ -159,7 +159,7 @@ child : Widget(감쌀위젯)
 elevation: double (shadow의 세기 조절)     
 color: Color(background color지정)   
 margin: EdgeInsetsGeometry (위젯 margin지정)   
-shape: ShapeBorder // Card의 shape지정. ShapeBorder는 Border의 모양을 지정할 수 있는 객체.    
+shape: ShapeBorder // Card의 shape지정. ShapeBorder는 Border의 모양을 지정할 수 있는 객체. 예를들어, 모서리가 둥근 사각형은 RoundedRactangleBorder객체.    
 
 
 - *Center위젯*   
@@ -207,9 +207,9 @@ scrollable + grid. grid형으로 위젯 배치
 children: [],   
 gridDelegate: SliverGridDelegate // grid의 child간의 layout을 지정하는 deligate설정, SliverGridDelegate은 클래스.        
 SliverGridDelegateWithMaxCrossAxisExtent(  // 그리드의 가로폭을 지정해 설정하는 deligate을 나타내는 SliverGridDelegate 객체.     
-maxCrossAxisExtent : double, // grid의 전체 가로폭 지정.    
+maxCrossAxisExtent : double, // 각 타일의 최대가로폭 지정. 가로폭이 이 값을 안넘게끔 한 row에 타일이 최대로들어감.    
 childAspectRatio : double, // 각 child위젯의 세로/가로 비율 지정.    
-crossAxisSpacing : double, // 인접한 child간 가로(?) 거리.   
+crossAxisSpacing : double, // 인접한 child간 가로 거리.   
 mainAxisSpacing : double, // 인접한 child간 세로 거리.   
 )
 
@@ -223,9 +223,11 @@ tip: GestureDetector를 사용하여 custom Button 위젯 생성 가능. child�
 
 - *InkWell*   
 GestureDetector + riffle effect
-onTap: (){} //   
+onTap: (){} //
+child: // 감쌀위젯./child가 단순container면 물결생성이 안에도 보임. card같은위젯이면 card밖(margin있는곳)만 보임.    
 splashColor: Color // 물결의 색깔   
 borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 있다면, 값을 똑같이 지정해주면 같은 형태의 물결 생성.       
+
 
 - *dedicated padding()*
 
@@ -236,7 +238,7 @@ Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named const
 (Image.)file() / file에서 stream을 가져오는 경우?    
 각 constructor내의 name argument   
 fit: BoxFit / 이미지가 Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
-(Box는 image에 지정된 height,width거나 미지정시 크기가 define된 부모위젯)         
+(image를 포함하는 Box의 크기는 image에 직접 지정된 height,width거나 미지정시 크기가 define된 부모위젯)         
 
 
 - *sizedBox*   
@@ -278,7 +280,8 @@ tip: Expanded를 ListView와 같은 infinity height을 같는 위젯에 씌울 �
 
 - *CircleAvatar*   
 원형의 컨테이너와 동일한 위젯. 감싸는 위젯을 원형의 공간 내에 배치.    
-radius: double / 원의 반지름 지정.    
+radius: double / 원의 반지름 지정. 해당 값이 지정되면 minRadius,maxRadius는 무시. 디폴트값은 20.        
+(min)MaxRadius /    
 child: Widget / 감쌀 위젯    
 backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
 backgoundImage:    /      
