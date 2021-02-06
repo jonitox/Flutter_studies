@@ -203,16 +203,29 @@ title:  Widget // 스위치 타일에 표시할 주된 내용. 일반적으로 T
 subTitle: Widget // title밑에 표시될 부가적인 내용. 일반적으로 Text
  
 - *GridView*   
-scrollable + grid. grid형으로 위젯 배치   
-children: [],   
+scrollable + grid. grid형으로 위젯 배치. 마찬가지로 두가지 방식으로 생성가능. children명시 or 빌더 사용.   
+children: [],   // gridveiw에 포함되는 자식위젯 명시. 
+GridView.builder() // builder로 gridview생성.    
 gridDelegate: SliverGridDelegate // grid의 child간의 layout을 지정하는 deligate설정, SliverGridDelegate은 클래스.        
 SliverGridDelegateWithMaxCrossAxisExtent(  // 그리드의 가로폭을 지정해 설정하는 deligate을 나타내는 SliverGridDelegate 객체.     
 maxCrossAxisExtent : double, // 각 타일의 최대가로폭 지정. 가로폭이 이 값을 안넘게끔 한 row에 타일이 최대로들어감.    
 childAspectRatio : double, // 각 child위젯의 세로/가로 비율 지정.    
 crossAxisSpacing : double, // 인접한 child간 가로 거리.   
-mainAxisSpacing : double, // 인접한 child간 세로 거리.   
-)
+mainAxisSpacing : double, // 인접한 child간 세로 거리. )      
+SliverGridDelegateWithFixedCrossAxisCount( // 그리드의 컬럼 개수를 지정하여 그리드를 생성하는 객체.     
+crossAxisCount: int // 컬럼개수 지정. 각 타일의 가로 너비는 디바이스에 따라 그리드의 컬럼수가 이값으로 맞춰지게끔 자동으로 정해짐.)      
 
+- *GridTile*    
+GirldView에 들어가기에 적합한 모양의 그리드 타일 형태의 위젯.(필수x, 따로 사용 가능)     
+child: Widget // 그리드 타일의 main content로 표현될 위젯.      
+footer: widget // 그리드 타일의 아래부분에 표시되는 위젯. 일반적으로, GridTileBar    
+
+- *GridTileBar*    
+GirdTile의 footer에 일반적으로 사용되는 위젯. 그리드 타일의 바 형태.    
+leading : Widget     
+title: Widget     
+subtitle: Widget
+trailing: Widget     
 
 - *GestureDetector*    
 감싼 위젯에 발생하는 User input(tap, double tap, ..)을 제어하기 위한 위젯.       
@@ -237,7 +250,8 @@ Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named const
 (Image.)network(String, fit: ,fit: BoxFit.cover) / 웹상의 이미지를 가져올 경우. positional 인자로 Url(String)입력      
 (Image.)file() / file에서 stream을 가져오는 경우?    
 각 constructor내의 name argument   
-fit: BoxFit / 이미지가 Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.    
+fit: BoxFit / 이미지가 Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.   
+(BoxFit.cover : 이미지를 비율유지하면서 확대해서 Box를 채움. 이미지가 짤릴수 있음.)      
 (image를 포함하는 Box의 크기는 image에 직접 지정된 height,width거나 미지정시 크기가 define된 부모위젯)         
 
 
@@ -306,7 +320,8 @@ ex) cupertinioScaffold의 child부분을 감싸 notch부분 피해 생성.
 child: Widget
 
 - *ClipRRect*    
-위젯을 감싸 rounded-rectangle형태의 clip으로 강제 하는 위젯. image등이 (별도의 shape 인자를 지정할 수 없는 위젯) rounded하게끔 변형할때 사용.    
+위젯을 감싸 rounded-rectangle형태의 clip으로 강제 하는 위젯.    
+image,GirdTile등이 (따로 shape이나 border를 지정할 수 없는 위젯들) rounded하게끔 변형할때 사용.    
 child: Widget    
 borderRadius: BorderRadius // 각 원형 모서리의 반지름 지정.
 
