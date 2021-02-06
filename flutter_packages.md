@@ -27,15 +27,15 @@ flutter 여러 base위젯 및 함수 등이 포함된 flutter패키지
 ------------------------------
 ## provider     
 - *concept: provider & listner*.   
-특정위젯에 attach된 provider(data container)를 지정하면, 해당 위젯의 자식위젯들은 이 provider에 대한 listner를 선언 가능.      
+특정위젯에 attach된 provider(data container)를 지정하면, 해당 위젯의 자식위젯(deep한 자식 포함)들은 이 provider에 대한 listner를 선언 가능.      
 그리고 이 위젯의 provider의 상태가 변하면(update), 모든 자식위젯을 다 빌드하는 것이 아닌, listner가 선언되이있는 자식위젯들만 build.      
+사용하지 않는 data임에도, 해당 data를 자식위젯이 필요로 해서, data를 deep하게 받아 계속 전달해야하는 경우 사용.      
 provider는 어느 위젯에도 선언될수 있고, 같은 위젯에 여러개의 provider를 선언할수도 있음.    
 
 - *provider선언*     
-provider는 data container로서 우선 provider가 될수있는 class를 선언.(data를 원하는 형태로 담아둔 class)     
+provider는 data container로서 우선 provider로 사용할 class를 선언.(data를 원하는 형태로 담아둔 class)     
 이때, 이 클래스(provider)를 listen하는 모든 자식 위젯들에게 해당 객체가 변경되었음을 알리기 위한 함수 notifyListner()를 사용하기 위해     
-flutter패키지에 포함된 클래스인 ChangeNotifier를 이 클래스에 mixin. 그리고, 해당 클래스내의 특정변수를 변경하는 함수를 따로 선언하여, 변경 후    
-notifyListner()를 선언함.    
+flutter패키지에 포함된 ChangeNotifier를 이 클래스에 mixin. 그리고, 해당 클래스내의 변수를 변경하는 함수를 선언하여, 변경 후 notifyListner()를 호출.    
 ex)    
 ```Dart	      
 import 'package:flutter/material.dart';
@@ -50,16 +50,16 @@ class Products with ChangeNotifier{
     // 변수의 변경. add함수 //  변경 함수를 호출해 변경해야, listner들에게 알리는 함수까지 호출할수 있음.     
     void addProduct(value) {    
         _items.add(value);    
-        notifyListeners(); // 이 객체의 변수를 변경 후, listner들에게 알린다.    
+        notifyListeners(); // 이 객체의 변수를 변경 후, listner들에게 알린다. // provider와 연결되어있는 listner를 re-build.    
     }    
 }   
 ```	      
 
 - *attach provider*    
 (provider를 위젯에 attach하기 전에, 우선 해당 provider를 attach할 위젯은, provider를 listen할 위젯들을 모두 포함하는 가능한 최상위 위젯이어야함.     
-provider의 listner는 attach되어있는 위젯의 자식위젯에서만 선언될수 있으므로. 모든 listen하는 위젯들에 접근할수있는 상위레벨 위젯에 attach.)     
+provider의 listner는 attach되어있는 위젯의 자식위젯에서만 선언될수 있으므로. 모든 listen하는 위젯들에 접근할수있는 상위레벨의 위젯에 attach.)     
 provider를 attach하기위해선, attach할 위젯에 import 'package:provider/provider.dart';한 후, 위젯을 provider와 묶일수있게하는 위젯인     
-ChangeNotifierProvider으로 감싼 후, 위젯의 provider를 create(3.xx버전이하는 builder)인자로 명시     
+ChangeNotifierProvider으로 감싼 후, 위젯에 provider를 create(3.xx버전이하는 builder)인자로 명시     
 ex) 
 ```Dart
 import 'package:provider/provider.dart';
@@ -72,8 +72,23 @@ import 'package:provider/provider.dart';
 ```    
 
 - *provider의 Listner선언*     
+한 provider의 listner를 특정 위젯에 attach하려면, 해당 위젯에서 package:provider/provider.dart를 import하고     
+Provider.of<Products>(context)로 해당 provider 객체에 연결 및 data fetch 가능. 이후, provider가 변할때마다(notifyLister호출시), 이 위젯 re-build.     
+(Provider클래스의 of(context) 메소드로, provider객체에 직접 접근. 이때, of메소드는 generic으로 <타입> 명시 가능. 앱내에 여러 provider가 있을수있으므로,              
+현 위젯의 부모 위젯 중 Products클래스의 객체인 provider가 선언되어있는 곳을 찾아 연결. 따라서, 반드시 provider는 상위 위젯에, listners는 자식위젯에 attach.    
+provider를 선언한 위젯은 provider가 update되면, provider가 attach된 위젯의 자식위젯 중 listner가 선언되어있는 위젯만 re-build됨.        
+ex) // data fetching    
+final productsData = Provider.of<Products>(context);    // provider(data class)에 연결.     
+final products = productsData.items;  // provider의 함수로 data fetching.     
 
-
+- *첫 생성시에만 data fetching, provider update시 re-build하지 않는 경우*    
+Provider.of()메소드는 listen: bool 인자 제공. provider의 리스너가 선언된 현 위젯이, provider의 notifyListners호출 시, re-build될것인지를 명시.    
+디폴트값은 listen: true로 provider update(notifyListners)시 re-build. false는 provider가 바뀌더라도 변경될 것이 없는 위젯에 사용.    
+ex) // Products중 선택된 product의 화면을 표시하는 스크린을 첫 생성시, // id로 선택된 product fetch. // 첫 생성시에만 provider에서 정보를 가져옴.            
+final loadedProduct = Provider.of<Products>(context, listen: false).findById(productId); // 이후 Products가 update되도 re-build되지않음.     
+// 즉, 다른 곳(다른 스크린)에서 Product를 추가하여 Products를 update해도, 해당 위젯은 살아있다면 변할게 없으므로 re-build되지않음.     
+// 단, 이 product의 content를 직접변경하는일이 없는 경우           
+    
 ------------------------
 ## extra packages   
 - *intl*    
