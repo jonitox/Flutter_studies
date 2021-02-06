@@ -71,6 +71,10 @@ bool _loadedInitData =false; 와 같이 bool면수를 사용. didChangeDependenc
 - *didChangeDependencies*    
 sateful위젯의 state객체의 dependency(reference)가 변할때마다 호출되는 함수. state내 모든 위젯 및 변수가 처음 initialized되었을 때도 호출.    
 
+- *state&state management*    
+일반적으로, app내의 data를 state라고하고, 이 data들을 바탕을로 UI를 상황에 맞게 rendering함.    
+state는 크게 app-wide state(app전체 혹은 많은 위젯에 공통적으로 영향이 있는 data. ex)authentication, 전체Loaded products..)와    
+widget(local) state(현재 위젯에만 관여된 data. ex)loading spinner 표시여부, form(field) input등)으로 구분.    
 
 ## tips    
 
