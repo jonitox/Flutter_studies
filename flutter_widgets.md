@@ -381,3 +381,16 @@ drawer 밖은 자동으로 backdrop생성(세기 지정 가능), 밖을 누르�
 child: Widget // drawer에 표시될 위젯.(ex)여러 개의 링크 목록을 배치시, 여러 ListTile(onTap 포함, drawer에 적절한 스타일)을    
 자식위젯으로 하는 Column을 사용 가능, onTap에서 navigator로 페이지 이동. push가 아닌 screen switch(pushReplacement))            
 elevation: double // drawer 뒤의 backdrop(어두워지는 배경)의 정도 지정.      
+
+- *PopupMenuButton*     
+누르면 옆으로 메뉴 목록이 overlay되는 버튼. appBar의 action 등에 사용하기 적합.       
+icon: Icon // 버튼의 아이콘 모양 지정.     
+itemBuilder : (BuildContext) => List<PopupMenuEntry> // 메뉴의 빌더 명시. 함수에서 메뉴에 들어갈 각 목록(PopupMenyEntry)을 리스트로 반환.      
+ onSelected : (value){} // 메뉴 item이 선택됬을때 호출할 함수 지정. 선택된 item의 value값을 전달.      
+(PopupMenuButton의 item인 PopupMenuEntry에는 일반적으로, PopupMenuItem 사용.)     
+
+- *PopupMenuItem*     
+PopupMenuButton의 item으로 사용되는 위젯.    
+child: Widget // item으로 명시될 위젯. 일반적으로 Text나 ListTile    
+value: dynamic // 해당 item이 가질 value 입력. 아이템이 입력됬을때 이 value를 PopupMenuButton의 onSelected함수에 전달함.   
+(일반적으로, value 0~k의 index를 사용하거나 enum으로 선언해서 관리. onSelected에서도 enum으로 받음.)        
