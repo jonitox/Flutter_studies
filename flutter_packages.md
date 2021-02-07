@@ -26,11 +26,16 @@ flutter 여러 base위젯 및 함수 등이 포함된 flutter패키지
 
 ------------------------------
 ## provider     
+
 - *concept: provider & listner*.   
 특정위젯에 attach된 provider(data container)를 지정하면, 해당 위젯의 자식위젯(deep한 자식 포함)들은 이 provider에 대한 listner를 선언 가능.      
 그리고 이 위젯의 provider의 상태가 변하면(update), 모든 자식위젯을 다 빌드하는 것이 아닌, listner가 선언되이있는 자식위젯들만 build.      
-사용하지 않는 data임에도, 해당 data를 자식위젯이 필요로 해서, data를 deep하게 받아 계속 전달해야하는 경우 사용.      
+사용하지 않는 data임에도, 해당 data를 자식위젯이 필요로 해서, data를 deep하게 받아 계속 전달해야하는 경우 사용.    
 provider는 어느 위젯에도 선언될수 있고, 같은 위젯에 여러개의 provider를 선언할수도 있음.    
+
+- *stateful vs provider* 
+state이 특정 위젯만 관련이 있는 widget-wide state라면 단순 stateful로 구현하는게 간편. ex) 현재 스크린의 filter       
+하지만, 여러곳에 영향이 있는 app-wide state이라면 provider가 더 적합. ex) 전체 product의 상태              
 
 - *provider선언*     
 provider는 data container로서 우선 provider로 사용할 class를 선언.(data를 원하는 형태로 담아둔 class)     
@@ -107,7 +112,8 @@ ex) ChangeNotifierProvider.value(value: products[i], child: ...)
  ex)
     ```Dart	
     Consumer<Product>( // 위젯이 provider를 listne하는 위젯임을 명시하는 위젯. generic으로 어떤 provider에 대한 연결인지 명시.      
-            // builder
+            // builder로 (BuildContext, <T>, Widget) => Widget 메소드를 받음.     
+            // <T> : 연결된 provider객체를 전달. child: 위젯이 re-build되어질때, re-build안될 위젯. 이 예제에선 사용안됨.  
             builder: (ctx,product, child) => IconButton(   // 위젯을 반환.
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -115,11 +121,14 @@ ex) ChangeNotifierProvider.value(value: products[i], child: ...)
                 product.toggleFavoriteStatus();
               },
             ), // IconButton
+            child: Text('favorites'), // builder의 child로 전달될 위젯. 위젯 내에서 해당 child를 참조한 자식위젯이 있다면, 이 child는 re-build되지않음.
           ), // Consumer
     ```
- 다만, of메소드를 사용하는것에 비해 가지는 장점은, 위젯 트리상에서 특정 위젯의 build내에서 listen할 자식 위젯들이 존재한다면,      
- 현 위젯을 listen하게 선언하고 전체를 re-build하는 것이나 listen하는 자식위젯 부분들을 따로 split해서 of메소드로 listen을 명시하는방법말고,      
-이 위젯의 build 코드 내에서 필요한 부분만 consumer로 감싸 선언 가능하다는 것.    
+다만, of메소드를 사용하는것에 비해 가지는 장점은, 위젯 트리상에서 특정 위젯의 build내에서 listen할 자식 위젯들이 존재한다면,      
+현 위젯을 listen하게 선언하고 전체를 re-build하는 것보다 optimize하기위해 listen하는 자식위젯 부분들을 전부 따로 split해서 of메소드로 listen을 명시할수도 있지만,      
+이 위젯의 build 코드 내에서 필요한 부분만 consumer로 감싸 선언 가능하다는 것. 예를들어, 현 위젯에서는 첫 생성시에만 provider에서 data를 받아 참조하여 생성되게끔,      
+of메소드 내에서 listen:false로 선언하고, 현위젯 내의 자식위젯 중 provider업데이트시 다시 빌드될 위젯들만 consumer로 감싼다면,      
+provider변화시 현 위젯은 re-build되지않고, 위젯 내의 필요한 부분만 update되고 다른 부분은 다시 빌드되지않음.         
    
 
 ------------------------
