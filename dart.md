@@ -126,8 +126,11 @@ String [i..j)까지의 subString을 반환.
   (flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
   
   - *mixin*    
-  한 클래스에서 다른 클래스를 직접 상속하지않고, 클래스의 몇가지 feature를 사용하고자할때, with키워들 사용.    
-ex) class Abc extends Def with Ghi와 같이 명시.    
+  클래스가 직접 상속하지않고, 사용할수 있는 변수 및 메소드를 제공하는 feature. mixin Ghi{}와 같이 선언.    
+  다른 클래스에서 해당 mixin을 가져와(with 키워드 사용.) mixin내의 메소드를 사용 가능. 한 클래스는 여러 Mixin을 포함 가능.          
+  상속과 다른점: 논리적으로, 상속처럼 클래스가 다른 클래스와 밀접한 관계를 맺는 것을 나타내는 것이 아닌, mixin의 함수를 제공받아 사용하는 것.     
+  mixin은 일종의 유틸리티 함수 제공 담당. 또한, 상속은 한 클래스만 가능하지만, mixin은 여러 개 사용 가능.     
+ex) class Abc extends Def with Ghi와 같이 mixin명시.    
   
   - *Random*     
   random수를 생성할수있게 돕는 클래스. 특정 조건으로 난수를 생성. import 'dart:math' 필요.       
