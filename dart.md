@@ -101,6 +101,17 @@ List 클래스에 선언되있는 메소드. 특정 조건으로 List를 생성�
 - *(List).reversed*     
 현 List의 원소 순서를 뒤집어 iterable로 반환. List로 변환하려면 reversed.toList() 사용.        
 
+- *(Map.)containsKey(_key)*  
+Map의 key 중 해당 값(_key)이 존재하는지 반환.    
+
+- *(Map.)putIfAbsent(_key, ()=>_value)*     
+Map의 존재하는 key 중 _key가 없다면 새로 들어갈 key와 value pair를 입력. 두번째 인자로 _key와 대응되는 입력할 value를 반환하는 함수 명시.    
+
+- *(Map.)update(_key, (value)=>newValue, ()=>newValue)*    
+Map의 _key가 존재한다면, 대응되는 value를 새로운 newValue로 바꿔 저장. 만약, _key가 존재하지않는다면, 생성하여 newValue를 입력.     
+두번째 인자로, 기존의 value를 newValue로 바꾸는 함수 명시. 세번째 인자로, _key가 없다면, 저장할 newValue를 반환하는 함수 명시.    
+_key가 반드시 있다면, 세번쨰 인자는 명시하지않아도됨. _key가 없는데 세번쨰 인자가 없다면 error.    
+
 - *(double.)parse(String)*   
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
 
