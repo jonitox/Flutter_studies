@@ -35,7 +35,8 @@ provider는 어느 위젯에도 선언될수 있고, 같은 위젯에 여러개�
 - *provider선언*     
 provider는 data container로서 우선 provider로 사용할 class를 선언.(data를 원하는 형태로 담아둔 class)     
 이때, 이 클래스(provider)를 listen하는 모든 자식 위젯들에게 해당 객체가 변경되었음을 알리기 위한 함수 notifyListner()를 사용하기 위해     
-flutter패키지에 포함된 ChangeNotifier를 이 클래스에 mixin. 그리고, 해당 클래스내의 변수를 변경하는 함수를 선언하여, 변경 후 notifyListner()를 호출.    
+import 'package:flutter/foundation.dart' 후 ChangeNotifier를 이 클래스에 mixin.    
+그리고, 해당 클래스내의 변수를 변경하는 함수를 선언하여, 변경 후 notifyListner()를 호출.    
 ex)    
 ```Dart	      
 import 'package:flutter/material.dart';
@@ -70,16 +71,15 @@ import 'package:provider/provider.dart';
       child: MaterialApp(...),
       }     
 ```    
-
 - *provider의 Listner선언*     
 한 provider의 listner를 특정 위젯에 attach하려면, 해당 위젯에서 package:provider/provider.dart를 import하고     
-Provider.of<Products>(context)로 해당 provider 객체에 연결 및 data fetch 가능. 이후, provider가 변할때마다(notifyLister호출시), 이 위젯 re-build.     
+Provider.of<Products>(context)로 해당 provider 객체에 연결 및 data fetch. 이후, provider가 변할때마다(notifyLister호출시),연결이 선언된 이 위젯 re-build.     
 (Provider클래스의 of(context) 메소드로, provider객체에 직접 접근. 이때, of메소드는 generic으로 <타입> 명시 가능. 앱내에 여러 provider가 있을수있으므로,              
-현 위젯의 부모 위젯 중 Products클래스의 객체인 provider가 선언되어있는 곳을 찾아 연결. 따라서, 반드시 provider는 상위 위젯에, listners는 자식위젯에 attach.    
+현 위젯의 부모 위젯 중 Products객체 타입의 provider가 선언되어있는 가장 가까운 곳을 찾아 연결. 따라서, 반드시 provider는 상위 위젯에, listners는 자식위젯에 attach.    
 provider를 선언한 위젯은 provider가 update되면, provider가 attach된 위젯의 자식위젯 중 listner가 선언되어있는 위젯만 re-build됨.        
-ex) // data fetching    
-final productsData = Provider.of<Products>(context);    // provider(data class)에 연결.     
-final products = productsData.items;  // provider의 함수로 data fetching.     
+ex)     
+final productsData = Provider.of<Products>(context);    // provider(data class)에 연결 및 listen.
+final products = productsData.items;  // provider내의 함수로 data fetching.     
 
 - *첫 생성시에만 data fetching, provider update시 re-build하지 않는 경우*    
 Provider.of()메소드는 listen: bool 인자 제공. provider의 리스너가 선언된 현 위젯이, provider의 notifyListners호출 시, re-build될것인지를 명시.    
@@ -89,6 +89,39 @@ final loadedProduct = Provider.of<Products>(context, listen: false).findById(pro
 // 즉, 다른 곳(다른 스크린)에서 Product를 추가하여 Products를 update해도, 해당 위젯은 살아있다면 변할게 없으므로 re-build되지않음.     
 // 단, 이 product의 content를 직접변경하는일이 없는 경우           
     
+- *provider의 소멸*    
+ChangeNotifierProvider는 연결된 위젯(혹은 스크린)이 사라지는 경우 알아서 provider패키지에 의해 소멸 및 관리.     
+
+- *nested Provider & ChangeNotifyProvider.value* (?)
+provider를 list나 grid의 item으로 선언하는 경우, 해당 item이 화면 밖으로 가서 사라졌다가 다시 생성되는 경우,      
+기존에 grid에서 item에 입력했던 변화를 반영하지 않는 문제 발생. 그 이유는,    
+(추측,) list의 item 같은 위젯은 다시 rendering될때 이전에 썻던 위젯을 그대로 다시 사용한다. 즉, 해당 위젯의 data와 provider를 update하더라도,     
+화면밖으로 나갔다 다시 오면, 기존값이 있는 새로운 provider를 다시 생성하고 변화 반영이 안됨.     
+해결법: ChangeNotifyProvider.value로 item 생성.      
+기존의 create으로 provder+위젯을 생성한 방식은, 위젯이 새로 생성될때마다 provider객체를 다시 초기화하는 방식으로, 일반적인 모든 경우에 권장.    
+.value로 생성하는 방식은, 기존에 존재하던 객체를 다시 사용. 즉, grid의 item에 적합. 그리드 전체가 사라지기전까진 provider 객체 생존 및 재사용.      
+ex) ChangeNotifierProvider.value(value: products[i], child: ...)     
+
+- *consumer<T>*     
+위젯을 listner로 선언하는 두번째 방법. Provider.of메소드로 연결을 선언하는것과 완전히 동일.    
+ ex)
+    ```Dart	
+    Consumer<Product>( // 위젯이 provider를 listne하는 위젯임을 명시하는 위젯. generic으로 어떤 provider에 대한 연결인지 명시.      
+            // builder
+            builder: (ctx,product, child) => IconButton(   // 위젯을 반환.
+              icon: Icon(
+                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+              },
+            ), // IconButton
+          ), // Consumer
+    ```
+ 다만, of메소드를 사용하는것에 비해 가지는 장점은, 위젯 트리상에서 특정 위젯의 build내에서 listen할 자식 위젯들이 존재한다면,      
+ 현 위젯을 listen하게 선언하고 전체를 re-build하는 것이나 listen하는 자식위젯 부분들을 따로 split해서 of메소드로 listen을 명시하는방법말고,      
+이 위젯의 build 코드 내에서 필요한 부분만 consumer로 감싸 선언 가능하다는 것.    
+   
+
 ------------------------
 ## extra packages   
 - *intl*    
