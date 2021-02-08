@@ -61,11 +61,11 @@ class Products with ChangeNotifier{
 }   
 ```	      
 
-- *attach provider*    
+- *provide(object) to Widget*    
 (provider를 위젯에 attach하기 전에, 우선 해당 provider를 attach할 위젯은, provider를 listen할 위젯들을 모두 포함하는 가능한 최상위 위젯이어야함.     
 provider의 listner는 attach되어있는 위젯의 자식위젯에서만 선언될수 있으므로. 모든 listen하는 위젯들에 접근할수있는 상위레벨의 위젯에 attach.)     
-provider를 attach하기위해선, attach할 위젯에 import 'package:provider/provider.dart';한 후, 위젯을 provider와 묶일수있게하는 위젯인     
-ChangeNotifierProvider으로 감싼 후, 위젯에 provider를 create(3.xx버전이하는 builder)인자로 명시     
+provider를 attach하기위해선, attach할 위젯에 import 'package:provider/provider.dart';한 후, 위젯을 custom data provider(object)와 묶어    
+하나의 provider로 관리하는 ChangeNotifierProvider으로 생성, 위젯의 data object를 create(3.xx버전이하는 builder)인자로 명시     
 ex) 
 ```Dart
 import 'package:provider/provider.dart';
@@ -75,7 +75,10 @@ import 'package:provider/provider.dart';
       create: (ctx) => Products(),// 해당 위젯에 provider를 생성해 attach    
       child: MaterialApp(...),
       }     
-```    
+```      
+provider는 non-object도 선언 가능. (String, int..) 단 위젯을 provider와 감쌀때, ChangeNotifier가 아니므로,     
+Provider클래스로 위젯+provider를 생성하고, 이 provider는 일종의 global(const)변수처럼 사용 가능.     
+
 - *provider의 Listner선언*     
 한 provider의 listner를 특정 위젯에 attach하려면, 해당 위젯에서 package:provider/provider.dart를 import하고     
 Provider.of<Products>(context)로 해당 provider 객체에 연결 및 data fetch. 이후, provider가 변할때마다(notifyLister호출시),연결이 선언된 이 위젯 re-build.     
@@ -95,7 +98,7 @@ final loadedProduct = Provider.of<Products>(context, listen: false).findById(pro
 // 단, 이 product의 content를 직접변경하는일이 없는 경우           
     
 - *provider의 소멸*    
-ChangeNotifierProvider는 연결된 위젯(혹은 스크린)이 사라지는 경우 알아서 provider패키지에 의해 소멸 및 관리.     
+ChangeNotifierProvider(및 create된 data객체)는 연결된 위젯(혹은 스크린)이 사라지는 경우 알아서 provider패키지에 의해 소멸 및 관리.     
 
 - *nested Provider & ChangeNotifyProvider.value* (?)
 provider를 list나 grid의 item으로 선언하는 경우, 해당 item이 화면 밖으로 가서 사라졌다가 다시 생성되는 경우,      
@@ -129,7 +132,24 @@ ex) ChangeNotifierProvider.value(value: products[i], child: ...)
 이 위젯의 build 코드 내에서 필요한 부분만 consumer로 감싸 선언 가능하다는 것. 예를들어, 현 위젯에서는 첫 생성시에만 provider에서 data를 받아 참조하여 생성되게끔,      
 of메소드 내에서 listen:false로 선언하고, 현위젯 내의 자식위젯 중 provider업데이트시 다시 빌드될 위젯들만 consumer로 감싼다면,      
 provider변화시 현 위젯은 re-build되지않고, 위젯 내의 필요한 부분만 update되고 다른 부분은 다시 빌드되지않음.         
-   
+
+- *MultiProvider*    
+한 위젯에 provider를 여러개 attach하고싶을때, ChangeNotifierProvider(1개의 provider)가 아닌 MutliProvider클래스로 생성.      
+ex)
+```Dart	
+MultiProvider(
+       // 위젯에 attach할 provider를 명시
+      providers: [    
+        ChangeNotifierProvider(
+          create: (ctx) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Cart(),
+        ),
+      ],
+      child: Material(...), // 위젯 명시
+
+```
 
 ------------------------
 ## extra packages   
