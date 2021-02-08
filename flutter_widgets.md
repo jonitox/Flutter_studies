@@ -394,3 +394,22 @@ PopupMenuButton의 item으로 사용되는 위젯.
 child: Widget // item으로 명시될 위젯. 일반적으로 Text나 ListTile    
 value: dynamic // 해당 item이 가질 value 입력. 아이템이 입력됬을때 이 value를 PopupMenuButton의 onSelected함수에 전달함.   
 (일반적으로, value 0~k의 index를 사용하거나 enum으로 선언해서 관리. onSelected에서도 enum으로 받음.)        
+
+- *Chip*    
+material 디자인의 클립을 표현하는 위젯.    
+label: Widget // 클립 내부의 주요 content가 되는 위젯. 일반적으로 text
+
+- *Spacer*     
+column, row등에서 사용할수있는 남은 공간을 최대로 차지하는 flex위젯. flex지정 가능. child는 없고 공간만 차지하는 위젯.          
+int flex= 1로 다른 flexible 존재시 default로 다른 flexible과 남은 공간을 균등하게 차지.
+ex) Row의 children에 Spacer()를 추가하면, Spacer가 다른 (flexible이 아닌)child제외 남는 가능한 공간을 전부 차지.     
+
+- *Dismissable*    
+감싼 위젯을 화면에서 swipe하여 지울수있도록 도와주는 위젯. swipe되면 UI상에서 위젯이 지워진다. 실제 데이터상에선 아무일도일어나지않음.(onDismissed에서 명시)          
+key: Key // dismissable의 키 지정. // 일반적으로, ValueKey 지정. // staeful & List issue참조.  
+(dismissable은 내부적으로 sateful이고, 일반적으로 list의 item으로 사용되므로, 지워졌을때 타일이 사라지고, 다음 타일들의 상태를 유지하며 채울 수 있도록)    
+child: Widget // 감쌀 위젯     
+background: Widget // 위젯이 swipe될때 뒤의 배경으로 표시될 위젯. ex) 삭제 구현시 일반적으로, 빨간색 배경과 휴지통 아이콘을 포함한 Container     
+direction: DismissDirection // swipe되는 방향 지정. default는 DismissDirection.horizontal(양쪽)      
+onDismissed: (DismissDirection){} // swipe되어 지워질때 호출할 함수 명시. 함수인자로 swipe된 방향 전달.(방향에 따라 다른 처리 가능.)     
+(swipe시 UI상에서만 지워지기때문에, 일반적으로 실제 데이터상에서 지워주는 작업을 함수에서 명시.)      
