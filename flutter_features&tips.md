@@ -113,6 +113,10 @@ mode목록을 List로 전달.  DeviceOrientation은 enum.)
 
 - *현폴더 상위폴더로 이동시 import '../aa.dart';*     
 
+- import시 해당 파일의 이름을 따로 명시할때(ex)두개이상의 파일에 같은class가 있어서) import '..' as ci; // (ci.)으로 함수 및 class접근가능.      
+
+- import시 파일 전체를 사용하기위해 불러오는게 아닌 몇개의 feature(class,함수)만 가져오고 싶을때 import '..' show Cart; // Cart클래스만 import      
+
 - *함수, 변수 ctrl+click : 해당 함수or변수가 포함된 파일 열기*    
 
 - *ctrl + . : 빠른 수정(위젯을 다른 위젯으로 감싸거나 custom 위젯으로 추출할때)*    
