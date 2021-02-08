@@ -23,6 +23,10 @@ ex) class AAA { String name; int age; AAA({this.name, this.age}); }
 객체를 특정조건으로 생성하고자할떄, 일반 생성자가 아닌 이름이 지정된 생성자로 생성.       
 ex) Abc.withNum(3,4);     
 
+- *(List./Map.)length*    
+List의 원소개수를 반환. Map의 key의 개수를 반환. (단, null이면 error, 빈 list면 0)     
+
+
 - *(List.)map*       
 List의 각 원소를 다른 원소로 mappingg하여 새로운 iterable반환. 리스트로 변환하려면 .toList() 추가     
 
