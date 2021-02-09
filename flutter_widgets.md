@@ -415,3 +415,23 @@ background: Widget // 위젯이 swipe될때 뒤의 배경으로 표시될 위젯
 direction: DismissDirection // swipe되는 방향 지정. default는 DismissDirection.horizontal(양쪽)      
 onDismissed: (DismissDirection){} // swipe되어 지워질때 호출할 함수 명시. 함수인자로 swipe된 방향 전달.(방향에 따라 다른 처리 가능.)     
 (swipe시 UI상에서만 지워지기때문에, 일반적으로 실제 데이터상에서 지워주는 작업을 함수에서 명시.)      
+confirmDismiss: (DismissDirection)=> Future<bool> // dismiss할시, dismiss를 할건지 확인받는 함수 명시. dismiss시 호출하여, direction전달      
+(함수는 Future(true/false)를 반환. true면 dismiss, false면 취소. 예를들어, showDialog()를 return)    
+ (참고: showDialog는 Future<T>를 반환하는데, <T>는 dialog pop시에 전달되는 값. 즉, Navigator.of(ctx).pop(true/false)로 dialog탈출)
+
+- *SnackBar*     
+전체 페이지의 SnackBar로 표현될수있는 위젯.       
+content: Widget // 스낵바의 main content가 되는 위젯. 일반적으로 text     
+duration: Duration // 스낵바가 생성되고 사라지기까지 표시되는 시간을 지정.     
+action: SnackBarAction // 스낵바에 표시될수 있는 action(버튼). SnackBarAction위젯을 받음. 일반적으로, UNDO 같은 버튼 명시.      
+
+- *SnackBarAction*     
+SnackBar의 action에 쓰이는 위젯.      
+label: String // action에 쓰일 라벨(text).    
+onPressed: (){} // 버튼 터치시 호출할 함수. 일반적으로, 방금 operation(결과로, 스낵바를 띄운)의 undo     
+
+- *AlertDialog*     
+Dialog로 쓰이는 일반적인 위젯.     
+title: Widget // dialog의 title. 일반적으로, Text 혹은 Row(icon+Text)     
+content: Widget // dialog의 main content. 일반적으로, 위젯을 감싼 singleChildScrollView 명시. (content가 dialog크기보다 커지는 경우 방지.)      
+actions: [] // dialog의 아래쪽에 사용될 위젯명시. 일반적으로, TextButton/FlatButton    
