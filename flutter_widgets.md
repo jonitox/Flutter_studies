@@ -46,11 +46,13 @@ navigationBar: preferredSizedWidget(ex)CupertinoNavigationBar) /  scaffold의 ap
 rendering되지만 child는 해당 부분까지 available한 영역으로 인식해 Bar와 겹쳐서 rendering됨. body부분의 위젯을 safeArea()로 씌워 해결.)    
 
 - *AppBar*   
-scaffold의 AppBar로 지정할수 있는 material 위젯.   
+scaffold의 AppBar로 지정할수 있는 material 위젯. 혹은 drawer같은 위젯의 상단(column의 첫째 자식) 등에도 사용 가능.   
 title: Widget(일반적으로, Text()) (AppBar에 표시될 타이틀 지정)   
 actions: List<Widget> (title옆에 표시될 widget지정. 일반적으로, iconButtons을 사용. 혹은 popUpMenuButton)   
 (Appbar.)preferredSize / appBar의 크기를 저장해놓은 객체. (preferredSize.)height으로 appBar의 높이 참고가능.
 bottom: PreferredSizedWidget // AppBar의 title밑 하단부분에 들어갈 위젯 명시. 일반적으로, tabBar(안드로이드 스타일의 탭 구성시)     
+automaticallyImplyLeading: bool // leading에 표시되는 위젯이 null일때 표시할지 여부. default는 true(leading이 없어도 자동으로 상황에맞는위젯 생성.)     
+(leading이 있는 경우는 효력x. 일반적으로, 돌아가는 페이지나 draw등이 없을때 작동안하는 버튼을 없앨 때 fale지정)      
 
 - *CupertinoNavigationBar*   
 cupertinoScaffold의 navigationBar로 지정할 수 있는 위젯.    
