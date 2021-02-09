@@ -36,6 +36,7 @@ setter // private변수를 외부에서 접근, 초기화할시.
 
 - *...*   
 List b; List a = [1,2, ...b]; : b의 각원소를 나누어 a에 이어 붙임. (List a = [1,2,b] : b가 nested list로 선언됨)   
+Map이라면 entries를 이어붙임. {...(Map)}와 같이 Map의 entry를 복사해 똑같은 새로운 Map생성 가능.    
 
 - *as*   
 현재 var이 어떤 type이라는 것을 dart에 명시할때   
@@ -70,6 +71,9 @@ $뒤의 변수를 String으로 변형. 만약 객체 내의 변수에 접근한�
 - *(List.)add()*    
 List뒤에 원소 하나를 추가하는 메소드.    
 tip: List가 final이어도 사용 가능.(final List a = []; 에서 a는 List객체의 포인터로 a값 변경 불가지만 객체 수정가능.)    
+
+- *(List.)insert(int, Object)*     
+List의 특정 index에 원소를 추가하는 메소드. 기존에있던 뒤의 원소는 자동으로 1씩 밀려서 채워짐.    
 
 - *(List).where((var)->bool)*   
 현 List의 특정조건을 만족하는 원소들만 iterable을 생성해 반환하는 메소드.   
@@ -151,3 +155,5 @@ ex) class Abc extends Def with Ghi와 같이 mixin명시.
   random수를 생성할수있게 돕는 클래스. 특정 조건으로 난수를 생성. import 'dart:math' 필요.       
   Random().nextInt(k) / 0~k-1범위의 정수를 하나 생성해 반환하는 함수.    
   
+  - *min,max*    
+  min(a,b),max(a,b) // import 'dart:math'     
