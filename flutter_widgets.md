@@ -415,9 +415,9 @@ background: Widget // 위젯이 swipe될때 뒤의 배경으로 표시될 위젯
 direction: DismissDirection // swipe되는 방향 지정. default는 DismissDirection.horizontal(양쪽)      
 onDismissed: (DismissDirection){} // swipe되어 지워질때 호출할 함수 명시. 함수인자로 swipe된 방향 전달.(방향에 따라 다른 처리 가능.)     
 (swipe시 UI상에서만 지워지기때문에, 일반적으로 실제 데이터상에서 지워주는 작업을 함수에서 명시.)      
-confirmDismiss: (DismissDirection)=> Future<bool> // dismiss할시, dismiss를 할건지 확인받는 함수 명시. dismiss시 호출하여, direction전달      
-(함수는 Future(true/false)를 반환. true면 dismiss, false면 취소. 예를들어, showDialog()를 return)    
- (참고: showDialog는 Future<T>를 반환하는데, <T>는 dialog pop시에 전달되는 값. 즉, Navigator.of(ctx).pop(true/false)로 dialog탈출)
+confirmDismiss: (DismissDirection)=> Future<bool> // dismiss시, dismiss를 다시 확인받는 함수 명시. 함수에 dismiss direction전달      
+(함수의 return인 Future값이 true면 dismiss, false면 취소. 예를들어, 함수에서 showDialog()를 return하고 dialog는 Future<true,false>를 return)    
+(참고: showDialog는 Future객체를 반환하고 이때 generic값은 dialog pop시에 전달되는 값이므로 즉, Navigator.of(ctx).pop(true/false)로 dialog탈출)
 
 - *SnackBar*     
 전체 페이지의 SnackBar로 표현될수있는 위젯.       
