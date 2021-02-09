@@ -196,4 +196,17 @@ RoundedRectangleBorder( // 모서리가 둥근 shape을 나타내는 일종의 s
 borderRadius : BorderRadiusGeometry // 각 모서리의 반지름 지정.    
 ),     
 
+- *Scaffold.of(context)*        
+현재 위젯에서 제일 가까운 Scaffold위젯(즉, 현위젯을 포함하는 페이지)에 연결하는 메소드. 해당 scaffold의 상태 참조 및 여러 호출 가능.      
+단, Scaffold를 반환하는 build내에서 직접 참조하면 error. scaffold내의 자식위젯의 build나 위젯 내에서 참조해야함.(context를 이용해 참조하므로)           
+(현 빌드의 위젯이 Scaffold인 경우 자신의 scaffold를 참조하는 방법:      
+https://medium.com/@ksheremet/flutter-showing-snackbar-within-the-widget-that-builds-a-scaffold-3a817635aeb2)     
+(Scaffold.of(context).)showSnackBar(SnackBar); // 해당 scaffold페이지에 snackBar를 표시.     
+(Scaffold.of(context)).hideSnackBar(); // 현재 snackBar가 있다면, snackBar를 숨김 // snackBar를 표시하는 버튼을 빠르게누를때 바로바로 뜨게할떄 사용.      
+
+- *showDialog*    
+화면 내에서 dialog를 띄어주는 함수.    
+context: BuildContext // 화면을 띄어주는 현 위젯의 context 전달.     
+builder: (ctx) => Widget // dialog로 띄워줄 위젯을 빌드하는 함수 명시. 일반적으로, 함수는 AlertDialog반환.        
+   
 
