@@ -76,6 +76,12 @@ sateful위젯의 state객체의 dependency(reference)가 변할때마다 호출�
 state는 크게 app-wide state(app전체 혹은 많은 위젯에 공통적으로 영향이 있는 data. ex)authentication, 전체Loaded products..)와    
 widget(local) state(현재 위젯에만 관여된 data. ex)loading spinner 표시여부, form(field) input등)으로 구분.    
 
+- *multiple TextField in Column/Listview*       
+Form등으로 여러개의 TextField를 포함한 column을 만드는 경우, render영역을 초과하는것을 대비해, singleChildScollView+Column 혹은 Listview를 사용하는데,      
+textField가 매우 긴 경우, ListView를 사용하게되면, item이 화면밖으로 많이넘어갔다 다시 추가되는 경우, textField를 re-add하므로, 입력한정보가 사라지는 issue발생.     
+즉, list의 정해진 길이가 짧으면서, portrait mode만 지원하는 경우면 ListView를 써도 괜찮지만, list가 많이 길어질 수있는 경우, 
+
+
 ## tips    
 
 - *adaptive한 위젯들은 custom으로 관리해 code 간결화*    
