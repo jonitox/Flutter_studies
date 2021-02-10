@@ -214,7 +214,7 @@ TextField에서 사용되는 field의 input을 관리하는 controller.
 ex) state객체 내에서 final _myController = TextEditingController(); 선언 후, TextField의 controller의 인자에 전달하여 명시.     
 TextField의 매 key stroke마다 controller에 입력값 저장.     
 (TextEiditingController.) //text로 현재의 입력값(String) 참조 가능.       
-(?) state소멸시 dispose 필요     
+또한, 선언한 controller는 state소멸시 dispose 필요. dispose()내에서 (TextEiditingController.)dispose();         
 
 - *FocusNode*     
 element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus로 이동 가능.          
