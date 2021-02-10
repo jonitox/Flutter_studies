@@ -217,13 +217,18 @@ TextField의 매 key stroke마다 controller에 입력값 저장.
 또한, 선언한 controller는 state소멸시 dispose 필요. dispose()내에서 (TextEiditingController.)dispose();         
 
 - *FocusNode*     
-element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus로 이동 가능.          
+element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus 이동 및 관리.          
 ex) state 객체 내에 final _priceFocusNode = FocusNode(); // 와 같이 선언 후,      
 TextField(...,focusNode: _priceFocusNode,), // element의 Focus인자에 명시.      
 // 다른 곳에서 이 Focus로 이동하려면 FocusScope.of(context).requestFocus(_priceFocusNode); 호출.    
-// 또한, state내에서 생성후, state소멸시 memory leak방지를 위해, (FocusNode.)dispose호출 해줘야함.
+// 또한, state내에서 생성후, state소멸시 memory leak방지를 위해, (FocusNode.)dispose호출.    
 @override    
 void dispose(){...; _priceFocuseNode.disepose(); super.dispose();}     
+//     
+(FocusNode.)addListner((){}) // FocusNode의 Focus상태 변화에 반응하는 리스너 생성. 리스너의 인자로, focus변할때마다 호출할 함수를 전달. 일반적으로, initState에서 리스너 생성.       
+(FocusNode.)removeListner((){}) // FocusNode의 (메모리 leak방지를 위해)리스너 소멸. 소멸할 리스너를 찾기위해 함수의 인자로, 생성시 사용한 함수포인터를 명시.     
+(단, 똑같이 dispose내에서 소멸시키는데, 해당 FocusNode자체를 dispose하기 전에 리스너부터 dispose해줌.)    
+
 
 - *FocusScope*   
 Focus의 Scope에 접근하기 위한 객체. 해당 위젯이 포함된 페이지의 FocusScope에 접근시 FocusScope.of(context) 메소드 사용.        
