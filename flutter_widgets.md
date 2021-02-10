@@ -451,9 +451,4 @@ textInputAction: TextInputAction // 입력시 soft Keyboard의 완료 버튼이 
 keyBoardType: TextInputType // 입력시 toggle되는 soft keyboar의 type지정.    
 focusNode: FocusNode // 해당 TextField의 FocusNode명시. 명시된 Focus로 다른곳에서 이곳으로 Focus이동 가능.         
 onFieldSubmitted : (value){} // textField의 완료버튼(next,done..)을 눌렀을때 호출할 함수. 해당 함수에 field에 입력된 값 전달.     
-
-- *FocusNode*     
-element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus로 이동 가능.          
-ex) state 객체 내에 final _priceFocusNode = FocusNode(); // 와 같이 선언 후,      
-TextField(...,focusNode: _priceFocusNode,), // element의 Focus인자에 명시.      
-// 다른 곳에서 이 Focus로 이동하려면 FocusScope.of(context).requestFocus(_priceFocusNode); 호출.    
+maxLines: int // text Field를 클릭해 입력시, input field UI의 크기(라인 수) 지정. default는 1.        
