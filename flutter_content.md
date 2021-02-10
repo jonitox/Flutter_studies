@@ -208,5 +208,28 @@ https://medium.com/@ksheremet/flutter-showing-snackbar-within-the-widget-that-bu
 화면 내에서 dialog를 띄어주는 함수.    
 context: BuildContext // 화면을 띄어주는 현 위젯의 context 전달.     
 builder: (ctx) => Widget // dialog로 띄워줄 위젯을 빌드하는 함수 명시. 일반적으로, 함수는 AlertDialog반환.        
-   
+
+- *TextEditingController*     
+TextField에서 사용되는 field의 input을 관리하는 controller.       
+ex) state객체 내에서 final _myController = TextEditingController(); 선언 후, TextField의 controller의 인자에 전달하여 명시.     
+TextField의 매 key stroke마다 controller에 입력값 저장.     
+(TextEiditingController.) //text로 현재의 입력값(String) 참조 가능.       
+(?) state소멸시 dispose 필요     
+
+- *FocusNode*     
+element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus로 이동 가능.          
+ex) state 객체 내에 final _priceFocusNode = FocusNode(); // 와 같이 선언 후,      
+TextField(...,focusNode: _priceFocusNode,), // element의 Focus인자에 명시.      
+// 다른 곳에서 이 Focus로 이동하려면 FocusScope.of(context).requestFocus(_priceFocusNode); 호출.    
+// 또한, state내에서 생성후, state소멸시 memory leak방지를 위해, (FocusNode.)dispose호출 해줘야함.
+@override    
+void dispose(){...; _priceFocuseNode.disepose(); super.dispose();}     
+
+- *FocusScope*   
+Focus의 Scope에 접근하기 위한 객체. 해당 위젯이 포함된 페이지의 FocusScope에 접근시 FocusScope.of(context) 메소드 사용.        
+(FocusScope.of(context).)requestFocus(FocusNode) // 인자로 전달된 FocusNode로 Focus이동.     
+
+- *KeyBoardType: TextInputType*      
+input을 받을때 쓰일 KeyBoard의 type 지정.     
+TextInputType.multiline // 여러줄의 키가 있는 일반적인 pc형태 키보드. 완료버튼은 엔터키(줄바꿈)로 고정. 즉, multiLine 사용시, textInputAction명시 불가능.       
 
