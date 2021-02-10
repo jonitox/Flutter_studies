@@ -443,12 +443,23 @@ actions: [] // dialog의 아래쪽에 사용될 위젯명시. 일반적으로, T
 - *Form*    
 user input의 submit, validation 등을 묶어서 관리할수 있도록 도와주는 위젯.      
 child: Widget // Form이 감쌀 위젯. 일반적으로,textField와 저장버튼 등을 포함하는 scrollable column/listview
+key: Key // Form에 key지정. 일반적으로, form외부에서, form의 state에 접근하여, validate, submit등을 관리하기위해, GlobalKey<FormState>를 생성하여 입력.       
+(ex) state객체 내부에 _form = GlobalKey<FormState>(); 후 Form(key: _form),처럼 명시)     
+ (GlobalKey<FormState>는 FormState의 data를 refer할 수 있는 key. GlobalKey는 위젯과 상호작용할수있는 key로 거의 Form에만 사용.        
+ GlobalKey<FormState>.currentState.save() // Form내의 각 Field의 onSaved함수 호출.      
+  GlobalKey<FormState>.currentState.validate() // Form내의 각 field의 validator호출. 모든 validate 통과시 true반환. 하나라도 error시 false반환.    
+autoValidate: bool // 모든 keyStroke마다 각 field의 validator를 호출할지 지정.    
 
 - *TextFormField*    
-Form에 사용될수있는 TextField위젯     
+Form에 사용될수있는 TextField위젯. default width constraint는 사용가능한 최대로, row안에 직접 사용시 error. 이런 경우, 길이를 지정하나, expanded로 감싸 사용.           
 decoration: InputDecoration // textField의 꾸밈 지정. label, hint text 지정 가능.     
 textInputAction: TextInputAction // 입력시 soft Keyboard의 완료 버튼이 어떤모양일지 명시.(next, done등. 실제 동작은 따로 명시필요.(onFieldSubmitted,FocusNode))    
 keyBoardType: TextInputType // 입력시 toggle되는 soft keyboar의 type지정.    
 focusNode: FocusNode // 해당 TextField의 FocusNode명시. 명시된 Focus로 다른곳에서 이곳으로 Focus이동 가능.         
 onFieldSubmitted : (value){} // textField의 완료버튼(next,done..)을 눌렀을때 호출할 함수. 해당 함수에 field에 입력된 값 전달.     
+onEditingComplete: (){} // (?) onFieldSubmitted와 다른점?     
 maxLines: int // text Field를 클릭해 입력시, input field UI의 크기(라인 수) 지정. default는 1.        
+onSave: (String){} // (formKey.)currentState.save() 호출시 현 text field에서 호출되는 함수. field의 현재 입력값을 함수에 전달.      
+validator: (String)=>String // (formKey.)currentState.validate() 호출시(혹은, autoValidate설정시 매keyStroke마다) 호출되는 현 입력값에 대한 validate확인함수 명시.      
+(Field의 현입력값을 함수에 전달. 함수는 String을 반환하는데 값이 null이면 validate시 현 필드의 error가 없는것으로 인식. null이 아닌 String은 error메시지로 표시됨.)      
+(validate 호출 후 fail시에 즉시 UI에 표시되는 각 error 메시지는 각 TextFormField의 decoration: InputDecoration에서 꾸밈(지속시간, 텍스트스타일 등) 지정 가능.)       
