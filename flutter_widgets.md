@@ -194,7 +194,8 @@ List Tile(네모난 카드 모양)형태로 표현할수 있는 위젯. ListView
 leading: Widget / title왼쪽에 표시할 위젯(보통 이미지나 가격, circleAvatar등)    
 title: Widget / List Tile의 주된 정보를 나타내는 위젯. 주로 Text    
 subtitle: Widget / 추가적인 정보를 나타내는 위젯. title밑에 표시. 주로 Text
-trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정 같은 버튼)    
+trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정 같은 버튼)(아이콘 어러개등을 포함한 row도 가능. 단, row에 컨테이너등으로 width 지정해서.      
+(trailing의 사이즈는 undefined.)     
 
 - *SwitchListTile*     
 ListTile형태의 switch 위젯. ListView내의 원소로 switch를 표현하고자할때 자주 쓰임. (app의 설정, 필터 등을 구현 할때)     
@@ -300,7 +301,10 @@ radius: double / 원의 반지름 지정. 해당 값이 지정되면 minRadius,m
 (min)MaxRadius /    
 child: Widget / 감쌀 위젯    
 backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
-backgoundImage:    /      
+backgoundImage:   ImageProvider / 원 안에 image를 입력. imageProvider객체를 받음.       
+(ImageProvider는 Image위젯이 아닌 이미지 자체를 전달하는 클래스로, AssetImage(), NetworkImage()등으로 생성.)     
+(이름에서 마찬가지로, 폴더에저장된 이미지는 AssetImage, Url로 가져오는 이미지는 NetworkImage로 생성. positional arg로 Url입력.)          
+(단, 위젯이아니므로 fit같은 설정 불가능.이미지를 입력하면 알아서 원의 크기에 맞춰짐.)      
  
 - *LayoutBuilder*   
 위젯을 기존 부모 위젯의 constraints에 responsive하게 크기를 지정해주려할때 사용하는 위젯. 부모위젯의 크기가 유동적이어도 사용 가능.       
@@ -435,3 +439,21 @@ Dialog로 쓰이는 일반적인 위젯.
 title: Widget // dialog의 title. 일반적으로, Text 혹은 Row(icon+Text)     
 content: Widget // dialog의 main content. 일반적으로, 위젯을 감싼 singleChildScrollView 명시. (content가 dialog크기보다 커지는 경우 방지.)      
 actions: [] // dialog의 아래쪽에 사용될 위젯명시. 일반적으로, TextButton/FlatButton    
+
+- *Form*    
+user input의 submit, validation 등을 묶어서 관리할수 있도록 도와주는 위젯.      
+child: Widget // Form이 감쌀 위젯. 일반적으로,textField와 저장버튼 등을 포함하는 scrollable column/listview
+
+- *TextFormField*    
+Form에 사용될수있는 TextField위젯     
+decoration: InputDecoration // textField의 꾸밈 지정. label, hint text 지정 가능.     
+textInputAction: TextInputAction // 입력시 soft Keyboard의 완료 버튼이 어떤모양일지 명시.(next, done등. 실제 동작은 따로 명시필요.(onFieldSubmitted,FocusNode))    
+keyBoardType: TextInputType // 입력시 toggle되는 soft keyboar의 type지정.    
+focusNode: FocusNode // 해당 TextField의 FocusNode명시     
+onFieldSubmitted : (value){} // textField의 완료버튼(next,done..)을 눌렀을때 호출할 함수. 해당 함수에 field에 입력된 값 전달.
+
+- *FocusNode*    
+element(TextField등)에 attach할 수 있는 Focus객체. controller와 비슷하게 생성 및 사용. Focus객체를 통해 해당 element의 focus로 이동 가능.          
+ex) state 객체 내에 final _priceFocusNode = FocusNode(); // 와 같이 선언 후,      
+TextField(...,focusNode: _priceFocusNode,), // element의 Focus인자에 명시.      
+// 다른 곳에서 이 Focus로 이동하려면 FocusScope.of(context).requestFocus(_priceFocusNode); 호출.
