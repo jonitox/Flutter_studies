@@ -462,4 +462,7 @@ maxLines: int // text Field를 클릭해 입력시, input field UI의 크기(라
 onSave: (String){} // (formKey.)currentState.save() 호출시 현 text field에서 호출되는 함수. field의 현재 입력값을 함수에 전달.      
 validator: (String)=>String // (formKey.)currentState.validate() 호출시(혹은, autoValidate설정시 매keyStroke마다) 호출되는 현 입력값에 대한 validate확인함수 명시.      
 (Field의 현입력값을 함수에 전달. 함수는 String을 반환하는데 값이 null이면 validate시 현 필드의 error가 없는것으로 인식. null이 아닌 String은 error메시지로 표시됨.)      
-(validate 호출 후 fail시에 즉시 UI에 표시되는 각 error 메시지는 각 TextFormField의 decoration: InputDecoration에서 꾸밈(지속시간, 텍스트스타일 등) 지정 가능.)       
+(validate 호출 후 fail시에 즉시 UI에 표시되는 각 error 메시지는 각 TextFormField의 decoration: InputDecoration에서 꾸밈(지속시간, 텍스트스타일 등) 지정 가능.)      
+controller: TextEditingController // controller로 입력값을 관리시(ex)Form의 input은 onSaved등으로 관리하지만, 따로 현재입력값을 읽을필요가있다면), controller 명시.       
+initialValue: String // TextField에 처음 저장되있을 text. (단, Field의 controller가 non-null이면 동시 사용 불가능. controller값으로 field값이 채워지므로.)     
+(controller가 있는 textField의 초기값을 주고 싶다면, field가 포함된 위젯 초기화시(state라면, initState나 didChangeDependecies) (controller.)text = (String)으로 초기화.)       
