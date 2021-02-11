@@ -120,8 +120,17 @@ Map의 _key가 존재한다면, 대응되는 value를 새로운 newValue로 바�
 두번째 인자로, 기존의 value를 newValue로 바꾸는 함수 명시. 세번째 인자로, _key가 없다면, 저장할 newValue를 반환하는 함수 명시.    
 _key가 반드시 있다면, 세번쨰 인자는 명시하지않아도됨. _key가 없는데 세번쨰 인자가 없다면 error.    
 
-- *(double.)parse(String)*   
+- *double.parse(String)*   
 String을 받아 double로 변환해주는 메소드. 입력String이 double로 변환이 불가능하면 error출력.   
+
+- *double.tryParse(String)*    
+parse()와 똑같지만, double로 변환이 불가능할시 error를 출력하는것이 아닌 null을 반환.      
+
+- *(String.)startsWith(String)*     
+String의 prefix로 다른 String이 존재하는지를 확인. true/false반환.    
+
+- *(String.)endsWith(String)*       
+String의 suffix로 다른 String이 존재하는지를 확인. true/false반환.    
 
 - *(object.)isEmpty*   
 해당 오브젝트에 값이 있는지(null) 확인.   
