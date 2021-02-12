@@ -151,6 +151,26 @@ MultiProvider(
 
 ```
 
+# Http package   
+Http request 및 response를 받을수있도록 돕는 flutter패키지.    
+tip) import 'package:http/http.dart' as http; 하여 (http.)으로 접근해 패키지 사용.(너무많은 이름의 메소드,클래스 등이 있어서 crash방지)   
+tip) 만약, app data를 provider로 관리하고 해당 데이터로 서버와 interact하고자한다면, provider class내에서 http메소드 선언.(ex) add함수에서 http.post ..)    
+
+- *Post*     
+(http.)post(String(url), body: dynamic(JSON), headers: Map<String,String>) // 서버에 post, url을 positional 인자로 전달.   
+(post메소드의 반환값은 Future<Response>. 즉, 서버에 post를 보내고 response를 받는 함수를 비동기적으로 실행(요청을 보내고 나서, 응답을 받을때까지 코드를 block하지않음.)     
+response를 받으면 Future객체의 완료상태, (post().)then()와 같이 응답을 받은 후 실행할 명령 선언 가능.)     
+(FireBase의 경우: post 요청은 body에 명시된 data(Json(Map))를 서버에(정확히는, url에 명시된 주소 + db주소 내에) 생성,     
+response는, body: (json.){'name':String(post로 생성된 해당 db container의 unique key)}) 로 구성.)        
+
+- *Response*   
+http를 사용하는 서버로부터의 응답을 표현하는 flutter http에 포함된 클래스. (Response.)body,header 와 같이 참조 가능.           
+
+
+- *Json*     
+일반적인 http 통신 시 데이터에 사용되는 포맷으로, flutter http에선 body부분의 format. 형식은 Map과 비슷하고, 따라서, Dart의 Map으로 encode/decode가능.       
+import 'dart:convert'; 후, (encode) json.encode(Map) // (decode) json.decode(Json)       
+
 ------------------------
 ## extra packages   
 - *intl*    
