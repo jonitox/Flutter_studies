@@ -144,9 +144,12 @@ String [i..j)까지의 subString을 반환.
 두번째 인자로, 각 원소의 아이템으로 계산할 값을 수정하는 함수 입력.   
 계산할 값의 현재값(sum)과, 현재 사용할 List의 원소(item)을 전달받아, 함수body에서 새로 덮어씌울 계산할값을 return해야함.    
  
- - *Future<T>*    
- <T>형 객체를 비동기적으로 저장하는 객체. 해당 변수가 저장되길 기다린다.
-  (Future.)then((var) {}) / 변수가 저장될때, 실행하는 함수 선언. 실행 함수의 인자로 저장된 객체를 전달    
+ - *Future&asynchronous(비동기식) code*    
+자바스크립트의 promise와 같이 future는 생성시 생성자로 전달한 함수를 실행하고 반환값인 <T>를 기다림. 함수가 리턴하여 종료되면 완료상태이거나 혹은 중간에 error발생시 throw error    
+ Future내의 함수는 바로실행되지만 함수의 실행 종료를 기다리지않고, 나머지 다른 모든 synchronous코드를 실행. 그 후 다시, future의 함수가 완료되었는지 확인.       
+ (Future.)then((dynamic){}) // 확인했을때 Future객체의 완료 상태시 실행할 "비동기" 명령을 명시. future로 실행한 함수의 리턴값을 then의 함수에 전달.(null이어도 전달.)      
+ then은 다시, future객체를 생성. 즉, then내의 코드도, 비동기로 실행. (Future.)then(..).then(..)같이 연쇄적으로, future에 then 실행 가능.       
+(Future.)catchError((error){}) // Future로 실행한 함수에서 error발생시 catch. (then().then().catchcError().then()...와 같은 경우, 앞쪽then에서의 error catch.)      
  then? wait? await?    
   
   - *if in List*   
