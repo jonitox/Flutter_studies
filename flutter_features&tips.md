@@ -81,6 +81,15 @@ Form등으로 여러개의 TextField를 포함한 column을 만드는 경우, re
 textField가 매우 긴 경우, ListView를 사용하게되면, item이 화면밖으로 많이넘어갔다 다시 추가되는 경우, textField를 re-add하므로, 입력한정보가 사라지는 issue발생.     
 즉, list의 정해진 길이가 짧으면서, portrait mode만 지원하는 경우면 ListView를 써도 괜찮지만, list가 많이 길어질 수있는 경우, 
 
+- *http request & progress Indicator*     
+http request과 같이 시간이 걸리는 명령을 처리할때, 화면에 progress Indicator를 rendering하는 방법.      
+ex) product를 추가하는 버튼 클릭시, http request를 보내고 모든 요청을 처리한 후 페이지를 pop하기 전까지, 화면에 indicator를 표시하고자 하는 경우.    
+statful인 페이지(Screen) 위젯 내에 bool 변수 _isLoading = false를 선언, 페이지의 body부분을 _isLoading에 따라 기존페이지(false),     
+CircularProgressIndicator(true)을 렌더링.
+product를 저장시 실행되는 함수의 처리 순서는(물론, 저장이 valid한 경우), setState(loading=true); 후에, http request를 보내고(post), 기다렸다 response를 받은 다음에 
+(Post.then()혹은, Post.then()도 처리된(ex)app data에도 추가하는 과정) 후인 Post.then().then()에서), 다시 setState(loading=false) 및 Navigator.pop();     
+(이때, http request를 보내는 부분이  Provider<Product>에 선언되어있다면, 해당 부분이 Future<void>를 반환하도록 하고(post메소드 자체나 post.then.then..then을 반환하면 됨),     
+기존의 저장시 실행하는 함수에서 Provider가 return한 Future의 then에 setState과 pop()을 선언.)     
 
 ## tips    
 
