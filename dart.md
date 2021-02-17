@@ -30,6 +30,9 @@ List의 원소개수를 반환. Map의 key의 개수를 반환. (단, null이면
 - *(List.)map*       
 List의 각 원소를 다른 원소로 mappingg하여 새로운 iterable반환. 리스트로 변환하려면 .toList() 추가     
 
+- *(List,Map.)forEach*      
+각 원소를 순회하며 실행할 함수를 받는 메소드., Map의 경우 entry(key,value)를 함수에 전달.(인자가 2개)     
+
 - *getter/setter*   
 getter // 클래스 내에서, 변수를 이용해 특정 값들을 도출해 반환할시. (ex) enum변수를 적절한 String으로 변환할때 등)     
 setter // private변수를 외부에서 접근, 초기화할시.  
