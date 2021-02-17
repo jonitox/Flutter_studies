@@ -157,8 +157,8 @@ String [i..j)까지의 subString을 반환.
 (error발생시, 코드에 catchError가 없다면(handling안되면), 그 뒤의 then 명령 실행안됨. catchError를통해 발생된 error를 처리해주어야(제거) 다음 명령들 제대로 실행.)     
  
  - *async/await*     
-future.then.then..을 대체하기 위한 키워드. async, await은 한쌍으로 사용되며 async는 함수 body전체를 future로 감싸고(자동으로 async로 선언한 body(함수)는 Future반환(?)(비동기로 실행)),    
-async내에서만 await 사용 가능. await으로 선언한 구문은, 해당 구문이 끝나기 전까지 다음 구문의 실행을 기다림. await구문이 완료되면(해당 구문이 future면 resolve되야) 다음 구문 실행.      
+future.then.then..을 대체하기 위한 키워드. async, await은 한쌍으로 사용되며 async는 함수 body전체를 future로 감싸고(자동으로 async로 선언한 body(함수)는 Future반환),    
+async내에서만 await 사용 가능. await으로 선언한 구문은 반드시 future여야함, await 선언시 해당 future가 done이기 전까지 다음 구문의 실행을 기다림. future가 완료되야 다음 구문 실행.     
 즉, 내부적으로, future-then과 동일한 코드. async내의 코드를 future내 함수처럼 비동기적으로 실행하고, await부분의 뒷부분은 then()처럼 실행.)     
 ex) Future<void> addProduct(Product product) async{    
  final response = await http.post(...);     
@@ -175,20 +175,27 @@ ex) try{
 ...    
 }
 
-  - *if in List*   
-  [if(a>1) B, C, ]처럼  if문이 성립할시 직후(괄호{}는 쓰지 않음.)의 원소를 포함하도록 선언 가능.    
-  (flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
-  
-  - *mixin*    
-  클래스가 직접 상속하지않고, 사용할수 있는 변수 및 메소드를 제공하는 feature. mixin Ghi{}와 같이 선언.    
-  다른 클래스에서 해당 mixin을 가져와(with 키워드 사용.) mixin내의 메소드를 사용 가능. 한 클래스는 여러 Mixin을 포함 가능.          
-  상속과 다른점: 논리적으로, 상속처럼 클래스가 다른 클래스와 밀접한 관계를 맺는 것을 나타내는 것이 아닌, mixin의 함수를 제공받아 사용하는 것.     
-  mixin은 일종의 유틸리티 함수 제공 담당. 또한, 상속은 한 클래스만 가능하지만, mixin은 여러 개 사용 가능.     
+- *remove&memory*     
+List(map)의 item(object)을 remove하거나, 변수(포인터)에 저장된 object를 다른 object로 갱신하는 경우,     
+dart는 해당 object를 memory에서 자동으로 지워줌.  (memory관리 / memory leak 방지)   
+단, 해당 object를 참조하는 다른 어떤 변수도 없을시에만 지움. (즉, 해당 object가 더이상 사용할 일이 없다고 판단되는 경우)   
+따라서, list의 item을 지울때, 서버에서도 지우는 요청을 하고 실패하는 경우에 다시 해당 item을 추가하려면       
+해당 item의 index와 obejct를 다른 변수에서 참조해두고, 지운다음. 서버 요청 실패시 다시 추가하는 logic을 구상할수 있음.    
+
+- *if in List*   
+[if(a>1) B, C, ]처럼  if문이 성립할시 직후(괄호{}는 쓰지 않음.)의 원소를 포함하도록 선언 가능.    
+(flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
+
+- *mixin*    
+클래스가 직접 상속하지않고, 사용할수 있는 변수 및 메소드를 제공하는 feature. mixin Ghi{}와 같이 선언.    
+다른 클래스에서 해당 mixin을 가져와(with 키워드 사용.) mixin내의 메소드를 사용 가능. 한 클래스는 여러 Mixin을 포함 가능.          
+상속과 다른점: 논리적으로, 상속처럼 클래스가 다른 클래스와 밀접한 관계를 맺는 것을 나타내는 것이 아닌, mixin의 함수를 제공받아 사용하는 것.     
+mixin은 일종의 유틸리티 함수 제공 담당. 또한, 상속은 한 클래스만 가능하지만, mixin은 여러 개 사용 가능.     
 ex) class Abc extends Def with Ghi와 같이 mixin명시.    
-  
-  - *Random*     
-  random수를 생성할수있게 돕는 클래스. 특정 조건으로 난수를 생성. import 'dart:math' 필요.       
-  Random().nextInt(k) / 0~k-1범위의 정수를 하나 생성해 반환하는 함수.    
-  
-  - *min,max*    
-  min(a,b),max(a,b) // import 'dart:math'     
+
+- *Random*     
+random수를 생성할수있게 돕는 클래스. 특정 조건으로 난수를 생성. import 'dart:math' 필요.       
+Random().nextInt(k) / 0~k-1범위의 정수를 하나 생성해 반환하는 함수.    
+
+- *min,max*    
+min(a,b),max(a,b) // import 'dart:math'     
