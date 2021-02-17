@@ -62,11 +62,13 @@ push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, to
 staeful위젯의 state를 처음 생성시 필요한 변수의 초기화를 initState내에서 진행하는 경우.    
 해당 초기화에 위젯의 context값을 사용한다면, error발생. 그 이유는, initState가 state위젯이 fully create되기 전(context가 생성되기 전)에 실행되기 떄문.     
 (initState에서 다른 일반 property나 widget(대응stateful객체)들은 사용가능. context는 아직 미생성.)          
-해결법: didChangeDependencies에서 초기화    
+해결법1: didChangeDependencies에서 초기화    
 state처음 생성시 필요하나 변수를 initState가 아닌 didChangeDependencies에서 초기화(모든 변수(context포함)가 초기화되었을때마다 호출되므로).      
 단, didChangeDependencies는 매 state dependency가 변할때마다 호출되므로, state의 생존 동안 초기화를 매번 진행하지않기 위해,    
 bool _loadedInitData =false; 와 같이 bool면수를 사용. didChangeDependencies내에서 _loadedInitData가 false일때만 초기화를 진행하고 bool값을 true로 바꾸고,    
 그 이후에 다시 호출되더라도, bool값이 true이므로 초기화를 진행하지않도록 구현.       
+해결법2: initState에서 선언하되, Future.delayed(Duration.zero).then()내에서 사용.        
+물리적으로, 시간상의 차이(Duration.zero)는 없지만, Future로 선언하여, initState에서 모든 state위젯의 dependency가 생성되고 난 다음에 실행되도록 실행순서를 바꿔주는 역할.          
 
 - *didChangeDependencies*    
 sateful위젯의 state객체의 dependency(reference)가 변할때마다 호출되는 함수. state내 모든 위젯 및 변수가 처음 initialized되었을 때도 호출.    
