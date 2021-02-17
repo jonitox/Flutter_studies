@@ -149,9 +149,29 @@ String [i..j)까지의 subString을 반환.
  Future내의 함수는 바로실행되지만 함수의 실행 종료를 기다리지않고, 나머지 다른 모든 synchronous코드를 실행. 그 후 다시, future의 함수가 완료되었는지 확인.       
  (Future.)then((dynamic){}) // 확인했을때 Future객체의 완료 상태시 실행할 "비동기" 명령을 명시. future로 실행한 함수의 리턴값을 then의 함수에 전달.(null이어도 전달.)      
  then은 다시, future객체를 생성. 즉, then내의 코드도, 비동기로 실행. (Future.)then(..).then(..)같이 연쇄적으로, future에 then 실행 가능.       
-(Future.)catchError((error){}) // Future로 실행한 함수에서 error발생시 catch. (then().then().catchcError().then()...와 같은 경우, 앞쪽then에서의 error catch.)      
- then? wait? await?    
-  
+(Future.)catchError((error){trow error}) // Future로 실행한 함수에서 error발생시 catch. (then().then().catchcError().then()...와 같은 경우, 앞쪽then에서의 error catch.)   
+ (throw error: catchError가 생성하는 future객체에서 다시 error를 throw. 해당 객체를 이어받는 then혹은 catchError로 전달됨.)    
+(error발생시, 코드에 catchError가 없다면(handling안되면), 그 뒤의 then 명령 실행안됨. catchError를통해 발생된 error를 처리해주어야(제거) 다음 명령들 제대로 실행.)     
+ 
+ - *async/await*     
+future.then.then..을 대체하기 위한 키워드. async, await은 한쌍으로 사용되며 async는 함수 body전체를 future로 감싸고(자동으로 async로 선언한 body(함수)는 Future반환(?)(비동기로 실행)),    
+async내에서만 await 사용 가능. await으로 선언한 구문은, 해당 구문이 끝나기 전까지 다음 구문의 실행을 기다림. await구문이 완료되면(해당 구문이 future면 resolve되야) 다음 구문 실행.      
+즉, 내부적으로, future-then과 동일한 코드. async내의 코드를 future내 함수처럼 비동기적으로 실행하고, await부분의 뒷부분은 then()처럼 실행.)     
+ex) Future<void> addProduct(Product product) async{    
+ final response = await http.post(...);     
+ final newProduct = Product(...,id: json.decode(response.body)['name'],);
+
+- *try/catch/finally*     
+error-handling을 위한 구문. 특히, async, await을 사용할때 error를 catch하려면 try-catch로 error catch. (future.catchError와 달리, 직접 catch)       
+try문을 일반코드처럼 실행. try내에서 error가 발생하면 catch문으로 errorCatch. error가 나는 여부와 상관없이 try,catch문 실행 후 finally문 실행.       
+ex) try{     
+...     
+} catch(error){     
+...    
+} finally{     
+...    
+}
+
   - *if in List*   
   [if(a>1) B, C, ]처럼  if문이 성립할시 직후(괄호{}는 쓰지 않음.)의 원소를 포함하도록 선언 가능.    
   (flutter에서 children내의 특정 위젯을 포함시킬지 결정하는데 유용.)      
