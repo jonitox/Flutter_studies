@@ -469,3 +469,9 @@ initialValue: String // TextField에 처음 저장되있을 text. (단, Field의
 
 - *CircularProgressIndicator*    
 로딩 indicator를 표시하는 위젯. http request등을 처리할시, 모든 완료 전까지 indicator표시해 사용.      
+
+- *RefreshIndicator*      
+pull to refresh를 구현한 stateful위젯으로, 일반적으로, 페이지body에 쓰이며 위젯을 밑으로 당겼을 경우, refresh동작을 수행.       
+child: Widget // 감쌀 위젯. pull to request기능을 추가할 기존의 위젯 명시.   
+onRefresh: ()=>Futrue // pull했을 경우, 실행할 함수 명시, 해당 함수는 future를 반환해야하며, future가 done이 되기전까지 위젯에서는 progoress indicator가 표시되고,      
+// future가 done이되면, child를 다시 build하여 refresh된 내용을 표시.     
