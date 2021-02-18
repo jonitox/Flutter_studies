@@ -475,3 +475,14 @@ pull to refresh를 구현한 stateful위젯으로, 일반적으로, 페이지bod
 child: Widget // 감쌀 위젯. pull to request기능을 추가할 기존의 위젯 명시.   
 onRefresh: ()=>Futrue // pull했을 경우, 실행할 함수 명시, 해당 함수는 future를 반환해야하며, future가 done이 되기전까지 위젯에서는 progoress indicator가 표시되고,      
 // future가 done이되면, child를 다시 build하여 refresh된 내용을 표시.     
+
+- *FutureBuilder*     
+위젯을 Future의 실행상황에 따라 다르게 표시할때 사용하는 stateful 위젯. 처음 screen을 렌더링 시 http request를 통해 데이터를 가져와 렌더링하는 경우 등에 사용.      
+(요청완료 전까지, loading spinner를 표시하기위해 stateful+_isLoading(bool)을 사용(initState에서 request)하는 것 대신 stateless+FutureBuilder로 구현 가능.)      
+future: Future<dynamic> // FutureBuilder를 처음 생성시에 생성(바로 실행)할 Future 명시.    
+builder: (BuildContext, AsyncSnapshot) => Widget // 생성된 Future의 상태에 따라 표현할 위젯을 생성하는 함수. 함수에, 위젯에 전달할 FutureBuilder의 context와     
+현재 Future의 상태를 참조할수있는 AsyncSnapshot전달.     
+(AsyncSnapshot은 future의 상태를 참조할수있는 클래스,      
+ (AsyncSnapshot.)connectionState // future의 현재 상태인 ConnectionState값 참조 (ConnectionState는 enum: waiting, done..)     
+ (AsyncSnapshot.)error // future가 error를 throw한 상황인지 확인. error가 발생하면, 해당 error 참조. null이면 error미발생     
+ )    
