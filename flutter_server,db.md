@@ -1,8 +1,13 @@
-# working with web server to connect database    
+# working with web server+database    
 직접 db와 연결하는것보다(코드 노출 가능), web server를 통해 db와 interact하는게 더 안전.    
 device에 제한되지않는 data를 저장해야할때. internet필요.     
-일반적으로, REST API(endPoint(URL)+verb(method))를 사용하는 server에 HTTP request를 보내서 server(+dataBase)와 interact.
+일반적으로, REST API(endPoint(URL)+verb(method))를 사용하는 server에 HTTP request를 보내서 server(+dataBase)와 interact.    
 
+# optimistic update.   
+delete, update 등 현 memory상의 처리와 서버 상의 처리 진행. 이때, 서버상의 처리의 오류 발생시(device 인터넷 끊김, 서버 오류 등.)    
+memory상의 처리를 복구하는 작업을 optimisitic update라고함.   
+예를 들어, 상품 삭제시, 앱 메모리 상의 상품 삭제 후, 서버 상의 상품 삭제. 이때 서버에 대한 요청 실패시, 메모리 상에 다시 상품을 로드하는 것.   
+(물론, 서버 요청 처리 실패에 대한 error handling도(앱 내에 실패 메시지를 표시하는 등.) 같이 구현 가능.)    
 
 # FireBase     
 간단한 서버+db생성 및 flutter에 연동.
