@@ -1,5 +1,8 @@
 ## Dart문법
 
+- *object*    
+dart의 모든 데이터(기본자료형/class)가 상속하는 클래스. toString() 메소드를 가짐.    
+
 - *arrow function*    
 한줄 함수(함수의 명령이 한줄)이면 =>로 표현가능. ex) void main() => runApp(myApp());  ( 반환값이 있다면 결과값을 return )    
 
@@ -181,6 +184,26 @@ dart는 해당 object를 memory에서 자동으로 지워줌.  (memory관리 / m
 단, 해당 object를 참조하는 다른 어떤 변수도 없을시에만 지움. (즉, 해당 object가 더이상 사용할 일이 없다고 판단되는 경우)   
 따라서, list의 item을 지울때, 서버에서도 지우는 요청을 하고 실패하는 경우에 다시 해당 item을 추가하려면       
 해당 item의 index와 obejct를 다른 변수에서 참조해두고, 지운다음. 서버 요청 실패시 다시 추가하는 logic을 구상할수 있음.    
+
+- *throw error *    
+함수 내에서 오류 발생시 throw키워드를 사용하여, error를 함수 밖으로 내보내고, 뒤의 구문을 더이상 진행하지않고 함수 종료.    
+내보낼 error는 객체로서 일반적으로 Exception객체.     
+ 
+- *Exception*      
+error를 나타내는 dart클래스(추상클래스). custom error를 생성할때 직접 사용하기보다 implement하여 사용. implement시 toString을 반드시 override    
+ex) class HttpException implements Exception{      
+final String message;
+HttpException(this.message);     
+@override    
+String toString(){    
+   return message;     
+   }        
+}
+
+- *abstract class & implements*     
+abstract : 직접 사용할 목적이 아닌 반드시 오버라이드해서 사용하도록 강제할 유틸리티 메소드들을 포함하는 클래스.     
+implements : abstract class를 상속. 반드시 모든 메소드를 override해야함.    
+
 
 - *if in List*   
 [if(a>1) B, C, ]처럼  if문이 성립할시 직후(괄호{}는 쓰지 않음.)의 원소를 포함하도록 선언 가능.    
