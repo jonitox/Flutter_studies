@@ -92,6 +92,13 @@ product를 저장시 실행되는 함수의 처리 순서는(물론, 저장이 v
 (Post.then()혹은, Post.then()도 처리된(ex)app data에도 추가하는 과정) 후인 Post.then().then()에서), 다시 setState(loading=false) 및 Navigator.pop();     
 (이때, http request를 보내는 부분이  Provider<Product>에 선언되어있다면, 해당 부분이 Future<void>를 반환하도록 하고(post메소드 자체나 post.then.then..then을 반환하면 됨),     
 기존의 저장시 실행하는 함수에서 Provider가 return한 Future의 then에 setState과 pop()을 선언.)     
+ 
+ - *future & context*      
+of(context) 사용시, async의 await 후/future.then()내에서 사용하는 경우, 에러 발생. 그이유는, 현 위젯의 context가 future완료 후 변할수 있기 때문.   
+해결방법: context로 참조한 객체를 변수에 저장해두어 사용.   
+ex) final scaffold = Scaffold.of(context);     
+async{await ..., scaffold.showSnackBar(..);}    
+
 
 ## tips    
 
@@ -181,3 +188,4 @@ Widget tree의 모든 위젯은 property가 전부 final이라면 const 생성�
 (위젯트리에서 새로 instantiation되지 않음.) 즉, 큰 performance향상은 아니지만, 큰 app에서 사소한 차이는 보일 수 있기때문에,        
 const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추천. app을 완성하고 추가하는 방식으로.       
   
+
