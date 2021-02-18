@@ -151,6 +151,11 @@ MultiProvider(
 
 ```
 
+- *initState& Provider.of(context)*      
+일반적으로, initState에서 직접적으로 context를 사용하여 of메소드를 호출할수 없지만, provider의 경우, listen: false로 fetching만 하는 경우는 사용 가능.    
+ex) initState(){ Provider.of<Products>(context, listen:false).fetchAndSetProducts(); super.initState();}      
+단, listen: false가 없으면 다른 context 사용과 마찬가지로, 사용할수 없음. (-> fulture.delayed를 이용하거나 didChangeDependencies사용)          
+
 # Http package   
 Http request 및 response를 받을수있도록 돕는 flutter패키지.    
 tip) import 'package:http/http.dart' as http; 하여 (http.)으로 접근해 패키지 사용.(너무많은 이름의 메소드,클래스 등이 있어서 crash방지)   
@@ -164,11 +169,37 @@ response를 받으면 Future객체의 완료상태, (post().)then()와 같이 �
 response는, body: (json.){'name':String(post로 생성된 해당 db container의 unique key)}) 로 구성.)        
 
 - *Response*   
-http를 사용하는 서버로부터의 응답을 표현하는 flutter http에 포함된 클래스. (Response.)body,header 와 같이 참조 가능.           
+http를 사용하는 서버로부터의 응답을 표현하는 flutter http에 포함된 클래스. (Response.)body,header, statusCode 등 참조 가능.           
 
+- *patch, put, delete & catchError*
+서버에 대한 요청시 받은 response의 statusCode가 400이상이면 오류가 발생한 것을 의미(요청 실패, 서버 오류 혹은 잘못된 url등.).     
+http패키지의 post, get 메소드는 요청 후 응답에서 이 code값을 확인하여, 400이상이면 자동으로 error를 throw함. 그런데 delete 등은 statusCode가 400이상이어도, error를 throw하지않음.   
+따라서 try{ await http.delete(url); } catch(error){ } 혹은 http.delete(url).catchError()와 같이 error catch불가능.     
+해결법: throw custom exception & optimistic delete      
+http.delete의 응답(res)을 await(혹은 then)을 통해 받아, res.statusCode를 확인하여, 400이상 시, error를 적절히 handling한 후, throw error.    
+ex)
+```Dart	
+// 삭제할 product의 index와 객체를 참조해둠. //memory에서 삭제되지않게끔.
+final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+var existingProduct = _items[existingProductIndex];
+_items.removeAt(existingProductIndex); // 현 List에서 삭제
+notifyListeners();
+// 서버에 삭제요청.
+final res = await http.delete(url);
+// 삭제 실패시
+if (res.statusCode >= 400) {
+  _items.insert(existingProductIndex, existingProduct); // List에 다시 추가. optimistic delete
+  notifyListeners();
+  throw HttpException('Could not delete product.'); // 실패시 error throw / 함수 종료
+}
+// 삭제 성공시, memory에서도 삭제.
+existingProduct = null;
+```
+단, patch, delete뿐만 아니라 모든 http request메소드 실행시, 서버 요청오류가 아닌 인터넷 미연결 같은 오류는 자동으로 error를 throw.(위 코드에선 handling되지않음.)       
+즉, 해당 오류를 catch하기위해선, try,catch로 handling해주면됨.(다시말해, 위 구문을 try로 감싸고 try내에선 statusCode를 확인해 복구, error발생시 try밖 catch구문 선언하여 복구.)        
 
 - *Json*     
-일반적인 http 통신 시 데이터에 사용되는 포맷으로, flutter http에선 body부분의 format. 형식은 Map과 비슷하고, 따라서, Dart의 Map으로 encode/decode가능.       
+일반적인 http 통신 시 데이터에 사용되는 포맷으로, flutter http에선 body부분의 format. 따라서, Dart의 Map,List으로 data를 encode/decode가능.       
 import 'dart:convert'; 후, (encode) json.encode(Map) // (decode) json.decode(Json)       
 
 ------------------------
