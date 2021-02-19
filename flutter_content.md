@@ -242,5 +242,5 @@ TextInputType.multiline // 여러줄의 키가 있는 일반적인 pc형태 키�
 contrainer의 transform에 사용되는 클래스     
 Matrix4.rotationZ(double Radian) // 회전각을 입력한 Matrix4생성. (named생성자)   
 (Matrx4.)translate(double x, [double y, double z]) // 현 Matrix4객체의 위치 변화값 지정하는 메소드    
-사용
+
 
