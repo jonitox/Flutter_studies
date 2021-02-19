@@ -238,3 +238,9 @@ Focus의 Scope에 접근하기 위한 객체. 해당 위젯이 포함된 페이�
 input을 받을때 쓰일 KeyBoard의 type 지정.     
 TextInputType.multiline // 여러줄의 키가 있는 일반적인 pc형태 키보드. 완료버튼은 엔터키(줄바꿈)로 고정. 즉, multiLine 사용시, textInputAction명시 불가능.       
 
+- *Matrix4*     
+contrainer의 transform에 사용되는 클래스     
+Matrix4.rotationZ(double Radian) // 회전각을 입력한 Matrix4생성. (named생성자)   
+(Matrx4.)translate(double x, [double y, double z]) // 현 Matrix4객체의 위치 변화값 지정하는 메소드    
+사용
+
