@@ -79,6 +79,7 @@ child : Widget 버튼내부에 표현되는 위젯(text, image등) 입력
 onPressed 인자: 버튼 터치시 수행하는 함수(_void_)의 포인터 입력 null이면 button이 enabled.   
 (RaisedButon.)icon() / icon과 label로 이루어진 버튼을 생성하는 named생성자. (named argument로는    
 onPressed: (){}, icon: Icon(표시될 icon위젯), label: Widget(표시될 label, 일반적으로 text), color:, textColor: 등       
+materialTapTargetSize: MaterialTapTargetSize // 버튼이 눌러지는 탭사이즈 지정.     
  
  - *FlatButton위젯*      
 배경이 없는 버튼. 나머지는 동일.    
@@ -144,6 +145,8 @@ color: Color / 단순 background color지정. 좀더 디테일한 설정 필요�
 decoration: Decoration (일반적으로, 상속하는 BoxDecoration을 객체로 입력/boarder나 gardient등 위젯을 꾸미는 정보를 담은 클래스)    
 Padding: EdgeInsetGeometry(boarder안쪽인 padding 설정)     
 alignment: AlignmentGeometry / container내 child의 배치를 지정.    
+transform: Matrix4 // container의 transform(현재 크기 및 위치로부터 회전, 확대/축소, 위치이동) 지정.     
+(Matrix4는 transformation을 표현가능한 클래스.)        
 
 -*Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
@@ -454,6 +457,8 @@ autoValidate: bool // 모든 keyStroke마다 각 field의 validator를 호출할
 Form에 사용될수있는 TextField위젯. default width constraint는 사용가능한 최대로, row안에 직접 사용시 error. 이런 경우, 길이를 지정하나, expanded로 감싸 사용.           
 decoration: InputDecoration // textField의 꾸밈 지정. label, hint text 지정 가능.     
 textInputAction: TextInputAction // 입력시 soft Keyboard의 완료 버튼이 어떤모양일지 명시.(next, done등. 실제 동작은 따로 명시필요.(onFieldSubmitted,FocusNode))    
+obscureText: bool // textField의 input이 *로 보이게할지 여부.(비밀번호 입력 등에 사용)     
+enabled: bool // textField에 클릭 및 입력 가능한지 여부. false면 textField disabled.    
 keyBoardType: TextInputType // 입력시 toggle되는 soft keyboar의 type지정.    
 focusNode: FocusNode // 해당 TextField의 FocusNode명시. 명시된 Focus로 다른곳에서 이곳으로 Focus이동 가능.         
 onFieldSubmitted : (value){} // textField의 완료버튼(next,done..)을 눌렀을때 호출할 함수. 해당 함수에 field에 입력된 값 전달.     
