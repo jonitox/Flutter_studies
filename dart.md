@@ -29,7 +29,9 @@ ex) Abc.withNum(3,4);
 - *(List./Map.)length*    
 List의 원소개수를 반환. Map의 key의 개수를 반환. (단, null이면 error, 빈 list면 0)     
 
-
+- *??*     
+var a = b ?? c;   // a 저장 시 b가 null이면 c를 사용. null이 아니면 b를 사용.           
+     
 - *(List.)map*       
 List의 각 원소를 다른 원소로 mappingg하여 새로운 iterable반환. 리스트로 변환하려면 .toList() 추가     
 
