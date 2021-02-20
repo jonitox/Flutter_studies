@@ -44,6 +44,13 @@ setter // private변수를 외부에서 접근, 초기화할시.
 List b; List a = [1,2, ...b]; : b의 각원소를 나누어 a에 이어 붙임. (List a = [1,2,b] : b가 nested list로 선언됨)   
 Map이라면 entries를 이어붙임. {...(Map)}와 같이 Map의 entry를 복사해 똑같은 새로운 Map생성 가능.    
 
+- *..*      
+객체내의 메소드 등을 참조하지만, 해당 메소드의 반환값을 사용하는 것이 아닌, ..앞쪽의 객체를 사용.   
+ex) transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-10.0),      
+// transform은 Matrix4를 받음. Matrix4내의 translate은 해당 Matirx4내의 변수들을 변경하는 void형 메소드.     
+즉, Matrix4를 생성 및 final myTrans = Matrix4.rotationZ(..)처럼 저장한 뒤, myTrans.translate(..) 후에 transform: myTrans로 전달할 필요없이,    
+생성된 객체내에 메소드를 호출하고 해당 객체를 바로 사용하는 코드를 한줄로 작성 가능.    
+
 - *as*   
 현재 var이 어떤 type이라는 것을 dart에 명시할때   
 사용예제) ↓   
@@ -170,11 +177,9 @@ ex) Future<void> addProduct(Product product) async{
 - *try/catch/finally*     
 error-handling을 위한 구문. 특히, async, await을 사용할때 error를 catch하려면 try-catch로 error catch. (future.catchError와 달리, 직접 catch)       
 try문을 일반코드처럼 실행. try내에서 error가 발생하면 catch문으로 errorCatch. error가 나는 여부와 상관없이 try,catch문 실행 후 finally문 실행.       
-한 함수 내에서 여러 exception이 발생할 수 있다면, on키워드로 특정 exception을 catch.    
 ex) try{     
 ...     
-} on HttpException catch(error){      // on 키워드: 발생한 error가 on으로 선언한 클래스의 객체인 경우만 catch.     
-...} catch(error){     
+} catch(error){     
 ...    
 } finally{     
 ...    
