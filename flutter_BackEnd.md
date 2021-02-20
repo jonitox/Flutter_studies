@@ -54,7 +54,7 @@ endPoint(서버주소)뿐만 아니라, /로 접근or새로 생성할 db폴더 f
 
 - *get*      
 flutter의 http.get(url)으로 요청, response로 data 전달. response의 body에 해당 url이 나타내는 db내 data를 (key(ID)-value(data)형태의 Map) json으로 전달.   
-body로 받은 데이터를, decode하여 Map<String, dynamic>으로 저장가능.     
+body로 받은 데이터를, decode하여 Map<String, dynamic>으로 저장가능. 해당 db경로에 data가 없다면, 응답 body는 null.    
 ex) final extractedData = json.decode(response.body) as Map<String, dynamic>; (Id가 나타내는 data가 Map인 경우(nestedMap)에, dynamic으로 받아야 error가 나지않음.)         
 
 - *patch*       
@@ -63,12 +63,16 @@ url = 'https://.../products/$id.json'로 요청.(products폴더 내의 해당 it
 이때, 메시지의 body로 새로운 title, description등을 입력하여(Map)(json으로 encode) update요청. 입력된 정보로서,        
 해당 item의 기존에 없던 key의 정보가 들어오면, 새롭게 추가, 기존의 key에 대한 값이 들어오면 해당 값으로 value update. 명시되있지 않은 기존에 있던 나머지 key에 대한 데이터는 유지.      
 
+- *put*     
+해당 url내의 db를 요청한 body로 update. patch와 다른 점은, patch는 body로 명시된 내용 중 다른 부분을 update하고 명시되지않은 부분은 유지하지만,    
+put은 해당 경로의 data를 요청한 data로 전체 변경. 즉, key-value가 기존에 어땠는지 상관없이 새로운 data로 교체.     
+
 - *delete*    
 flutter에서 http.delete(url)로 요청. 해당 url이 지칭하는 db 컨테이너를 삭제.     
 
 - *request with token*    
-authentication이 필요한 요청의 경우, fireBase는 url뒤에 
-필요
+authentication이 필요한 요청의 경우, fireBase는 url뒤에(.json뒤) '?auth=(String)'로 token을 명시하여 요청.      
+(다른 http api의 경우, 요청의 header에 token을 명시하는 경우도있음.) 해당 token이 유효한 경우(authenticated)만, 요청에 맞는 처리.    
 
 # FireBase Auth REST API      
 FireBase에서 제공하는 authentication API. 이 서버로부터 내 서버에 대한 auth관리 가능.      
