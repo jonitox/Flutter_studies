@@ -170,9 +170,11 @@ ex) Future<void> addProduct(Product product) async{
 - *try/catch/finally*     
 error-handling을 위한 구문. 특히, async, await을 사용할때 error를 catch하려면 try-catch로 error catch. (future.catchError와 달리, 직접 catch)       
 try문을 일반코드처럼 실행. try내에서 error가 발생하면 catch문으로 errorCatch. error가 나는 여부와 상관없이 try,catch문 실행 후 finally문 실행.       
+한 함수 내에서 여러 exception이 발생할 수 있다면, on키워드로 특정 exception을 catch.    
 ex) try{     
 ...     
-} catch(error){     
+} on HttpException catch(error){      // on 키워드: 발생한 error가 on으로 선언한 클래스의 객체인 경우만 catch.     
+...} catch(error){     
 ...    
 } finally{     
 ...    
