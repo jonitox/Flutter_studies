@@ -77,6 +77,16 @@ tip: now()를 debug시 간편하게 unique한 객체의 id로 사용가능.
 (DateTime.)subract(Duration) / DateTime의 시간에서 Duration만큼의 시간을 빼주는 메소드.   
 (DateTime).isAfter(Datetime2) / 다른 DateTime과 비교하여 그 이후인지를 bool로 반환해주는 메소드.   
 Duration() / 시간의 duration값을 나타내는 클래스. 생성자에 named argument전달.(days: int, hours: int 등으로 duration의 길이 지정.)      
+(DateTime.)difference(Datetime2) // 다른 dateTime과의 시간 차이를 Duration객체로 반환.     
+
+- *Duration*    
+시간의 기간을 나타내는 클래스.    
+(Duration.)inSeconds // 시간을 초(int)로 계산해 반환.    
+
+- *Timer*     
+시간을 재는 타이머를 구현한 클래스. import 'dart:async'; 후에 사용.    
+Timer(Duration, void Function); // 구문 실행 시 Duration의 시간만큼 기다린 후, 두번쨰 인자로 전달된 함수를 실행. 
+(Timer.)cancel(); // 타이머의 현재 재고있는 시간을 캔슬. (Timer객체를 null로 만드는것이 아닌, 재고있는 duration 및 명시된 함수 취소)     
 
 - *(object.)toString()*    
 모든 object에 암묵적으로 포함된 메소드. object를 String으로 변환. double, DateTime등을 String으로 바꿀때 유용.    
