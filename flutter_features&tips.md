@@ -133,6 +133,11 @@ SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrien
 (SystemCrhome은 system wide한 설정 가능하도록 하는 클래스, setPreferredOrientation()으로 앱의 지원 mode 설정.      
 mode목록을 List로 전달.  DeviceOrientation은 enum.)    
 
+- *fully controlled animation*     
+staeful위젯의 state내에 AnimationController과 Animation을 직접 생성하는 방식.  
+
+-----------------
+
 ## memo  
 
 - *flutter docs/ widget catalog*     
