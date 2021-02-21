@@ -166,8 +166,8 @@ update: (ctx, dynamic, ChangeNotifier) => ChangeNotifier // 현 provider를 upda
 // 해당 함수의 두번째 인자로 의존하는 provider(방금 변경된)객체 전달, 세번째 인자로, 현재까지 존재한 이전의 provider객체 전달. 처음 proxyProvider를 생성하는 경우라면, null전달.      
 // 함수는 이값들을 참조하여, 새로운 provider를 생성해 반환. 일반적으로, 이전의 값들중 그대로 사용할 값들은 provider의 생성자로 받아 저장.          
 
-
-# Http package   
+------------------------
+# Http    
 Http request 및 response를 받을수있도록 돕는 flutter패키지.    
 tip) import 'package:http/http.dart' as http; 하여 (http.)으로 접근해 패키지 사용.(너무많은 이름의 메소드,클래스 등이 있어서 crash방지)   
 tip) 만약, app data를 provider로 관리하고 해당 데이터로 서버와 interact하고자한다면, provider class내에서 http메소드 선언.(ex) add함수에서 http.post ..)    
@@ -212,6 +212,34 @@ existingProduct = null;
 - *Json*     
 일반적인 http 통신 시 데이터에 사용되는 포맷으로, flutter http에선 body부분의 format. 따라서, Dart의 Map,List으로 data를 encode/decode가능.       
 import 'dart:convert'; 후, (encode) json.encode(Map) // (decode) json.decode(Json)       
+
+-----------
+# Shared Preferences      
+key-value형태로 data를 device내에 저장하도록 돕는 패키지. 패키지를 pubspec.yaml에서 get한 후      
+import 'package:shared_preferences/shared_preferences.dart'; 하여 사용.     
+
+- *Future<SharedPreferences> SharedPreferences.getInstance()*      
+SharedPreferences는 현 flutter앱과 SharedPreferences저장공간과의 연결을 관리하는 클래스. getInstance()메소드를 통해,      
+연결을 생성.(SharedPreferences객체를 가져옴) 메소드는 Future를 반환하고, 가져온 SharedPreferences객체가 future에 resolve됨.    
+즉, 해당 메소드를 async 내에서 await으로 호출 후 가져온 SharedPreferences객체를 저장 가능.     
+ex) final prefs = await SharedPreferences.getInstance(); 로 저장해서 객체 내 메소드(저장, 로딩)를 호출.      
+
+- *(SharedPreferences.)setString(String key,String value)*     
+SharedPreferences객체는 디바이스에 데이터를 저장하는 함수인 여러 set함수를 제공. setDouble, setInt, setBool 등과     
+data를 String인 key-val쌍으로 저장하는 메소드인 setString 제공.     
+일반적으로, key는 사용자지정(해당 키로 나중에 데이터를 불러옴), value에는 저장하고자하는 데이터를 json으로 encode하여 저장.    
+
+- *(SharedPreferences.)containsKey(String key)*      
+저장된 key-value쌍 중 특정 key로 저장된 데이터의 유무 확인. bool반환.    
+
+- *(SharedPreferences.)getString(String key)*      
+SharedPreferences에 저장된 key에 해당하는 value값을 String으로 반환.(데이터 load)      
+
+- *(SharedPreferences.)remove(String key)*     
+해당 key의 데이터 삭제     
+
+- *(SharedPreferences.)clear()*     
+현app과 연결된 SharedPreferences저장 공간 전체 초기화.    
 
 ------------------------
 ## extra packages   
