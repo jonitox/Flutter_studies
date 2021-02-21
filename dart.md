@@ -79,6 +79,10 @@ tip: now()를 debug시 간편하게 unique한 객체의 id로 사용가능.
 Duration() / 시간의 duration값을 나타내는 클래스. 생성자에 named argument전달.(days: int, hours: int 등으로 duration의 길이 지정.)      
 (DateTime.)difference(Datetime2) // 다른 dateTime과의 시간 차이를 Duration객체로 반환.     
 
+- *(DateTime.)toIso8601String() & DateTime.parse(String)*       
+dateTime을 Iso8601형식의 string으로 변환. 해당 String을 다시 DateTime으로 parsing가능.    
+ex) DateTime a; String b = a.toIso8601String(); DateTime c = DateTime.parse(b);      
+
 - *Duration*    
 시간의 기간을 나타내는 클래스.    
 (Duration.)inSeconds // 시간을 초(int)로 계산해 반환.    
