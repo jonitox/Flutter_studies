@@ -22,6 +22,12 @@ ex) void func(int a, {int b, int c =3}){} => func(10, b=3, c=4)로 호출.
 contructor에서 클래스 내의 property의 이름으로 named arguments를 선언 가능. this를 이용해 같은 이름으로 받을 것임을 명시.    
 ex) class AAA { String name; int age; AAA({this.name, this.age}); }
 
+- *optional positional arguments*     
+함수의 인자가 positional parameter면 반드시 전달되야함. 하지만, [ ] 내에 parameter를 선언하면, positional이지만 optional로 선언가능.   
+optional argument에 대해 default값 지정 가능.    
+ex) void myFunc(int a, [int b =3, int c])       
+
+
 - *named constructor*   
 객체를 특정조건으로 생성하고자할떄, 일반 생성자가 아닌 이름이 지정된 생성자로 생성.       
 ex) Abc.withNum(3,4);     
