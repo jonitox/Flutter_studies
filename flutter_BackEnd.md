@@ -70,9 +70,22 @@ put은 해당 경로의 data를 요청한 data로 전체 변경. 즉, key-value�
 - *delete*    
 flutter에서 http.delete(url)로 요청. 해당 url이 지칭하는 db 컨테이너를 삭제.     
 
+- *url+query*       
+url뒤에 서버에 요청하는 query를 '?' 와 '(key)=(val)'의 형태로 전달. 명시할 query가 여러개인 경우 &로 구분.   
+ex) url = 'https://flutterudate-default-rtdb.firebaseio.com/products.json?auth=$authToken&$orderBy="creatorId"&equalTo="$userId"';      
+
 - *request with token*    
-authentication이 필요한 요청의 경우, fireBase는 url뒤에(.json뒤) '?auth=(String)'로 token을 명시하여 요청.      
+authentication(token)이 필요한 요청의 경우, fireBase는 url뒤에(.json뒤) '?auth=(String)'로 token을 명시.      
 (다른 http api의 경우, 요청의 header에 token을 명시하는 경우도있음.) 해당 token이 유효한 경우(authenticated)만, 요청에 맞는 처리.    
+
+- *filtering data from Server*     
+data를 노드에서 fetch할때, 전체 data 중 특정 조건을 만족하는 일부만 fetch하고자하는 경우, fireBase server는 filtering지원.    
+우선, realTime Db의 rules에, 특정 노드의 index화 추가. 
+ex) "products": { // filtering할 노드
+      ".indexOn": ["creatorId"]  // index기준인(?) 노드의 key 명시(filtering할 key)
+    }
+그 후, data 요청 시, url의 query에 parameter로 orderBy="creatorId"&equalTo="$userId" 추가.    
+해당 요청을 받으면 서버단에서, 데이터를 creatorId 키의 value가 userId와 일치하는 항목만 fetching.       
 
 # FireBase Auth REST API      
 FireBase에서 제공하는 authentication API. 이 서버로부터 내 서버에 대한 auth관리 가능.      
