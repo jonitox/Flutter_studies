@@ -156,6 +156,17 @@ MultiProvider(
 ex) initState(){ Provider.of<Products>(context, listen:false).fetchAndSetProducts(); super.initState();}      
 단, listen: false가 없으면 다른 context 사용과 마찬가지로, 사용할수 없음. (-> fulture.delayed를 이용하거나 didChangeDependencies사용)          
 
+- *ProxyProvider*      
+다른 provider에 의존적인 provider. 의존하는 provider가 변할때, 해당 provider를 다시 생성 혹은 갱신. ChangeNotifierProxyProvider<T, ChangeNotifier>로 생성.    
+ChangeNotifierProxyProvider<T,ChangeNotifier>( // 첫번째 generic으로 의존할 provider객체 명시. 단, 해당 객체는 provider tree(multi Provider)에서 먼저 선언되어있어야함.  
+(가장 가까운 해당 provider객체를 찾아서 연결(의존).)   
+// 두번쨰 인자로, 현재 생성할 provider의 클래스 명시.    
+create: (ctx) => ChangeNotifier // 의존하는 provider의 변경시, 현 provider를 처음부터 다시 생성하는 경우의 builder함수. 다시 생성하지않고 update할거면 null로 명시.   
+update: (ctx, dynamic, ChangeNotifier) => ChangeNotifier // 현 provider를 update하는 경우의 builder함수. 이전의 provider를 참조하여 새로운 provider를 반환.       
+// 해당 함수의 두번째 인자로 의존하는 provider(방금 변경된)객체 전달, 세번째 인자로, 현재까지 존재한 이전의 provider객체 전달. 처음 proxyProvider를 생성하는 경우라면, null전달.      
+// 함수는 이값들을 참조하여, 새로운 provider를 생성해 반환. 일반적으로, 이전의 값들중 그대로 사용할 값들은 provider의 생성자로 받아 저장.          
+
+
 # Http package   
 Http request 및 response를 받을수있도록 돕는 flutter패키지.    
 tip) import 'package:http/http.dart' as http; 하여 (http.)으로 접근해 패키지 사용.(너무많은 이름의 메소드,클래스 등이 있어서 crash방지)   
