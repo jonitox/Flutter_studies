@@ -243,4 +243,43 @@ contrainer의 transform에 사용되는 클래스
 Matrix4.rotationZ(double Radian) // 회전각을 입력한 Matrix4생성. (named생성자)   
 (Matrx4.)translate(double x, [double y, double z]) // 현 Matrix4객체의 위치 변화값 지정하는 메소드    
 
+- *AnimiationController*      
+animation의 동작을 control하는 컨트롤러.    
+State객체 내의 initState에서 생성하고, dispose에서 (AnimationController.)dispose()를 호출해 소멸. // (?) stateless에서 사용.     
+AnimationController(         
+vsync : TickerProvider // animation이 포함된 현 오브젝트(위젯의 state)를 명시. 즉, 일반적으로, this
+// vsync: this가 동작하기위해선, 현 state객체가 TickerProvider여야함. 따라서, state객체에 SingleTickerProviderStateMixin를 mixin       
+// SingleTickerProviderStateMixin는 내부적으로 현 위젯에 애니메이션이 표시될수있는지 등을 결정하거나, 위젯이 애니메이션 표시기간등을 인지 할 수 있게끔 도와주는 메소드등을 포함하는 클래스        
+duration: Duration(milliseconds: 300,) // 애니메이션이 변화하는 시간길이 지정. 일반적으로 300 msec       
+)        
+이렇게 생성된 animationController는 Animation객체의 parent로 attach. 해당 animation객체는 listner가 추가되어있어야 UI로 반영.            
+(Controller.)forward()로 애니메이션을 시작. (Controller.)reverse()로 역방향 실행 시작.         
 
+
+- *Animation<T>*       
+시간에 따라 변화하는 애니메이션을 표현한 클래스. Animation은 generic으로 <T>는 변화할 값의 클래스. (예를들어, 크기가 변하는 경우, Animation<Size>)       
+(Animation.)value로 값이 변하는 T에 접근 가능.      
+(Animation.)addListner((){}) // 애니메이션의 리스너 추가. 애니메이션컨트롤러에 의해 애니메이션이 값이 변할때마다(16milisec) 호출할 함수를 전달.    
+ // 일반적으로, 별도의 리스너는 AnimationBuilder 미사용시, 수동으로 애니메이션을 사용할때 사용. 즉, stateful필요. state내에서 선언하여 직접 build호출을 위해 사용.          
+ // stateful위젯을 다시 build하기위해 함수로는 setState((){}) 명시. 이후 stateful 위젯 내에서 애니메이션객체의 value에 접근해, 변화하는 값으로 container 크기 등을 지정.       
+
+- *Tween<T>*     
+시작과 끝, 두 값으로 변화하는 값을 표현하는 클래스. generic으로 값의 타입을 명시. .animate을 호출해 이 값을 기반으로 변화하는 animation 생성 가능.     
+ Tween<T>(    
+ begin: T // 시작에 쓰일 오브젝트.    
+ end: T // 끝에 쓰일 오브젝트.
+)       
+ (Tween.)animate(Animation<double>) // Animation을 받아 tween이 지정한 값의 value에 따라 변화되는 animation을 생성, 반환. 일반적으로, CurvedAnimation을 사용.
+ 
+ - *CurvedAnimation*     
+ controller와 시간에 따라 값이 변하는 속도를 지정할 수 있는 애니메이션.     
+ parent: AnimationController // controller지정. controller의 메소드에 따라 애니메이션을 변화시킴.     
+ curve: Curve // 시간에 따라 변하는 속도를 지정. Curve는 Curves(static값을 지정한 클래스)내의 값을 사용.      
+ ex) Curves.linear : 일정하게 변함. Curves.fastOutSlowIn : 느리게시작해서 점점빨라짐        
+ 
+ - *Size*    
+ width와 height값을 지정할 수있는 클래스.     
+ 
+ - *Offset*    
+ 상대적 위치를 나타낼 수있는 클래스. Offset(int dx, int dy)로 생성.     
+ 
