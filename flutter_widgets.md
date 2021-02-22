@@ -251,7 +251,7 @@ borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 �
 - *dedicated padding()*
 
 - *Image*     
-Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성.   
+Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성. image provider(NetworkImage, AssetImage)클래스와는 달리직접 이미지를 포함하는 위젯.     
 (Image.)asset('파일경로 및 이름', height:200, width:double.infinity,fit: BoxFit.cover) / pubspec.yaml에 명시된 asset 내의 파일인 경우.   
 (Image.)network(String, fit: ,fit: BoxFit.cover) / 웹상의 이미지를 가져올 경우. positional 인자로 Url(String)입력      
 (Image.)file() / file에서 stream을 가져오는 경우?    
@@ -304,10 +304,8 @@ radius: double / 원의 반지름 지정. 해당 값이 지정되면 minRadius,m
 (min)MaxRadius /    
 child: Widget / 감쌀 위젯    
 backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
-backgoundImage:   ImageProvider / 원 안에 image를 입력. imageProvider객체를 받음.       
-(ImageProvider는 Image위젯이 아닌 이미지 자체를 전달하는 클래스로, AssetImage(), NetworkImage()등으로 생성.)     
-(이름에서 마찬가지로, 폴더에저장된 이미지는 AssetImage, Url로 가져오는 이미지는 NetworkImage로 생성. positional arg로 Url입력.)          
-(단, 위젯이아니므로 fit같은 설정 불가능.이미지를 입력하면 알아서 원의 크기에 맞춰짐.)      
+backgoundImage:   ImageProvider / 원 안에 image를 입력. imageProvider객체를 받음.(AssetImage, NetworImage등)       
+
  
 - *LayoutBuilder*   
 위젯을 기존 부모 위젯의 constraints에 responsive하게 크기를 지정해주려할때 사용하는 위젯. 부모위젯의 크기가 유동적이어도 사용 가능.       
@@ -491,3 +489,34 @@ builder: (BuildContext, AsyncSnapshot) => Widget // 생성된 Future의 상태�
  (AsyncSnapshot.)connectionState // future의 현재 상태인 ConnectionState값 참조 (ConnectionState는 enum: waiting, done..)     
  (AsyncSnapshot.)error // future가 error를 throw한 상황인지 확인. error가 발생하면, 해당 error 참조. null이면 error미발생     
  )    
+ 
+ - *AnimatedBuilder*      
+ 애니메이션에 따라 변하는 위젯을 만들때 사용하는 stateful 위젯.      
+ animation : Animation // listen할 애니메이션 명시.해당 애니메이션에 따라 자동으로 빌더의 위젯을 다시 생성.     
+ builder: (ctx, child) => Widget // 표현할 위젯을 생성하는 빌더. 해덩 위젯 내에서 animation의 value를 사용. 위젯 셍성 시 , 현 BuildContext와 다시 생성하지않을 위젯인 child를 전달.       
+ child: Widget // 애니메이션이 변화한 후 빌더에 의해 widget를 재생성시, 다시 빌드하지않을 위젯 명시.      
+ 
+ - *AnimatedContainer*     
+container의 size를 애니메이션 효과로 변형시킬 수 있는 inplicitlyAnimatedWidget 위젯. container+애니메이션의 작동을 구현. 즉, 별도의 애니메이션 및 컨트롤러 객체 불필요.         
+duration: Duration // 애니메이션의 작동 시간     
+curve: Curve // 애니메이션의 시간에 따른 속도 변화     
+그 외의 named Argument는 일반 컨테이너와 동일.    
+단, 위젯 내에서 변화하는 값들을 전부 smooth하게(애니메이션으로) 렌더링.     
+ex) height : _authMode == AuthMode.Signup ? 320 : 260, // 일반적인 stateful내의 컨테이너라면, authMode가 변할시 크기가 즉시 변화하지만,      
+// animatedContainer는 크기가 320에서 260에서 변하면, 애니메이션 효과와 함께 변경.       
+
+- *FadeTransition*      
+위젯의 opacity를 애니메이션에 따라 변하게 지정하는 위젯. listen할 애니메이션객체는 따로 생성해야함. 해당 애니메이션에 따라 자동으로 다시 렌더링.     
+opacity: Animation<double> // opacity값이 따를 애니메이션(double값의 변화를 지정한 애니메이션) 명시.  
+child: Widget // 감싼위젯    
+tip) FadeTransition은 opacity만 바꾸므로, 해당 위젯이 안보여도, UI의 빈 공간을 차지함. 애니메이션에 따라 해당 공간도 smooth하게 지웠다 생기게하고싶다면,     
+FradeTransition을 AnimatedController로 감싸고, 컨태에너의 constrain(or size)를 조건에 따라 지정.       
+ 
+ - *SlideTransition*    
+위젯의 위치를 애니메이션에 따라 변하게 지정하는위젯.      
+position: Animation<Offset>  // 감싼 위젯의 위치(Offset)가 따를 애니메이션 명시        
+child: Widget // 감싼위젯    
+(Offset은 상대적위치(dx,dy)를 표현하는 클래스)      
+ 
+ 
+ 
