@@ -254,7 +254,7 @@ borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 �
 Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성. image provider(NetworkImage, AssetImage)클래스와는 달리직접 이미지를 포함하는 위젯.     
 (Image.)asset('파일경로 및 이름', height:200, width:double.infinity,fit: BoxFit.cover) / pubspec.yaml에 명시된 asset 내의 파일인 경우.   
 (Image.)network(String, fit: ,fit: BoxFit.cover) / 웹상의 이미지를 가져올 경우. positional 인자로 Url(String)입력      
-(Image.)file() / file에서 stream을 가져오는 경우?    
+(Image.)file(File, fit: ..) / File객체로부터 이미지를 생성하는 경우.       
 각 constructor내의 name argument   
 fit: BoxFit / 이미지가 Box내에서 size를 어떻게 fit할지 지정. BoxFit은 여러 값을 지정한 enum.   
 (BoxFit.cover : 이미지를 비율유지하면서 확대해서 Box를 채움. 이미지가 짤릴수 있음.)      
@@ -519,7 +519,7 @@ child: Widget // 감싼위젯
 (Offset은 상대적위치(dx,dy)를 표현하는 클래스)      
  
  - *FadeInImage*      
- image를 네크워크 등으로부터 로딩하는 동안 다른 이미지를 표시하고 로딩이 완료되면 이미지를 fade-in(애니메이션)으로 표시하는 위젯. 자동으로, 위젯의 로딩을 기다림.          
+ image를 네크워크 등으로부터 로딩하는 동안 다른 이미지를 표시하고 로딩이 완료되면 이미지를 fade-in(즉, 애니메이션포함)으로 표시하는 위젯. 자동으로, 위젯의 로딩을 기다림.          
  placeholder: ImageProvider // 로딩되기 전에 표시할 이미지. ImageProvider로 지정.      
  image: ImageProvider // 표시할 target 이미지. 전부 준비되면 fade-in하여 렌더링.    
  fit: BoxFit // image들의 fit지정.     
