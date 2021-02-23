@@ -305,7 +305,7 @@ radius: double / 원의 반지름 지정. 해당 값이 지정되면 minRadius,m
 child: Widget / 감쌀 위젯    
 backgroundColor: Color / 원의 색깔. default는 Theme의 primaryColor    
 backgoundImage:   ImageProvider / 원 안에 image를 입력. imageProvider객체를 받음.(AssetImage, NetworImage등)       
-
+(이미지의 크기는 자동으로 원 안에 맞춰짐.)     
  
 - *LayoutBuilder*   
 위젯을 기존 부모 위젯의 constraints에 responsive하게 크기를 지정해주려할때 사용하는 위젯. 부모위젯의 크기가 유동적이어도 사용 가능.       
@@ -518,5 +518,36 @@ position: Animation<Offset>  // 감싼 위젯의 위치(Offset)가 따를 애니
 child: Widget // 감싼위젯    
 (Offset은 상대적위치(dx,dy)를 표현하는 클래스)      
  
- 
- 
+ - *FadeInImage*      
+ image를 네크워크 등으로부터 로딩하는 동안 다른 이미지를 표시하고 로딩이 완료되면 이미지를 fade-in(애니메이션)으로 표시하는 위젯. 자동으로, 위젯의 로딩을 기다림.          
+ placeholder: ImageProvider // 로딩되기 전에 표시할 이미지. ImageProvider로 지정.      
+ image: ImageProvider // 표시할 target 이미지. 전부 준비되면 fade-in하여 렌더링.    
+ fit: BoxFit // image들의 fit지정.     
+
+- *Hero*     
+위젯의 변화 혹은 두 다른 스크린 간의 이동시, 특정위젯이 크기만 바뀌어 렌더링되는 경우. 지웠다가 새로 생기는게 아닌 화면상에 경로를 유지하며 크기가 서서히 변하게끔(애니메이션) 도와주는 위젯.    
+즉, 서로 다른 공간에서 Hero를 선언하고, 같은 tag값을 주어 서로를 인식할수 있도록 한 후, 스크린 이동시 부드럽게 변하게끔 렌더링.     
+tag: Object // 어떤 위젯을 hero로 관리할것인지를 구분하기 위한 tag. (ex) id나 uniqueKey)    
+child: Widget // 감쌀위젯.      
+
+- *CustomScrollView*     
+sliver를 사용하여 custom하게 scroll가능한 view를 생성.     
+slivers: [] // scrollview에 포함될 위젯들(sliver) 명시      
+
+- *SliverAppBar*      
+customScrollView의 slivers에 사용될수있는 appBar위젯. custom(animation)하게 구현 가능. scrollView를 내리면 appBar의 크기를 변화시키고 최대 확장시 다른 위젯을 렌더링 가능.       
+expandedHeight: double // appBar가 가질수있는 최대 세로길이. scrollView를 내릴떄 가질수있는 최대 길이.     
+pinned: bool // appBar가 scrollview의 보이는 영역에서 사라지더라도, 최상단에 항상 보이게할지를 결정.     
+flexibleSpace: Widget // appBar가 크기가 변하는 공간에 실제로 렌더링할 위젯. 일반적으로, 크기가 변하는 FlexibleSpaceBar위젯 사용.     
+
+- *FlexibleSpaceBar*         
+title: Widget // appBar에 표시할 title. Bar의 크기가 변하더라도 bar가 있는 동안 title은 항상 렌더링. (pinned: true면 항상 표시)    
+background: Widget // appBar가 최대로 expanded되었을때 뒷 배경에 표시할 위젯. 최대로 expanded되었을때만 표시됨. background위에 title표시.     
+
+- *SliverList*     
+ListView(column)과 유사한 sliver내에서 여러 자식위젯을 포함할수있도록 하는(각 자식 사이의 일정 공간과함께) sliver위젯. 
+CustomScrollView내에서 별도로 scrollable한 list를 생성하고자할때 사용.   
+delegate: SliverChildDelegate // list 내부가 어떻게 렌더링 될지를 명시. //(?) 일반적으로 SliverChildListDelegate사용.      
+(SliverChildListDelegate( // list의 세부사항을(포함할 자식 등) 명시. // 단, 일반적인 column과 달리, AxisAlign을 지정할수 없으므로, list의 각 cihld에 alignment를 줘야함.        
+List<Widget>, // positional 인자로 list가 포함할 위젯 목록을 받음.    
+)   )     
