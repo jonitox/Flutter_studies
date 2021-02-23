@@ -90,6 +90,12 @@ appBarTheme: AppBarTheme / appBar에 사용될 별도의 theme지정. appBarThem
 ThemeData.light() / 모든 값이 default setting으로 이루어진 ThemeData 반환.      
 여러 theme을 나타내는 객체는 (theme.)copyWith({})로 특정 named argument를 overwrite하여 그대로 사용 가능.    
 ex) 기본 설정의 textTheme을 수정해서 사용할시, themeData.light().textTheme.copyWith(...)처럼 사용.   
+pageTransitionsTheme: PageTransitionsTheme // 페이지 이동시에 사용할 transitionTheme 지정. platform별로 지정 가능. custom transition사용시 명시.        
+(PageTransitionsTheme(   
+ builders: Map<TragetPlatform, PageTransitionBuilder> // 플랫폼별 모든 페이지라우팅에 사용할 트랜지션빌더를 Map형태로 지정.      
+ // ex)builders: {TargetPlatform.iOS: CustomPageTransitionBuilder(), TargetPlatform.android: CustomPageTransitionBuilder(),},      
+))     
+
 
 - *BoxDecoration*   
 container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.
@@ -190,6 +196,63 @@ fullScreenDialog: bool // 페이지를 디폴트값인 slide 애니메이션으�
 ex)MaterialPageRoute(builder: (ctx) { return CategoryMealsScreen(id,title); }, ),
 (불러올 새로운 페이지의 생성자를 통해 데이터도 전달 가능.)    
 
+- *Material(Cupertino)PageRoute<T> & CustomPageRoute*     
+일반적인 pageRoute클래스를 extends하여 customPageRoute를 생성 가능. 페이지 이동시 transition을 custom하게 구현 가능.    
+해당 라우팅을 사용하기 위해선, Navigator.push(ModralPageRoute)를 사용해야함. (route객체를 쓰지않는 pushNamed에선 사용 불가능.)      
+```Dart	 
+ class CustomRoute<T> extends MaterialPageRoute<T> { // pageRoute<T>은 pop시 resolve되는 값을 generic으로 가짐 
+  CustomRoute({
+    WidgetBuilder builder,
+    RouteSettings settings,
+  }) : super(     // 부모인 MaterialPageRoute를 초기화.
+          builder: builder,
+          settings: settings,
+        );
+ // route가 사용할 Transition을 override하여 custom하게 정의. // 커스텀라우팅 객체를 Navigator.push에 사용하면, 이 transition을 사용해 페이지로 이동.
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation, // 페이지 이동시 제공되는 double형 애니메이션. 이 애니메이션으로 여러 효과 구현.
+    Animation<double> secondaryAnimation,
+    Widget child, // 페이지 위젯.
+  ) {
+    if (settings.name == '/') { // 라우팅이 앱의 첫화면(홈)이라면, 그대로 사용.
+      return child;
+    }
+    return FadeTransition( // 화면을 fade-in효과로 transition.
+      opacity: animation,
+      child: child,
+    );
+  }
+}
+```	  
+ 
+ - *PageTranstionBuilder*       
+ page의 Transition을 빌드하는 함수를 포함하는 클래스. App의 pageTransitionsTheme에서 사용 가능. 모든 페이지변환시 사용가능.      
+ 이 클래스를 상속하여 custom pageTransition구현 가능.
+ ex)
+ ```Dart	 
+ class CustomPageTransitionBuilder extends PageTransitionsBuilder {
+ // PageTransitionBuilder가 포함하는 Transition의 빌드함수를 override하여 customize.
+  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route, // PageRoute클래스 내의 buildTransition과 달리, route인자를 추가로 받음. 해당 페이지 transition을 호출한 route가 있다면 전달.     
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    if (route.settings.name == '/') {
+      return child;
+    }
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+    // throw UnimplementedError();
+  }
+}
+ ```	  
+
 - *ShapeBorder*    
 card의 shape인자로 들어가는 Border의 shape에 대한 정보를 표현한 클래스.    
 RoundedRectangleBorder( // 모서리가 둥근 shape을 나타내는 일종의 shapeBorder클래스.     
@@ -283,3 +346,7 @@ duration: Duration(milliseconds: 300,) // 애니메이션이 변화하는 시간
  - *Offset*    
  상대적 위치를 나타낼 수있는 클래스. Offset(int dx, int dy)로 생성.     
  
+ - *ImageProvider*
+Image위젯이 아닌 이미지 자체를 담아 제공하는 클래스로, AssetImage(), NetworkImage()등으로 생성.      
+이름에서 보이듯, 폴더에 저장된 이미지는 AssetImage, Url로 가져오는 이미지는 NetworkImage로 생성. positional arg로 Url입력.     
+단, 위젯이아니므로 fit같은 설정 불가능. 이미지를 전달하면 알아서 전달된 위젯에 따라 크기가 맞춰짐.       
