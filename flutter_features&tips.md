@@ -108,6 +108,13 @@ FutureBuilder의 http request를 다시 실행하지 않아야한다면(새로�
 위젯을 stateful로 바꾸고, 한번 실행될 future를 initState에서 변수에 저장해둔 후, build내의 FutureBuilder의 future: 에 사용.    
 즉, future를 처음에만 생성한 후, 다시 build되더라도, FutureBuilder의 future는 새로 생성하지않고, 완료된 상태의 future를 사용.
 
+- *Button의 외곽UI을 없고자할때(ex)화면 맨아래에 공간남김없이 버튼을 붙여서 렌더링하고자할때)*      
+drop shadow를 없애기위해 elevation: 0 을 주고, (flatButton이 아니라면, default값이 2이므로, 버튼 밑에 검은 영역 존재.)              
+materialTapTargetSize: MAterialTapTargetSize.shrinkWrap을 줌.    
+버튼은 기본적으로, tap가능한 영역을 버튼 이미지 바깥에 좀더 주기위해, 버튼의 이미지보다 더큰 영역(탭 가능 영역)을 차지.   
+해당 영역을 없애기 위해 shrinkWrap으로 선언.     
+
+
 ## tips    
 
 - *adaptive한 위젯들은 custom으로 관리해 code 간결화*    
