@@ -80,7 +80,8 @@ onPressed 인자: 버튼 터치시 수행하는 함수(_void_)의 포인터 입�
 (RaisedButon.)icon() / icon과 label로 이루어진 버튼을 생성하는 named생성자. (named argument로는    
 onPressed: (){}, icon: Icon(표시될 icon위젯), label: Widget(표시될 label, 일반적으로 text), color:, textColor: 등       
 materialTapTargetSize: MaterialTapTargetSize // 버튼이 눌러지는 탭사이즈 지정. 디폴트는 버튼은 버튼 살짝 바깥쪽도 tap가능(?) (.shrinkWrap : 버튼 UI에 맞게끔 shrink )      
- 
+elevation: double // 버튼 밑의 drop shadow값 지정. flatButton을 제외한 모든 버튼의 default값은 2.0     
+
  - *FlatButton위젯*      
 배경이 없는 버튼. 나머지는 동일.    
 (FlatButton.)icon() / raisedButton의 icon생성자와 동일. icon+label형태 버튼 생성.    
