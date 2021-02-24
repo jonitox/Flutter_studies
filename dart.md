@@ -251,3 +251,8 @@ Random().nextInt(k) / 0~k-1범위의 정수를 하나 생성해 반환하는 함
 
 - *min,max*    
 min(a,b),max(a,b) // import 'dart:math'     
+
+- *File*     
+일반 file을 표현한 클래스. 'dart:io'를 import하여 사용. flutter에서 device의 내부 file 사용시 활용.     
+(File).path // 파일 객체의 경로(String)반환.      
+(File.)copy(String) // 파일을 os내의 해당 path(String)에 복사. path는 경로/파일이름으로 구성 가능.         
