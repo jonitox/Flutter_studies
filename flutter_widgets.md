@@ -200,6 +200,8 @@ title: Widget / List Tile의 주된 정보를 나타내는 위젯. 주로 Text
 subtitle: Widget / 추가적인 정보를 나타내는 위젯. title밑에 표시. 주로 Text
 trailing: Widget / title 오른쪽에 표시할 위젯 (보통 휴지통, 수정 같은 버튼)(아이콘 어러개등을 포함한 row도 가능. 단, row에 컨테이너등으로 width 지정해서.      
 (trailing의 사이즈는 undefined.)     
+onTap: (){} // listTile tap시 호출할 함수.     
+
 
 - *SwitchListTile*     
 ListTile형태의 switch 위젯. ListView내의 원소로 switch를 표현하고자할때 자주 쓰임. (app의 설정, 필터 등을 구현 할때)     
