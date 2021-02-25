@@ -143,6 +143,9 @@ mode목록을 List로 전달.  DeviceOrientation은 enum.)
 - *fully controlled animation*     
 staeful위젯의 state내에 AnimationController과 Animation을 직접 생성하는 방식.  
 
+- *Packages using device features*      
+device feature를 사용하는 package를 사용하는 경우, 공식 문서의 README를 숙지할것.     
+
 -----------------
 
 ## memo  
