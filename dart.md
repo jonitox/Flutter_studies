@@ -254,5 +254,6 @@ min(a,b),max(a,b) // import 'dart:math'
 
 - *File*     
 일반 file을 표현한 클래스. 'dart:io'를 import하여 사용. flutter에서 device의 내부 file 사용시 활용.     
+File(String path) // 생성자: 파일 경로를 전달, 해당 경로의 파일을 File객체로서 메모리 상에 생성.     
 (File).path // 파일 객체의 경로(String)반환.      
 (File.)copy(String) // 파일을 os내의 해당 path(String)에 복사. path는 경로/파일이름으로 구성 가능.         
