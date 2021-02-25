@@ -192,7 +192,7 @@ pushNamed로 해당 페이지 생성시 생성자를 사용해 값을 받지않�
 - *Route*    
 새로운 스크린 위젯(페이지)를 빌드해주는 클래스. MaterialPageRoute, CupertinoPageRoute 등이 있음.    
 builder: (BuildContext ctx) => Widget // 빌드할 위젯(페이지)을 반환하는 함수인 builder 지정. 빌더에 현위젯의 ctx를 자동으로 전달.   
-fullScreenDialog: bool // 페이지를 디폴트값인 slide 애니메이션으로 불러올지, 전체화면에 바로 띄울지를 결정.     
+fullScreenDialog: bool // 페이지를 디폴트값인 slide 애니메이션으로 불러오고 뒤로가기표시를 생성할지(false), 전체화면에 바로 띄울지고 x표시를 생성할지(true)결정.        
 ex)MaterialPageRoute(builder: (ctx) { return CategoryMealsScreen(id,title); }, ),
 (불러올 새로운 페이지의 생성자를 통해 데이터도 전달 가능.)    
 
