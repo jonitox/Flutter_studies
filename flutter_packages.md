@@ -240,6 +240,31 @@ SharedPreferences에 저장된 key에 해당하는 value값을 String으로 반�
 
 - *(SharedPreferences.)clear()*     
 현app과 연결된 SharedPreferences저장 공간 전체 초기화.    
+------------------
+# sqflite       
+SQLite를 flutter에서 사용할수 있도록 돕는 패키지. SQLite 명령을 사용하여 device내에 db를 생성 및 data insert, fetch 가능.         
+tip) SQLite과 관련하여, data를 db와 interact하는 메소드를 별도의 class 및 파일에 선언 후, import하여 사용.   
+
+- *methods*     
+Future<String> getDatabasesPath() // db를 새로 생성할수있는 디바이스 저장공간의 path(String)을 반환. 일반적으로, 안드로이드와 IOS의 경우 고정된 저장공간 경로 존재.       
+Future<Database> openDatabase(String path, {Future<void> (DataBase, int) onCreate, int version})      
+// path에 명시된 db를 (version을 명시했다면, 해당 version으로) 열어 반환하거나(Database를 resolve),     
+// 해당 path(경로+이름)에 같은 이름의 db가 없는 경우, 해당 이름으로 db를 새로 생성 후, onCreate를 호출하고, 생성된 db를 반환.     
+// onCreate은 db가 처음 생성될때 호출되는 함수로, sql이 새로 생성한 db와 int(생성한 db의 version)전달. 일반적으로, 해당 함수 내에서, return db.execute()로 db를 초기화.     
+
+- *Database*     
+SQLite에 포함된 db클래스.     
+
+Future<void> (Database.)execute(String) // db에 sql 명령어 수행.(ex) CREATE TABLE .. : db에 테이블 생성.) 명령 완료시, future이 done.      
+// 자세한 명렁어는 https://pub.dev/packages/sqflite 혹은 SQLite문서 참조.    
+    
+Future<int> (Database.)insert(String, Map<String, dynamic>, {conflictAlogrithm: ConflictAlgorithm}) // db에 데이터 추가. id(?)반환.        
+// 첫번째 인자로, table명(String), 두번쨰 인자로, 추가할 data(Map) // Map의 key는 db table의 key와 동일해야함.    
+// conflictAlgorithm은 데이터 테이블에 이미 존재하는 id의 데이터를 추가할시, 어떻게 처리할지를 명시하는 enum.     
+
+Future<> (Database.)query(String) // table(String)내의 모든 데이터를 추출.    
+// 데이터를 List<Map<String, dynamic>>의 ㅇ    
+// 데이터중 일부, 혹은 특정 조건을 만족하는 필터링된 데이터만 추출하고자하는 경우:  공식 문서 참조.
 
 ------------------------
 ## extra packages   
@@ -249,3 +274,39 @@ DateFormat.yMMd().format(dateTime) / DateTime객체를 pattern에 맞게 formatt
 DateFormat은 class로서 생성자 인자로 패턴(ex)yyyy-MM-dd)을 받거나 여러 pre-configured pattern을 named생성자(ex).yMMD())로 지정.   
 DateFormat.E().format(dateTime) / DateTime을 요일만 표시(Mon,Tue,...).      
 format은 class내부 메소드. date를 해당 패턴을 가진 String으로 반환.    
+
+- *Image_Picker*      
+device의 갤러리, 카메라 등을 접근해 사용하고, 이미지 파일을 가져올수있도록 돕는 패키지. 
+// 안드로이드는 별도의 패키지 외에 별도의 configuration이 필요없지만, IOS의 경우 device feature를 사용하기 위해 permission을 받아야하며,      
+<project root>/ios/Runner/Info.plist:에 NSPhotoLibraryUsageDescription(갤러리 접근) 등의 키를 선언해야함.     
+(Info.plist에 key등록 방법: <key>...</key>로 등록, 다음줄에 <string>...</string>으로 IOS의 경우 해당 permission을 제공할때, prompt해 디스플레이할 텍스트를 지정.)        
+
+// 갤러리, 카메라 등으로부터 이미지를 가져오는 방법.      
+'package:image_picker/image_picker.dart'를 import한 후, final picker = ImagePicker()와 같이, ImagePicker 객체를 생성하고, 
+객체 내의 getImage()메소드 호출. 해당 호출은 future로 pickedFile객체(imagePicker내에 포함된 일종의 File클래스)로 resolve되기 전까지 await필요.      
+ex) final imageFile = (picker.)getImage(    
+source: ImageSource // 이미지를 어디서 불러올지 소스 지정. ImageSource는 enum으로 gallery or camera 포함.(소스에 따라 갤러리/카메라 접근.)     
+maxWidth(maxHeight): double // (?) 이미지의 최대 가로(세로)길이        
+)    
+이후, 해당 file을 dart의 File객체에 저장하려면, File(imageFile.path)로 변환해 저장.      
+
+- *path_provider & path*     
+path_provider: device내의 app이 사용할수있는 저장공간에 접근(path 탐색 및 반환)할 수있게 도와주는 패키지.     
+path: path에 관해 파일 이름 추출과 같은 동작을 도와주는 패키지.     
+     
+// path_provider 내의 메소드    
+getApplicationDocumentsDirectory() // app이 사용할수있는 device 저장공간인 directory를 future를 통해 반환. directory resolve까지 await필요.    
+getExternalStorageDirectory() // sd카드 등의 디바이스 외부 저장공간 반환. 안드로이드에서만 사용가능.      
+getgetTemporaryDirectory() // 디바이스 내의 일시적으로 사용가능한 저장공간 반환.     
+(directory는 디렉토리를 나타내는 클래스로, 해당 공간으로의 경로는 (Directory.)path로 접근 가능.     
+// pah내의 메소드    
+basename(String) // path에서 파일명+확장명을 추출. (마지막 / 이후의 문자열)         
+join(String, [String, String, ..]) // path경로(String)를 여러 서브 경로의 합치기('/' 자동 추가)로 생성. ex) join('main/lib','example.txt');     
+
+ex) 두 패키지를 사용하여, file을 device의 hard drive에 저장. (tip: device에는 app이 사용할수있는 공간이 별도로 있고, app이 삭제되면 자동으로 연결된 데이터가 삭제됨.)     
+```Dart	  
+// path_provider.dart를 syspaths로 import, path.dart를 path로 import함.    
+final appDir = await syspaths.getApplicationDocumentsDirectory();  // device 저장공간 탐색    
+final fileName = path.basename(_storedImage.path); // 현재 메모리에 저장된 이미지의 File의 경로로부터 해당 이미지의 (카메라로 찍었다면 카메라가 자동생성한)이름 추출.    
+final savedImage = await _storedImage.copy('${appDir.path}/$fileName');   // 메모리의 이미지를 device저장공간에 같은 이름으로 복사.      
+```
