@@ -141,10 +141,19 @@ SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrien
 mode목록을 List로 전달.  DeviceOrientation은 enum.)    
 
 - *fully controlled animation*     
-staeful위젯의 state내에 AnimationController과 Animation을 직접 생성하는 방식.  
+staeful위젯의 state내에 AnimationController과 Animation을 직접 생성하는 방식. (<->) built-in widget사용(AnimationBuilder, AnimatedController..)     
 
 - *Packages using device features*      
 device feature를 사용하는 package를 사용하는 경우, 공식 문서의 README를 숙지할것.     
+device feature를 접근해 처리하는 메소드를 별도의 helper 클래스(static 메소드로 구성)를 생성하여 사용.     
+
+- *Google Cloud platform(Maps API, ..)*      
+google Maps API : key를 발급받아 사용.           
+google map의 이미지사용: (Maps Static API)  https://developers.google.com/maps/documentation/maps-static/overview    
+위도, 경도 <-> 실제 주소 변환 : (Geocoding API) Google Maps Platform > documentations > Geocoding API // API(url)에 http request를 보내고 응답 사용.      
+
+- *SQLite를 emulator에 사용시 db구성이 변화하는 경우*     
+test하는 경우, db내에서 이름이 바뀌거나 구성이 바뀐다면, 해당 db를 emulator내에서 삭제 필요. 즉, 앱을 uninstall하고 다시 build해야 제대로 작동.     
 
 -----------------
 
