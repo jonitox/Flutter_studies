@@ -259,12 +259,12 @@ Future<void> (Database.)execute(String) // db에 sql 명령어 수행.(ex) CREAT
 // 자세한 명렁어는 https://pub.dev/packages/sqflite 혹은 SQLite문서 참조.    
     
 Future<int> (Database.)insert(String, Map<String, dynamic>, {conflictAlogrithm: ConflictAlgorithm}) // db에 데이터 추가. id(?)반환.        
-// 첫번째 인자로, table명(String), 두번쨰 인자로, 추가할 data(Map) // Map의 key는 db table의 key와 동일해야함.    
+// 첫번째 인자로, table명(String), 두번쨰 인자로, 추가할 data(Map) // Map의 key목록은 db table의 key와 동일해야함. key가 존재하지않거나,
 // conflictAlgorithm은 데이터 테이블에 이미 존재하는 id의 데이터를 추가할시, 어떻게 처리할지를 명시하는 enum.     
 
-Future<> (Database.)query(String) // table(String)내의 모든 데이터를 추출.    
-// 데이터를 List<Map<String, dynamic>>의 ㅇ    
-// 데이터중 일부, 혹은 특정 조건을 만족하는 필터링된 데이터만 추출하고자하는 경우:  공식 문서 참조.
+Future<List<Map<String, dynamic>>> (Database.)query(String) // db내의 특정 table(String)의 모든 데이터를 추출.    
+// 데이터를 List<Map<String, dynamic>>의 형태로 추출.     
+// 데이터중 일부, 혹은 특정 조건을 만족하는 필터링된 데이터만 추출하고자하는 경우:  공식 문서 참조.    
 
 ------------------------
 ## extra packages   
@@ -278,7 +278,7 @@ format은 class내부 메소드. date를 해당 패턴을 가진 String으로 �
 - *Image_Picker*      
 device의 갤러리, 카메라 등을 접근해 사용하고, 이미지 파일을 가져올수있도록 돕는 패키지. 
 // 안드로이드는 별도의 패키지 외에 별도의 configuration이 필요없지만, IOS의 경우 device feature를 사용하기 위해 permission을 받아야하며,      
-<project root>/ios/Runner/Info.plist:에 NSPhotoLibraryUsageDescription(갤러리 접근) 등의 키를 선언해야함.     
+/ios/Runner/Info.plist에 NSPhotoLibraryUsageDescription(갤러리 접근) 등의 키를 선언해야함.     
 (Info.plist에 key등록 방법: <key>...</key>로 등록, 다음줄에 <string>...</string>으로 IOS의 경우 해당 permission을 제공할때, prompt해 디스플레이할 텍스트를 지정.)        
 
 // 갤러리, 카메라 등으로부터 이미지를 가져오는 방법.      
@@ -292,7 +292,7 @@ maxWidth(maxHeight): double // (?) 이미지의 최대 가로(세로)길이
 
 - *path_provider & path*     
 path_provider: device내의 app이 사용할수있는 저장공간에 접근(path 탐색 및 반환)할 수있게 도와주는 패키지.     
-path: path에 관해 파일 이름 추출과 같은 동작을 도와주는 패키지.     
+path: 파일 경로와 관련하여 파일 이름 추출과 같은 동작을 도와주는 패키지.     
      
 // path_provider 내의 메소드    
 getApplicationDocumentsDirectory() // app이 사용할수있는 device 저장공간인 directory를 future를 통해 반환. directory resolve까지 await필요.    
@@ -310,3 +310,21 @@ final appDir = await syspaths.getApplicationDocumentsDirectory();  // device 저
 final fileName = path.basename(_storedImage.path); // 현재 메모리에 저장된 이미지의 File의 경로로부터 해당 이미지의 (카메라로 찍었다면 카메라가 자동생성한)이름 추출.    
 final savedImage = await _storedImage.copy('${appDir.path}/$fileName');   // 메모리의 이미지를 device저장공간에 같은 이름으로 복사.      
 ```
+
+- *location*     
+디바이스의 위치서비스를 이용하여 현재 위치를 앱에서 얻을 수 있도록 돕는 패키지. (?) 사용시 update settings.gradle. 문제    
+IOS의 경우, info.plist에 NSLocationWhenInUseUsageDescription, NSLocationAlwaysUsageDescription 추가 필요.           
+
+Location().getLocation(); // 위치 가져오기. Location 객체를 생성 후, getLocation()호출. Future를 반환, LocationData로 resolve됨    
+// LocationData는 위치 정보를 표현한 클래스로, latitude(double), longitude(double)를 포함.     
+ex) final locData = await Location().getLocation(); print(locData.latitude);     
+
+- *google_maps_flutter*     
+구글맵 지도를 띄워주는 패키지.      
+맵을 표현하는 위젯 GoogleMap을 생성하여 사용.    
+GoogleMap( // GoogleMap은 부모 위젯의 height, width가 있어야함.      
+    initialCameraPositionL CameraPosition( // 맵을 생성할때 초기의 위치 지정. CameraPosition객체로 지정.         
+        target: LatLng( 12.0, 34.91), // 위도 고도로 위치 지정.     
+        zoom: double, // 맵의 zoom크기 지정.      
+        tilt: double, // 맵의 방향 지정.    
+)
