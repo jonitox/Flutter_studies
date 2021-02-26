@@ -163,7 +163,7 @@ ValueKey(String) / String에 따라 서로 다른 key생성. String이 다르면
 
 - *Navigator*    
 flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리의 구조를 알기 위해 Navigator.of(context)로 호출.     
-(Navigator.of(ctx).)push(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음.     
+(Navigator.of(ctx).)push<T>(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음. T는 pop시에 resolve될 객체에 명시할 타입.        
 (Navigator.of(ctx).)pushReplancement(Route) // 현 스크린을 스택에서 제거하며 다른 페이지를 추가 및 이동.(즉, 이전화면으로 갈수없음. login page->main page이동 같은 경우 사용)     
 (Navigator.of(ctx).)pushNamed(String, aruments: Object) // 다른페이지의 라우팅을 미리 선언해놓은 이름으로 참조해 추가 및 이동.    
 (모든 push함수는 future객체를 반환. 즉, 해당 push가 종료된 이후(push만이 아니라 추가된 페이지가 종료되어 현재 페이지로 돌아오는것까지.) 실행할 루틴을 지정 가능.)      
