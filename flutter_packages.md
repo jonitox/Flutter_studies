@@ -266,6 +266,11 @@ Future<List<Map<String, dynamic>>> (Database.)query(String) // db내의 특정 t
 // 데이터를 List<Map<String, dynamic>>의 형태로 추출.     
 // 데이터중 일부, 혹은 특정 조건을 만족하는 필터링된 데이터만 추출하고자하는 경우:  공식 문서 참조.    
 
+- *SQL 문법*  
+CREATE TABLE : table 생성.      
+REAL : int          
+TEXT : String      
+
 ------------------------
 ## extra packages   
 - *intl*    
@@ -320,11 +325,14 @@ Location().getLocation(); // 위치 가져오기. Location 객체를 생성 후,
 ex) final locData = await Location().getLocation(); print(locData.latitude);     
 
 - *google_maps_flutter*     
-구글맵 지도를 띄워주는 패키지.      
+구글맵 지도를 띄워주는 패키지. 사용하기 위해선 os별 별도 configuration필요 (android: manifest, IOS: info.plist). README참조.          
 맵을 표현하는 위젯 GoogleMap을 생성하여 사용.    
 GoogleMap( // GoogleMap은 부모 위젯의 height, width가 있어야함.      
     initialCameraPositionL CameraPosition( // 맵을 생성할때 초기의 위치 지정. CameraPosition객체로 지정.         
-        target: LatLng( 12.0, 34.91), // 위도 고도로 위치 지정.     
+        target: LatLng( 12.0, 34.91), // 위도 고도로 위치 지정. LatLng은 위도와 고도로 위치를 표현하는 클래스.          
         zoom: double, // 맵의 zoom크기 지정.      
         tilt: double, // 맵의 방향 지정.    
+    onTap: (LatLng){} // 맵을 터치할때 호출할 함수 명시. 함수에 해당 지역의 LatLng전달. 함수 내에서 해당 터치 지역의 위치를 저장할수 있음.   
+    markers: Set<Marker> // 맵에 표시할 마커의 목록(set)명시. onTap에서 setState을 호출하고, 마커의 위치를 tap마다 생성할 수 있음.    
+    // Marker(markerId: MarkerId('m1'), position: LatLng) // Marker는 마커를 표현하는 클래스로, markerId는 unique하게 생성해야하며(Set), position에 위치지정하여 생성      
 )
