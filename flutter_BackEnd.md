@@ -17,13 +17,27 @@ google fully-managed backEnd API (database, file storage, authentication, server
 firbase 프로젝트에 앱 추가(OS별 app추가. 같은 작업을하는 안드로이드, IOS앱을(두 os를 지원하는 플러터앱의 경우 둘다 필요) 하나의 Firebase프로젝트에 연결)       
 추가하는 법: https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android    
 
+# DB: cloud_firestore     
+ 
+flutter 앱에 cloud_firestrore 패키지 설치. -> 앱과 연동된 firebase프로젝트에 cloud_firestore생성. (개발시 test mode)       
 
-- *DB: cloud_firestore*
-flutter 앱에 cloud_firestrore 패키지.    
-firebase프로젝트에 cloud_firestore생성. (개발시 test mode)       
+- *DB 구성*    
+collection(table) - documents(entries, each data) 로 구성. 각 document는 다시 sub collection들을 가질수있음.     
+각 document는 필드(이름)-값로 구성.    
+ex) chat app: 최상위 chats collection이 chat room document들을 가지고 각 chat room이 messages collection을 가지고     
+message collection내에 단위 String 메시지를 document로 구성.    
 
+- *access to firestore*      
+cloud_firestore 패키지에 포함된 Firestore.instance()로 연동된 firebase의 firestore에 access. 항상 생성된 인스턴스(내 Firebase entry)를 통해 여러 메소드 사용.     
+ex) Firestore.instance().collection...     
+(Firestore.)collection(String) // store내 collection접근. 최종 collection 경로 명시. 해당 collection을 CollectionReference객체로 반환. ex)'chats/(document key)/messages'   
+(CollectionReference.)snapshots() // collection의 Stream객체를 반환. stream을 통해 collection의 변화가 있을때마다 자동으로 감지 가능.     
+(Stream<QuerySnapshot>.)listen((QuerySnapshot){}) // collection(Stream) 변화시마다 호출 할 함수를 명시. 해당 함수에 collection의 변화 이후 상태인 QuerySnapshot전달.         
+// QuerySnapshot.documents로 각 document접근 가능. 
+      
+- **    
 
-# FireBase REST API.    
+# FireBase REST API without SDK.    
 
 프로젝트와 app의 연동(sdk 및 플러그인 설치) 필요없이, http만 사용해 db서비스 사용 가능.    
 단순 rest api를 지원하는 realtime DB사용.     
@@ -73,7 +87,7 @@ ex) "products": { // filtering할 노드
 해당 요청을 받으면 서버단에서, 데이터를 creatorId 키의 value가 userId와 일치하는 항목만 fetching.       
 
 
-# FireBase Auth REST API      
+# FireBase Auth REST API without sdk    
 FireBase에서 제공하는 authentication API. 이 서버를 사용해 내 앱(내 firebase 서버,db)에 대한 auth관리 가능. (token사용)     
 https://firebase.google.com/docs/reference/rest/auth#section-create-email-password 참조.    
 
