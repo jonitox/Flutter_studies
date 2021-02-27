@@ -554,3 +554,11 @@ delegate: SliverChildDelegate // list 내부가 어떻게 렌더링 될지를 �
 (SliverChildListDelegate( // list의 세부사항을(포함할 자식 등) 명시. // 단, 일반적인 column과 달리, AxisAlign을 지정할수 없으므로, list의 각 cihld에 alignment를 줘야함.        
 List<Widget>, // positional 인자로 list가 포함할 위젯 목록을 받음.    
 )   )     
+ 
+ - *StreamBuilder*     
+Stream객체에 따라 widget을 regenerate할때 사용. ex) chat page    
+stream: Stream<dynamic> // stream지정. // Stream은 상호작용하는 data가 변할때마다, 새로운 값(snapshot)을 도출해주는 클래스.        
+builder: (BuildContext, AsyncSnapshot) => Widget // widget의 빌더 함수. 해당 함수에 Stream의 가장 최근 snapshot전달. (즉, Stream이 변할떄마다 실행)    
+// AsyncSnapshot.data로 snapshot data접근 가능. (ex) 연동한 Firestore의 snapshot인 경우, snapshot.data.documents로 documents참조)        
+// 주의) 단, 첫 생성시, 내부적으로 Stream에서 data를 요청하여 전부 fectch하기 전까진, data는 null로 data에서 다른 값을 참조하면 에러 발생.    
+// 해결법: (snapshot.)connectionState이 waiting인지 확인하고, 다른 위젯 렌더링.    
