@@ -114,6 +114,9 @@ materialTapTargetSize: MAterialTapTargetSize.shrinkWrap을 줌.
 버튼은 기본적으로, tap가능한 영역을 버튼 이미지 바깥에 좀더 주기위해, 버튼의 이미지보다 더큰 영역(탭 가능 영역)을 차지.   
 해당 영역을 없애기 위해 shrinkWrap으로 선언.     
 
+- *DexArchiveMergerException error*      
+Firesore access시 발생하는 error.    
+해결법: 앱수준 build.gradle내의 defaultConfig영역에 multiDexEnabled true 추가 + dependencies영역에 implementation 'com.android.support:multidex:1.0.3' 추가     
 
 ## tips    
 
