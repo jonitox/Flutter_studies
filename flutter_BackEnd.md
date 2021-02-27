@@ -43,8 +43,26 @@ bool get isAuth {
   }
 ```
 
-# FireBase     
-간단한 서버+db생성 및 flutter에 연동.
+# FireBase      
+google fully-managed backEnd API (database, file storage, authentication, server-side code(cloud-function) etc. )       
+
+- *Firbase를 flutter app과 연동.*      
+firbase 프로젝트에 앱 추가(OS별 app추가. 같은 작업을하는 안드로이드, IOS앱을(두 os를 지원하는 플러터앱의 경우 둘다 필요) 하나의 Firebase프로젝트에 연결)       
+추가하는 법: https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android    
+
+
+- *DB: cloud_firestore*
+flutter 앱에 cloud_firestrore 패키지.    
+firebase프로젝트에 cloud_firestore생성. (개발시 test mode)       
+
+
+# FireBase REST API.    
+
+프로젝트와 app의 연동(sdk 및 플러그인 설치) 필요없이, http만 사용해 db서비스 사용 가능.    
+단순 rest api를 지원하는 realtime DB사용.     
+
+- *realtime DB생성.*    
+간단한 서버+db생성 및 flutter에서 사용.    
 Firebase -> 프로젝트 생성 -> realtime DB생성
 
 - *Post*      
@@ -87,16 +105,18 @@ ex) "products": { // filtering할 노드
 그 후, data 요청 시, url의 query에 parameter로 orderBy="creatorId"&equalTo="$userId" 추가.    
 해당 요청을 받으면 서버단에서, 데이터를 creatorId 키의 value가 userId와 일치하는 항목만 fetching.       
 
+
 # FireBase Auth REST API      
-FireBase에서 제공하는 authentication API. 이 서버로부터 내 서버에 대한 auth관리 가능.      
+FireBase에서 제공하는 authentication API. 이 서버를 사용해 내 앱(내 firebase 서버,db)에 대한 auth관리 가능. (token사용)     
 https://firebase.google.com/docs/reference/rest/auth#section-create-email-password 참조.    
 
-- *API의 endPoint에 내 서버의 키를 명시.*    
+- *endPoint에 내 서버의 키를 명시.*    
 내 api키: Firebase 프로젝트 -> 설정 -> 내 웹 API키     
 
-- *post*
-post메소드로 요청, email,password등으로 로 sing up/in 가능, sign up시 body에 email, password, returnSecureToken(bool) 명시.      
-response에는 body에 idToken 등 포함.    
+- *post로 auth요청*       
+내 서버의 키를 포함한 url로 post 요청, signUp, signIn 등인지도 urlSegment로 구분.      
+email,password등으로 로 sing up/in 가능, email로 요청시 body에 email, password, returnSecureToken(bool) 명시.      
+response에는 body에 error여부, 성공시 idToken 등 포함. 해당 정보를 앱에서 처리. (ex)로그인 성공시, 토큰 저장 및 화면 전환 등)      
 
 - *authentication error*     
 authentication에 관한 error 발생시 (sign up시 이미 존재하는 email, sign in시 잘못된 비밀번호, 존재하지않는 email 등 )    
