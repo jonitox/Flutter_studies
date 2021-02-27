@@ -33,7 +33,7 @@ ex) Firestore.instance().collection...
 (Firestore.)collection(String) // store내 collection접근. 최종 collection 경로 명시. 해당 collection을 CollectionReference객체로 반환. ex)'chats/(document key)/messages'   
 (CollectionReference.)snapshots() // collection의 Stream객체를 반환. stream을 통해 collection의 변화가 있을때마다 자동으로 감지 가능.     
 (Stream<QuerySnapshot>.)listen((QuerySnapshot){}) // collection(Stream) 변화시마다 호출 할 함수를 명시. 해당 함수에 collection의 변화 이후 상태인 QuerySnapshot전달.         
-// QuerySnapshot.documents로 각 document접근 가능. 
+// QuerySnapshot.documents로 collection내 document접근 가능 // list와 같이 []로 i번째 document참조 가능. 각 documen는 Map과 같이 [String]으로 값 참조 가능.     
       
 - **    
 
