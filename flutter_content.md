@@ -298,6 +298,7 @@ void dispose(){...; _priceFocuseNode.disepose(); super.dispose();}
 - *FocusScope*   
 Focus의 Scope에 접근하기 위한 객체. 해당 위젯이 포함된 페이지의 FocusScope에 접근시 FocusScope.of(context) 메소드 사용.        
 (FocusScope.of(context).)requestFocus(FocusNode) // 인자로 전달된 FocusNode로 Focus이동.     
+(FocusScope.of(context).)unFocus() // 현재 페이지의 설정된 Focus를 전부 해제. (즉, textInput등에 focus가 있어 keyBoard가 떠있다면, 해제하고 keyboard소멸)         
 
 - *KeyBoardType: TextInputType*      
 input을 받을때 쓰일 KeyBoard의 type 지정.     
