@@ -9,6 +9,10 @@ dart의 모든 데이터(기본자료형/class)가 상속하는 클래스. toStr
 - *anonymous function*    
 익명함수, 재사용하지 않는 함수에 활용. ( arguments ) { body }로 표현가능. ex) (value) { print(value); };    
 
+- *Function*      
+함수의 포인터를 나타내는 클래스. 함수의 argument와 return type을 규정하여 함수를 Function에 저장 가능.     
+ex) final void Function(String a, int b) myFunc;    // myFunc에 저장하는 함수는 String,int를 받고 void반환이어야함.      
+
 - *final/const*   
 final: runtime시에 initialized된 이후부터 변경x (run time constant)   
 const: compile단계에서 변경x (compile time constant)    
