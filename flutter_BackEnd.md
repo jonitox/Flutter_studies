@@ -44,6 +44,9 @@ Future<> (CollectionREference.)add(Map<String,dynamic) // collection에 document
 
 - **    
 
+# auth: Firebase_auth     
+별도의 auth state management(ex) provider)필요x
+
 # FireBase REST API without SDK.    
 
 프로젝트와 app의 연동(sdk 및 플러그인 설치) 필요없이, http만 사용해 db서비스 사용 가능.    
