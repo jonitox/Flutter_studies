@@ -449,9 +449,9 @@ user input의 submit, validation 등을 묶어서 관리할수 있도록 도와�
 child: Widget // Form이 감쌀 위젯. 일반적으로,textField와 저장버튼 등을 포함하는 scrollable column/listview
 key: Key // Form에 key지정. 일반적으로, form외부에서, form의 state에 접근하여, validate, submit등을 관리하기위해, GlobalKey<FormState>를 생성하여 입력.       
 (ex) state객체 내부에 _form = GlobalKey< FormState >(); 후 Form(key: _form),처럼 명시)     
- (GlobalKey<FormState>는 FormState의 data를 refer할 수 있는 key. GlobalKey는 위젯과 상호작용할수있는 key로 거의 Form에만 사용.        
- GlobalKey<FormState>.currentState.save() // Form내의 각 Field의 onSaved함수 호출.      
-  GlobalKey<FormState>.currentState.validate() // Form내의 각 field의 validator호출. 모든 validate 통과시 true반환. 하나라도 error시 false반환.    
+ (GlobalKey< FormState >는 FormState의 data를 refer할 수 있는 key. GlobalKey는 위젯과 상호작용할수있는 key로 거의 Form에만 사용.        
+ GlobalKey< FormState >.currentState.save() // Form내의 각 Field의 onSaved함수 호출.      
+  GlobalKey< FormState >.currentState.validate() // Form내의 각 field의 validator호출. 모든 validate 통과시 true반환. 하나라도 error시 false반환.    
 autoValidate: bool // 모든 keyStroke마다 각 field의 validator를 호출할지 지정.    
 
 - *TextFormField*    
