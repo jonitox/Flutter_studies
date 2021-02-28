@@ -80,10 +80,12 @@ Cupertino App의 대응클래스는 cupertinoThemeData
 primaryColor: Color / theme의 default로 쓰일 color. 다른 위젯에서 이 색상만 지정가능.    
 primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으로 사용. 위젯에서 theme색 참조시 여러버전으로 참조가능.     
 accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
+accentColorBrightness // accentColor의 brightness. (?)명시된 밝기에 따라, accentColor위의 text나 icon의 색깔이 달라짐   
 canvasColor: Color /    
 errorColor: Color / 에러에 쓰일 색상 지정. default는 red.   
 fontFamiliy: String / app의 global폰트family 지정(text의 default폰트?)     
 textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
+ButtonTheme: ButtonTheme / 버튼의 theme지정. ButtonTheme에는 buttonColor, textTheme, shape등 포함.         
 (TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.   
 style: Theme.of(context).textTheme.title) 혹은 color : Theme.of(context).textTheme.button.color 와 같이)    
 appBarTheme: AppBarTheme / appBar에 사용될 별도의 theme지정. appBarTheme정보를 나타내는 객체. textTheme등 지정 가능.       
