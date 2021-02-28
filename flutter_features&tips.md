@@ -53,7 +53,12 @@ item에 직접 해당하는 topmost의 stateful위젯의 생성자에 전달받�
 이때, 매 item생성시, UniqueKey()를 쓰면, item목록이 변하지않더라도 ListView가 갱신될때마다,(ListView의 조상위젯이 rebuild된다면,)      
 각 item에 다시 새로운 key를 입력하므로, element들이 기존에 대응되는 위젯을 찾지못해, 새로운 위젯을 매번 다시 생성.       
 따라서, UniqueKey대신 ValueKey 사용. ValueKey의 인자로는 unique한 key인 id등을 쓰면 됨.     
- 
+
+- *column & conditional TextFormField*     
+list & stateful과 마찬가지로, textFormField 여러개를 stateful내에서 Form내의 column에 선언시, 특정 textField를 특정 조건인 경우만 렌더링 시,      
+버튼 클릭 등으로 조건을 변경해 해당 textFormField를 지우면, Form내에서 해당 textField내의 input이 지워지지않고, 순차적으로 다음 textField input으로 attach됨.      
+마찬가지방법으로, key를 지정해 해결.        
+
  - *pages as a stack*    
  page들은 stack으로 관리됨. topmost Page가 화면에 표시. stack은 현 페이지에서 push(), pop() 등으로 관리.          
 push, pop은 navigator의 도움을 받아 사용. 스택이 쌓여있다면, topmost페이지에 뒤로가기버튼 자동생성.(버튼은 단순 Navigator.of(context).pop()실행)           
