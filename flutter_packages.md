@@ -215,8 +215,8 @@ import 'dart:convert'; 후, (encode) json.encode(Map) // (decode) json.decode(Js
 
 -----------
 # Shared Preferences      
-key-value형태로 data를 device내에 저장하도록 돕는 패키지. 패키지를 pubspec.yaml에서 get한 후      
-import 'package:shared_preferences/shared_preferences.dart'; 하여 사용.     
+key-value형태로 data를 device내에 저장하도록 돕는 패키지. 일반적으로, auth의 token 등과 같은 복잡하지않은 data를 device에 저장할때 사용.     
+패키지를 pubspec.yaml에서 get한 후 import 'package:shared_preferences/shared_preferences.dart'; 하여 사용.     
 
 - *Future<SharedPreferences> SharedPreferences.getInstance()*      
 SharedPreferences는 현 flutter앱과 SharedPreferences저장공간과의 연결을 관리하는 클래스. getInstance()메소드를 통해,      
