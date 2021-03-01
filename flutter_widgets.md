@@ -428,7 +428,7 @@ confirmDismiss: (DismissDirection)=> Future<bool> // dismiss시, dismiss를 다�
 (참고: showDialog는 Future객체를 반환하고 이때 generic값은 dialog pop시에 전달되는 값이므로 즉, Navigator.of(ctx).pop(true/false)로 dialog탈출)
 
 - *SnackBar*     
-전체 페이지의 SnackBar로 표현될수있는 위젯.       
+전체 페이지의 SnackBar로 표현될수있는 위젯. 일반적으로, Scaffold.showSnackBar()에 표시할 위젯으로 사용.      
 content: Widget // 스낵바의 main content가 되는 위젯. 일반적으로 text     
 duration: Duration // 스낵바가 생성되고 사라지기까지 표시되는 시간을 지정.     
 action: SnackBarAction // 스낵바에 표시될수 있는 action(버튼). SnackBarAction위젯을 받음. 일반적으로, UNDO 같은 버튼 명시.      
