@@ -174,6 +174,9 @@ String의 prefix로 다른 String이 존재하는지를 확인. true/false반환
 - *(String.)endsWith(String)*       
 String의 suffix로 다른 String이 존재하는지를 확인. true/false반환.    
 
+- *(String.)trim()*    
+String의 앞과 뒤에 존재하는 모든 공백을 지운 String 반환.       
+
 - *(object.)isEmpty*   
 해당 오브젝트에 값이 있는지(null) 확인.   
 
