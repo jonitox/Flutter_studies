@@ -13,17 +13,18 @@ memory상의 처리를 복구하는 작업을 optimisitic update라고함.
 # FireBase      
 google fully-managed backEnd API (database, file storage, authentication, server-side code(cloud-function) etc. )       
 
-- *Firbase를 flutter app과 연동.*      
+- *Firbase를 flutter app과 연동(Firebase sdk설치)*      
 firbase 프로젝트에 앱 추가(OS별 app추가. 같은 작업을하는 안드로이드, IOS앱을(두 os를 지원하는 플러터앱의 경우 둘다 필요) 하나의 Firebase프로젝트에 연결)       
 추가하는 법: https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android    
 
 # DB: cloud_firestore     
- 
-flutter 앱에 cloud_firestrore 패키지 설치. -> 앱과 연동된 firebase프로젝트에 cloud_firestore생성. (개발시 test mode)       
+앱과 연동된 firebase의 firestore를 접근 및 사용 등 db관리를 돕는 패키지.     
+flutter 앱에 cloud_firestrore 패키지 설치 및 앱과 연동된 firebase프로젝트에 cloud_firestore생성. (개발시 test mode)       
 
 - *DB 구성*    
-collection(table) - documents(entries, each data) 로 구성. 각 document는 다시 sub collection들을 가질수있음. (documents는 flutter에선 List와 동일시 [i]로 document접근)        
-각 document는 필드-값로 구성. (flutter에선 key-value의 Map과 동일시. 저장 및 전송시 Map처럼 사용. ['key']로 접근.)   
+collection(table) - documents(entries, Map) 로 구성. 각 document는 고유 id가 존재하며,       
+각 document는 필드-값을 가질수있음. (flutter에선 key-value의 Map과 동일시. 저장 및 전송시 Map처럼 사용. ['key']로 접근.)   
+또한, 각 document는 다시 sub collection들을 가질수있음. (documents는 flutter에선 List와 동일시 [i]로 document접근)  
 ex) chat app: 최상위 chats collection이 chat room document들을 가지고 각 chat room이 messages collection을 가지고     
 message collection내에 단위 String 메시지를 document로 구성.    
 
@@ -37,15 +38,59 @@ ex) Firestore.instance().collection...
 
 - *Collection*
 (CollectionReference.)snapshots() // collection의 Stream객체를 반환. stream을 통해 collection 참조 및 변화가 있을때마다 자동으로 감지 가능.     
-(반환된 Stream객체에서 listen 호출 가능. : .snapshots().listen((){}) // collection(Stream) 변화시마다 호출 할 함수를 명시. 해당 함수에 가장 최근 Snapshot     
- (정확히는, firestore에서 제공되는 QuerySnapshot) 전달.  // (QuerySnapshot.)documents로 collection내 documents접근 가능
-Future<> (CollectionREference.)add(Map<String,dynamic) // collection에 document추가. Map의 key-value가 필드-값으로 추가됨.       
-
-
-- **    
+(반환된 Stream객체에서 listen 호출 가능. : .snapshots().listen((){}) // collection(정확힌, Stream) 변화시마다 호출 할 함수를 명시. 해당 함수에 가장 최근 Snapshot     
+ (정확히는, firestore에서 제공되는 QuerySnapshot(collection의 snapshot)) 전달.  // (QuerySnapshot.)documents로 collection내 documents접근 가능
+Future<> (CollectionReference.)add(Map<String,dynamic>) // collection에 document추가. document id는 자동으로 생성. Map의 key-value가 필드-값으로 추가됨.       
+(CollectionReference.)document([String path]) // Collection내 document에 접근. DocumentReference객체 반환. document id가 존재하지않던 id거나 혹은    
+// document id(path)가 명시되지않은 경우(null), 명시한 새로운 id의 document를 참조 혹은 자동으로 id를 생성한 document를 참조하는데,     
+// 단, 실제로 생성하는 것은 아님. documentRefence의 setData등으로 데이터를 생성해야, 해당 id로 document가 자동생성됨.     
+  
+- *document*    
+Future<> (DocumentReference.)setData(Map) // 해당 document에 데이터 추가(Map). 이때, documentReference가 존재하지않던 id의 document면    
+// firestore에 document를 새로 생성해 추가.    
 
 # auth: Firebase_auth     
-별도의 auth state management(ex) provider)필요x
+앱 및 연동된 Firebase에 auth를 관리할수있도록 돕는 auth관리 패키지. 별도의 auth state management(ex) provider)필요x        
+여러 auth관련 sdk사용을 돕는 패키지인 firebase_auth 설치.
+
+- *access to FirebaseAuth*      
+FirebaseAuth.instance로 앱과 연동된 Firebase Auth에 access. 생성된 FirebaseAuth 인스턴스를 통해 여러 메소드 사용.
+
+- *signUp,signIn,signOut*     
+(FirebaseAuth.)signInWithEmailAndPassword(email: ,password: ),     
+(FirebaseAuth.)createUserWithEmailAndPassword(email: password: ),     
+(FirebaseAuth.)signOut()
+등의 메소드로 signUp/In, signOut     
+해당 메소드는 future로 내부적으로, firebase에 signIn,signUp요청. 결과로서, AuthResult객체로 resolve.
+
+- *Error handling*     
+signIn,signUp 등 시 발생하는 에러를 처리. invalid한 email입력 등과 같은 에러는 요청 메소드에서 PlatformException 타입의 error를 throw. 즉, try,catch로 처리.       
+// PlatformException에러는 Firbase_auth에 포함된 exception으로 err.message를 통해 error 메시지 확인 가능. (invalid Email등)    
+이런 부류의 error를 catch하기위해 on PlatformException으로 catch하여 handling(ex) err.message가 null이 아니면 pop-up).     
+그 외의 인터넷 끊김등으로 발생하는 에러도 catch하여 적절한 handling 필요.     
+
+- *AuthResult*     
+Auth요청에 대한 응답을 표현한 클래스.   
+(AuthResult.)user // FirebaseUser반환. signUp/In한 user에 대한 정보 참조 가능.    
+// (FirebaseUser.)uid 로 해당 user에 자동생성된 unique한 id를 참조 가능. 해당 id를 사용해, firestore에 해당 유저에 대한 extra정보를 저장하거나, 관리할수있음.    
+// (ex) users콜렉션 내의 document id를 user의 uid로 하고 해당 document에 유저의 정보 저장.)    
+
+- *onAuthStateChanged*     
+FirebaseAuth.onAuthStateChanged는 현재 auth상태(정확히는, FirebaseUser)를 resolve할수있는 Stream을 생성해 반환.        
+즉, 해당 Stream의 snapshot.hasData(User != null인지)를 확인하여, 로그인된 유저가 존재하는지 확인 가능.    
+(내부적으로는, FirebaseUser 구성을 위해 현재 auth에 토큰이 있는지, 있다면 토큰이 유효한지 등을 모두 검사하는 과정 포함하기 때문.)   
+ex) 스크린을 auth상태가 바뀔때마다 자동으로 렌더링 가능. (로그아웃 등으로 변할때마다 혹은 앱을 재시작했을 시 등)    
+```Dart	  
+ StreamBuilder(
+        stream: FirebaseAuth.instance.onAuthStateChanged, // Stream<FirebaseUser>반환
+        builder: (ctx, userSnapshot) { // 빌더함수, auth변할때마다 호출.
+          if (userSnapshot.hasData) { // User가 null이 아닌지 확인. (authenticated user가 있는지)   
+            return ChatScreen();
+          }
+          return AuthScreen();
+        },
+      ),
+```
 
 # FireBase REST API without SDK.    
 
