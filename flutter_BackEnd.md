@@ -44,10 +44,33 @@ Future<> (CollectionReference.)add(Map<String,dynamic>) // collection에 documen
 (CollectionReference.)document([String path]) // Collection내 document에 접근. DocumentReference객체 반환. document id가 존재하지않던 id거나 혹은    
 // document id(path)가 명시되지않은 경우(null), 명시한 새로운 id의 document를 참조 혹은 자동으로 id를 생성한 document를 참조하는데,     
 // 단, 실제로 생성하는 것은 아님. documentRefence의 setData등으로 데이터를 생성해야, 해당 id로 document가 자동생성됨.     
-  
+(CollectionReference.)orderBy(dynamic field, {bool decending=false}) // 접근한 collection의 data들을 특정 필드의 값을 기준으로 정렬한 collection을 반환.     
+// ex) 각 documents에 'createdAt'이란 필드가있고, TimeStamp가 값이라면, timeStamp기준으로 정렬하여 collection반환 (document[0]이 가장 빠른 timeStamp)      
+// decending: true로 명시할 시 정렬한 것을 다시 역순으로 반환. (document[0]이 가장 느린 timeStamp)     
+// Firestore에 정렬한 collection을 새로 생성하는 것이 아닌, store내의 collection에는 변화가 없고, 정렬하여 반환하기만함. 같은 collection을 의미하므로, snapshot()으로 stream생성 등 가능.    
+
 - *document*    
 Future<> (DocumentReference.)setData(Map) // 해당 document에 데이터 추가(Map). 이때, documentReference가 존재하지않던 id의 document면    
 // firestore에 document를 새로 생성해 추가.    
+
+- *Rules*     
+Firestore에 접근하는 요청에 대한 규칙들을 규칙(Rules)탭에서 정의 가능. db에 대한 read, create, write등이 가능한 조건들을 가능.    
+자세한 사용법: https://firebase.google.com/docs/rules/rules-and-auth?authuser=0     
+ex)    
+match /users/{uid}{      
+  // users collection의 모든 document(uid)에 대해 write은 동일한 user에 의해서만(요청에 user가 authenticated되어있으며, 해당 user의 uid가 document와 일치하는 경우만) 가능.     
+  allow write: if request.auth != null && request.auth.uid == uid;    
+}   
+match /chats/{documents=**}{    
+  // chats collection내에 존재하는 모든 (하위의)documents들에 대해 read,write(=create, update, delete포함)은 authenticated된 user만 가능.       
+  allow read,write: if request.auth != null;    
+}    
+
+- *TimeStamp*     
+firestore 패키지에 포함된 클래스로, datetime과 비슷한 timestamp를 나타내는 클래스. TimeStamp.now()로 현재 timeStamp생성     
+데이터를 store에 추가할 때 시간이 필요한 데이터인 경우 사용. 
+ex) chat의 각 message document의 필드에 'createdAt' : TimeStamp.now()를 추가해 명시. 해당 필드로 message들을 불러올때,    
+orderBy로 시간순으로 정렬 가능.
 
 # auth: Firebase_auth     
 앱 및 연동된 Firebase에 auth를 관리할수있도록 돕는 auth관리 패키지. 별도의 auth state management(ex) provider)필요x        
