@@ -192,6 +192,7 @@ itemBuilder: (BuildContext, int(index번호))->Widget (ListView의 새로운 아
 (자동적으로 buildcontext(메타정보)와 int(index,몇번째 아이템인지)를 선언한 함수에 인자로 전달해줌.)   
 (함수에선 아이템으로 표시할 위젯을 반환하도록 작성. index를 이용해 각종 정보에 접근하여 생성가능.)      
 itemCount: int (현재 ListView에 포함할 아이템의 갯수 명시.)   
+reverse: bool // Listview의 item들을 Listview에서 역순+할당된 공간의 아래쪽부터 채울지 지정.       
 
 - *ListTile*   
 List Tile(네모난 카드 모양)형태로 표현할수 있는 위젯. ListView내의 한 원소를 표현할떄 자주 쓰임.(필수 x, 따로도 사용 가능)   
