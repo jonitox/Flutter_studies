@@ -557,8 +557,21 @@ List<Widget>, // positional 인자로 list가 포함할 위젯 목록을 받음.
  
  - *StreamBuilder*     
 Stream객체에 따라 widget을 regenerate할때 사용. ex) chat page    
-stream: Stream<dynamic> // stream지정. // Stream은 상호작용하는 data가 변할때마다, 새로운 값(snapshot)을 도출해주는 클래스.        
-builder: (BuildContext, AsyncSnapshot) => Widget // widget의 빌더 함수. 해당 함수에 Stream의 가장 최근 snapshot전달. (즉, Stream이 변할떄마다 실행)    
-// AsyncSnapshot.data로 snapshot data접근 가능. (ex) 연동한 Firestore의 snapshot인 경우, snapshot.data.documents로 documents참조)        
+stream: Stream<dynamic> // stream지정. // Stream은 상호작용하는 data가 변할때마다, 새로운 event(snapshot)를 도출해주는 클래스.        
+builder: (BuildContext, AsyncSnapshot<dynamic>) => Widget // widget의 빌더 함수. 해당 함수에 Stream의 가장 최근 snapshot전달. (즉, Stream이 변할떄마다 실행)    
+// AsyncSnapshot.data로 snapshot의 resolve된 data접근 가능.(ex) Firestore의 .snapshot()인 경우, data는 querySnapshot으로 data.documents로 documents참조)       
+// AsyncSnapshot.hasData로 현재 전달된 data가 있는지 확인 가능. (ex) firebase_auth의 onAuthStateChange인 경우, data는 FirebaseUser로, 현재 로그인 되어있는지(null인지) 확인 가능.   
 // 주의) 단, 첫 생성시, 내부적으로 Stream에서 data를 요청하여 전부 fectch하기 전까진, data는 null로 data에서 다른 값을 참조하면 에러 발생.    
 // 해결법: (snapshot.)connectionState이 waiting인지 확인하고, 다른 위젯 렌더링.    
+
+- *DropdownButton*     
+누르면, 여러개의 누를수 있는 목록을 drop down으로생성하는 버튼.     
+value: dynamic // value가 null이 아니면 반드시, DropdownMenyItem의 value중 하나와 같아야하고, 첫 생성시 해당 아이템을 버튼옆에 default로 표시.     
+icon: Icon // 버튼의 아이콘(일반적으로, more_vert)     
+item: <DropdownMenuItem>[] // 목록에 포함될 DropdownMenuItem 위젯리스트.      
+onChanged: (String){} // 목록 중 하나를 누를떄마다 호출할 함수 명시. 누른 DropdownMenuItem이 가지는 value(String)을 전달.       
+ 
+ - *DropdownMenuItem*     
+ DropdownButton에 쓰이는 아이템위젯.     
+ child: Widget // 아이템으로 표현될 위젯.    
+ value: String // 해당 아이템이 가질 value(identifier). 이 아이템이 눌려지는 경우, 해당 value로 구분.    
