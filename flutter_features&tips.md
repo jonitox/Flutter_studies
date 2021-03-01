@@ -104,6 +104,10 @@ of(context) 사용시, async의 await 후/future.then()내에서 사용하는 �
 ex) final scaffold = Scaffold.of(context);     
 async{await ..., scaffold.showSnackBar(..);}    
 
+- *Scaffold.of(context)*     
+Scaffold를 build하는 class내에서 Scaffold.of(context)로 Scaffold를 참조하면, 현재 Scaffold를 찾지못하는 에러 발생. (위젯 상위에 있는 scaffold를 찾으므로)    
+해결법: Scaffold를 참조하고자하는, scaffold내의 세부위젯의 context를 of에 사용.     
+
 - *FutureBuilder & build*      
 FutureBuilder를 위젯의 자식위젯으로 쓰는 경우, 위젯이 build될때마다, FutureBuilder를 다시 생성, future객체를 다시 생성함.     
 하지만, 첫 build에만 future를 생성 및 실행하고, 그 이후 build에는 같은 future를 다시 생성하고싶지않다면,     
