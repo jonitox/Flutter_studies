@@ -76,7 +76,8 @@ ModalSheet이 가지는 maxHeight존재.(tip: 위젯의 크기가 modalSheet의 
 
 - *ThemeData*    
 Material App의 Theme에 대한 정보를 저장하는 클래스. material Theme에 지정시 다른 위젯에서 Theme.of(context).(label)로 참조해서 사용.   
-Cupertino App의 대응클래스는 cupertinoThemeData
+대부분의 값이 default값을 가짐.     
+Cupertino App의 대응클래스는 cupertinoThemeData    
 primaryColor: Color / theme의 default로 쓰일 color. 다른 위젯에서 이 색상만 지정가능.    
 primarySwatch: Color / theme의 한 색상을 여러 shade가 있는 그룹으로 사용. 위젯에서 theme색 참조시 여러버전으로 참조가능.     
 accentColor: Color / 보색으로 쓰일 색상 지정. Material design Theme문서에 여러 조합 검색 가능.    
@@ -85,6 +86,7 @@ canvasColor: Color /
 errorColor: Color / 에러에 쓰일 색상 지정. default는 red.   
 fontFamiliy: String / app의 global폰트family 지정(text의 default폰트?)     
 textTheme: TextTheme / app의 text별 theme지정. TextTheme은 여러 text종류별 style을 저장하는 객체.   
+accentTextTheme: TextTheme // accentTextTheme 지정.     
 ButtonTheme: ButtonTheme / 버튼의 theme지정. ButtonTheme에는 buttonColor, textTheme, shape등 포함.         
 (TextTheme(title: TextStyle, body1: TextStyle)처럼 여러 label별 textStyle을 theme으로 지정 가능. 다른 위젯에서 사용시 label로 참조.   
 style: Theme.of(context).textTheme.title) 혹은 color : Theme.of(context).textTheme.button.color 와 같이)    
