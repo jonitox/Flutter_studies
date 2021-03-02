@@ -291,7 +291,8 @@ device의 갤러리, 카메라 등을 접근해 사용하고, 이미지 파일�
 객체 내의 getImage()메소드 호출. 해당 호출은 future로 pickedFile객체(imagePicker내에 포함된 일종의 File클래스)로 resolve되기 전까지 await필요.      
 ex) final imageFile = (picker.)getImage(    
 source: ImageSource // 이미지를 어디서 불러올지 소스 지정. ImageSource는 enum으로 gallery or camera 포함.(소스에 따라 갤러리/카메라 접근.)     
-maxWidth(maxHeight): double // (?) 이미지의 최대 가로(세로)길이        
+maxWidth(maxHeight): double // (?) 이미지의 최대 가로(세로)길이, 작을수록 이미지의 용량이 줄어듬.        
+imageQuality: int // 이미지의 퀄리티 0~100사이의 값 지정. 100이면 원본. 작은 원 안에 들어갈 프로필 이미지 등은 낮은 퀄리티를써도됨. 퀄리티가 낮을수록 파일의 용량이 확연히 줄어듬.      
 )    
 이후, 해당 file을 dart의 File객체에 저장하려면, File(imageFile.path)로 변환해 저장.      
 
