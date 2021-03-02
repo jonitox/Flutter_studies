@@ -152,10 +152,12 @@ transform: Matrix4 // container의 transform(현재 크기 및 위치로부터 �
 -*Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
 children: [] / 포갤 위젯목록 지정. 첫번째 원소가 가장 아래에 배치.   
+overflow: Overflow // stack의 크기 밖으로 벗어나는 부분에 대해(예를들어, positioned로 top: -100을 준 경우) 어떻게 표시할지 지정. 디폴트는 .clip(자름). 보이게할경우 .visible 사용     
+
 
 - "Positioned위젯"    
 Stack내에서만 사용할 수 있는 위젯으로, 감싼 위젯이 전체 Stack 공간 내에서 특정 위치에 배치될수 있게 돕는 위젯.     
-top(bottom,right,left): double // 전체 stack 기준으로 위(아래,오른쪽,왼쪽)로부터 얼만큼 떨어져있는지 지정.     
+top(bottom,right,left): double // 전체 stack 기준으로 위(아래,오른쪽,왼쪽)로부터 얼만큼 떨어져있는지 지정. top:0이면 최상단, null이면 지정 하지않음.    
 
 - *Card위젯*   
 위젯을 담아 shadow를 주어 배치하는 content container위젯. UI공간은 default로 child크기만큼 할당.   
