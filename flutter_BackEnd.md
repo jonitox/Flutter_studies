@@ -16,6 +16,7 @@ google fully-managed backEnd API (database, file storage, authentication, server
 - *Firbase를 flutter app과 연동(Firebase sdk설치)*      
 firbase 프로젝트에 앱 추가(OS별 app추가. 같은 작업을하는 안드로이드, IOS앱을(두 os를 지원하는 플러터앱의 경우 둘다 필요) 하나의 Firebase프로젝트에 연결)       
 추가하는 법: https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android    
+(IOS의 runner에 GoogleService-info.plist추가시 파일을 직접 저장하는것 외에, xcode에서 앱의 ios프로젝트를 열어 Runner에 직접 add file해야함.)     
 
 # DB: cloud_firestore     
 앱과 연동된 firebase의 firestore를 접근 및 사용 등 db관리를 돕는 패키지.     
@@ -39,8 +40,8 @@ ex) Firestore.instance().collection...
 - *Collection*
 (CollectionReference.)snapshots() // collection의 Stream객체를 반환. stream을 통해 collection 참조 및 변화가 있을때마다 자동으로 감지 가능.     
 (반환된 Stream객체에서 listen 호출 가능. : .snapshots().listen((){}) // collection(정확힌, Stream) 변화시마다 호출 할 함수를 명시. 해당 함수에 가장 최근 Snapshot     
- (정확히는, firestore에서 제공되는 QuerySnapshot(collection의 snapshot)) 전달.  // (QuerySnapshot.)documents로 collection내 documents접근 가능
-Future<> (CollectionReference.)add(Map<String,dynamic>) // collection에 document추가. document id는 자동으로 생성. Map의 key-value가 필드-값으로 추가됨.       
+ (정확히는, firestore에서 제공되는 QuerySnapshot(collection의 snapshot)) 전달.  // (QuerySnapshot.)documents로 collection내 documents(list형태)접근 가능
+Future<> (CollectionReference.)add(Map<String,dynamic>) // collection에 document추가. document id는 자동으로 생성. Map의 key-value가 필드-값으로 추가됨.     
 (CollectionReference.)document([String path]) // Collection내 document에 접근. DocumentReference객체 반환. document id가 존재하지않던 id거나 혹은    
 // document id(path)가 명시되지않은 경우(null), 명시한 새로운 id의 document를 참조 혹은 자동으로 id를 생성한 document를 참조하는데,     
 // 단, 실제로 생성하는 것은 아님. documentRefence의 setData등으로 데이터를 생성해야, 해당 id로 document가 자동생성됨.     
@@ -52,7 +53,8 @@ Future<> (CollectionReference.)add(Map<String,dynamic>) // collection에 documen
 - *document*    
 Future<> (DocumentReference.)setData(Map) // 해당 document에 데이터 추가(Map). 이때, documentReference가 존재하지않던 id의 document면    
 // firestore에 document를 새로 생성해 추가.    
-
+Future<DocumentSnapshot> (DocumentReference.)get() // 해당 document의 data를 get. Future로서, DocumentSnapshot으로 resolve. 해당 snapshot은 Map처럼 [''] 참조가능.   
+ 
 - *Rules*     
 Firestore에 접근하는 요청에 대한 규칙들을 규칙(Rules)탭에서 정의 가능. db에 대한 read, create, write등이 가능한 조건들을 가능.    
 자세한 사용법: https://firebase.google.com/docs/rules/rules-and-auth?authuser=0     
@@ -99,8 +101,8 @@ Auth요청에 대한 응답을 표현한 클래스.
 // (ex) users콜렉션 내의 document id를 user의 uid로 하고 해당 document에 유저의 정보 저장.)    
 
 - *onAuthStateChanged*     
-FirebaseAuth.onAuthStateChanged는 현재 auth상태(정확히는, FirebaseUser)를 resolve할수있는 Stream을 생성해 반환.        
-즉, 해당 Stream의 snapshot.hasData(User != null인지)를 확인하여, 로그인된 유저가 존재하는지 확인 가능.    
+FirebaseAuth.onAuthStateChanged는 현재 auth상태(정확히는, FirebaseUser)를 확인할수있는 Stream을 생성해 반환. auth상태 바뀔때마다 event발생.              
+즉, 해당 Stream의 snapshot.hasData(FirebaseUser != null인지)를 확인하여, 로그인된 유저가 존재하는지 확인 가능.    
 (내부적으로는, FirebaseUser 구성을 위해 현재 auth에 토큰이 있는지, 있다면 토큰이 유효한지 등을 모두 검사하는 과정 포함하기 때문.)   
 ex) 스크린을 auth상태가 바뀔때마다 자동으로 렌더링 가능. (로그아웃 등으로 변할때마다 혹은 앱을 재시작했을 시 등)    
 ```Dart	  
@@ -114,6 +116,36 @@ ex) 스크린을 auth상태가 바뀔때마다 자동으로 렌더링 가능. (�
         },
       ),
 ```
+
+- *currentUser*      
+단순히, 현재 유효한 로그인되어있는 유저의 정보를 알고싶을떈, (FirebaseAuth.instance.)currentUser() 호출. 해당 함수는 Future로     
+await하면, 현재 로그인되어있는 FirebaseUser로 resolve됨. 해당 FirebaseUser객체를 통해 uid 등을 참조 가능.    
+
+# storage: firebase_storage
+Firebase의 storage(file 저장 및 관리) 사용을 돕는 패키지.     
+cloud_firestore과 마찬가지로, 사용 권한에 관한 rule(규칙탭)지정 가능. 
+
+- *bucket*     
+bucket은 storage의 폴더 단위를 의미. bucket내에 file저장 가능. bucket은 sub-bucket을 가질수있음.     
+FirebaseStorage.instance.ref()로 최상위 bucket(루트)에 access 가능.     
+
+- *StorageReference*     
+storage의 모든 폴더 및 파일은 StorageReference로 참조 가능. (ex FirebaseStorage.ref()는 루트 버킷)      
+각 StorageReference는 다시 (StorageReference.)child(String path) 로 forwarding 가능. 함수 인자로 현재로부터 forwarding할 경로 명시.    
+(StorageRefrence.)child()는 현 포인트의 child를 다시 StorageRefence로 반환. 즉, 파일 경로를 child로 순차적으로 chaining가능.    
+이때, 해당 경로 도중 폴더(버킷) or 파일이 존재하지않는다면, 자동적으로 새로 생성. (단, ref에 실제로 putFile()을 통해 파일을 추가할때 생성됨.)     
+
+- *파일 추가*    
+(StorageReference.)putFile(File,[StorageMetaData]) // 해당 reference에 파일 추가. reference는 파일의 경로 및 최종 파일의 이름까지 명시되어있는 reference여야함.      
+ex) Firebase.instance.child('user_image').child(authResult.user.uid+'.jpg').putFile(image);  // id.jpg의 이름으로 이미지 파일을 추가.     
+// StorageMetaData객체는 optional로 파일의 메타데이터 지정 가능.(파일의 인코딩 언어 등)      
+// putFile은 asynchronous하게 업로드하고, 함수는 StorageUploadTask를 반환. Future를 생성해 기다리고싶다면, 해당 작업을 완료하는것을 기다리는 (StorageUploadTask.)onCompleate 생성.    
+// ex) await await ref.putFile(image).onComplete; // onComplete은 Future를 반환. uploadTask가 완료되면 done.       
+
+- *경로 다운로드*     
+Future<dynamic> (StorageReference.)getDownloadURL()() // 해당 reference(폴더 or 파일)의 url을 retreive. Future로 await을 통해 url(String)로 저장 가능.    
+이미지 파일인 경우 storage에 저장하고, 직접 fetch하지않고, url을 통해, 이미지 참조가 가능. 즉 예를들어, user의 프로필 이미지를 가져오는 경우, 전체 stroge에서 해당 uid의 이미지를 탐색해 
+ 가져올 필요 없이, user 대한 document에 image_url 필드를 추가하여, 해당 필드의 값으로 이미지를 가져올수 있음.     
 
 # FireBase REST API without SDK.    
 
