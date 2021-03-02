@@ -492,6 +492,7 @@ builder: (BuildContext, AsyncSnapshot) => Widget // 생성된 Future의 상태�
 (AsyncSnapshot은 future의 상태를 참조할수있는 클래스,      
  (AsyncSnapshot.)connectionState // future의 현재 상태인 ConnectionState값 참조 (ConnectionState는 enum: waiting, done..)     
  (AsyncSnapshot.)error // future가 error를 throw한 상황인지 확인. error가 발생하면, 해당 error 참조. null이면 error미발생     
+ (AsyncSnapshot.)data // Future에 resolve된 data참조.
  )    
  
  - *AnimatedBuilder*      
