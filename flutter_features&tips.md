@@ -53,6 +53,9 @@ item에 직접 해당하는 topmost의 stateful위젯의 생성자에 전달받�
 이때, 매 item생성시, UniqueKey()를 쓰면, item목록이 변하지않더라도 ListView가 갱신될때마다,(ListView의 조상위젯이 rebuild된다면,)      
 각 item에 다시 새로운 key를 입력하므로, element들이 기존에 대응되는 위젯을 찾지못해, 새로운 위젯을 매번 다시 생성.       
 따라서, UniqueKey대신 ValueKey 사용. ValueKey의 인자로는 unique한 key인 id등을 쓰면 됨.     
+// 이 외에도, list가 유동적으로 변하거나, list item들이 일부가 변하지만, 전체 list가 다시 빌드되는 등의 경우(ex) chat), 
+// 효율적으로 listview가 re-render되기 위해서, 유동적으로 변하는 listView에는 항상 key를 써주는게 좋다.     
+
 
 - *column & conditional TextFormField*     
 list & stateful과 마찬가지로, textFormField 여러개를 stateful내에서 Form내의 column에 선언시, 특정 textField를 특정 조건인 경우만 렌더링 시,      
