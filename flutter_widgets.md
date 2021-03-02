@@ -245,14 +245,14 @@ child: Widget / 감쌀 위젯
 tip: GestureDetector를 사용하여 custom Button 위젯 생성 가능. child를 버튼모양, onTap을 listner로 구성     
 
 - *InkWell*   
-GestureDetector + riffle effect
-onTap: (){} //
+GestureDetector + riffle effect   
+onTap: (){} //   
 child: // 감쌀위젯./child가 단순container면 물결생성이 안에도 보임. card같은위젯이면 card밖(margin있는곳)만 보임.    
 splashColor: Color // 물결의 색깔   
 borderRadius: BorderRadiusGeometry // 만약 감싼 위젯에 borderRadius가 있다면, 값을 똑같이 지정해주면 같은 형태의 물결 생성.       
 
 
-- *dedicated padding()*
+- *dedicated padding()*   
 
 - *Image*     
 Image파일을 띄어주는 위젯. Image의 출처에 따라 여러 named constructor로 생성. image provider(NetworkImage, AssetImage)클래스와는 달리직접 이미지를 포함하는 위젯.     
