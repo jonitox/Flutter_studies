@@ -9,6 +9,9 @@ memory상의 처리를 복구하는 작업을 optimisitic update라고함.
 예를 들어, 상품 삭제시, 앱 메모리 상의 상품 삭제 후, 서버 상의 상품 삭제. 이때 서버에 대한 요청 실패시, 메모리 상에 다시 상품을 로드하는 것.   
 (물론, 서버 요청 처리 실패에 대한 error handling도(앱 내에 실패 메시지를 표시하는 등.) 같이 구현 가능.)    
 
+- *push notification*      
+앱의 push 알람은 push notifiaction 서버를 사용해 구현. (남용과 안전문제 방지)     
+
 
 # FireBase      
 google fully-managed backEnd API (database, file storage, authentication, server-side code(cloud-function) etc. )       
@@ -146,6 +149,39 @@ ex) Firebase.instance.child('user_image').child(authResult.user.uid+'.jpg').putF
 Future<dynamic> (StorageReference.)getDownloadURL()() // 해당 reference(폴더 or 파일)의 url을 retreive. Future로 await을 통해 url(String)로 저장 가능.    
 이미지 파일인 경우 storage에 저장하고, 직접 fetch하지않고, url을 통해, 이미지 참조가 가능. 즉 예를들어, user의 프로필 이미지를 가져오는 경우, 전체 stroge에서 해당 uid의 이미지를 탐색해 
  가져올 필요 없이, user 대한 document에 image_url 필드를 추가하여, 해당 필드의 값으로 이미지를 가져올수 있음.     
+
+# Firebase Clouod Messaging(FCM) & Firebase_messaging    
+push 알림을 돕는 서비스. 푸시알림은 서버에 메시지와함꼐 푸시알림을 요청하면, 내 앱을 가진 유저의 디바이스에 푸시알림을 서버가 별도로 보내줌.     
+안드로이드의 서버를 활용한 푸시알림은 FCM을 반드시 사용해야하고, ios의 경우 ios push 서비스를 내부적으로 빌드해줌.     
+메시지 구분: notification message(일반적인 푸시알림, 앱을 사용중이지않아도 알림이뜨고, 누르면 앱으로 이동) / data message (앱을 사용하고있는 동안 데이터 업데이트등을 알리는 메시지)       
+안드로이드 에뮬레이터의 경우, 푸시 알람을 받기위해선, 구글 플레이가 설치되어있는 시스템이어야함.       
+firebase_messasing은 flutter app에서 FCM 서비스를 접근 및 관리할수 있도록 돕는 패키지.      
+
+- *Firebase_messaing setup*     
+pub.dev의 패키지 README에 명시된 set up을 선행해야함. firebase와 앱을 연동해야하고 푸시알림을 탭하여 앱에서 handle할수있도록 setup 4번 과정 진행.(manifest파일 변경)      
+
+- *cloud_messaging*     
+cloud_messaging서비스를 통해 firebase console에서 직접, 모든 앱사용자에게 푸시알람을 발송 가능. 
+단, 메시지가 안드로이드앱에 전송될때는, 메시지의 추가 옵션에 click_action: FLUTTER_NOTIFICATION_CLIC이 포함되어야      
+앱내에서 푸시알림을 눌렀을때의 작업을 처리할수있음.(onResume,onLaunch의 실행.)(푸시 handling작업이 없다면 물론 필요없고 탭시 단순히 앱으로 이동됨.)     
+
+- *Message receiving*
+onMessage : // push가 앱이 실행되고있는 도중 오는 경우 실행. 물론 push알림이 뜨진않음.
+onResume : // push가 앱이 중단상태일때 오는 경우, 탭하면 앱이 resume되면서 호출.     
+onLaunch : // push가 앱이 종료상태일때 오는 경우, 탭하면 앱이 시작되면서 호출.     
+
+- *push를 앱에서 생성. : Firebase의 Functions 사용*     
+Firebase의 firestore에 저장할때마다 해당 데이터를 바탕으로 푸시알림을 하고자하는 경우, Firebase(server side)의  cloud function을 사용.     
+firestore의 변화시마다, 자동으로 trigger되어 푸시알림을 생성하는 자바스크립트 코드를 firebase function에 생성.     
+firebase Function을 게시하기위한 순서: (firebase tool 설치) -> (firebase login) -> 내 앱 프로젝트내에 명령어, firebase init -> 사용할 feature로 function선택     
+-> 사용할 프로젝트 선택(Use an existing project)에서 내 앱 프로젝트 선택 -> 언어 javascript선택 -> bug catch yes -> dependencies 설치 yes       
+위 단계를 통해, firebase functions 폴더가 내 프로젝트내에 생성됨. "index.js"에 function에 게시하고자 하는 함수의 코드를 작성한 후,    
+firebase deploy명령어를 입력하면 함수가 firebase에 로드됨.    
+
+- *FireStore trigger function*       
+cloud function이 firestore에 의해 trigger되고자한다면, 해당 문서 참조: https://firebase.google.com/docs/functions/firestore-events?hl=ko       
+onCreate을 통해 해당 collection/document에 데이터가 입력될때마다 실행함 함수를 명시.
+
 
 # FireBase REST API without SDK.    
 
