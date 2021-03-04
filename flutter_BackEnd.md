@@ -155,33 +155,76 @@ push 알림을 돕는 서비스. 푸시알림은 서버에 메시지와함꼐 �
 안드로이드의 서버를 활용한 푸시알림은 FCM을 반드시 사용해야하고, ios의 경우 ios push 서비스를 내부적으로 빌드해줌.     
 메시지 구분: notification message(일반적인 푸시알림, 앱을 사용중이지않아도 알림이뜨고, 누르면 앱으로 이동) / data message (앱을 사용하고있는 동안 데이터 업데이트등을 알리는 메시지)       
 안드로이드 에뮬레이터의 경우, 푸시 알람을 받기위해선, 구글 플레이가 설치되어있는 시스템이어야함.       
-firebase_messasing은 flutter app에서 FCM 서비스를 접근 및 관리할수 있도록 돕는 패키지.      
+firebase_messaging은 flutter app에서 FCM 서비스를 접근 및 관리할수 있도록 돕는 패키지.      
 
 - *Firebase_messaing setup*     
 pub.dev의 패키지 README에 명시된 set up을 선행해야함. firebase와 앱을 연동해야하고 푸시알림을 탭하여 앱에서 handle할수있도록 setup 4번 과정 진행.(manifest파일 변경)      
 
 - *cloud_messaging*     
-cloud_messaging서비스를 통해 firebase console에서 직접, 모든 앱사용자에게 푸시알람을 발송 가능. 
+firebase console의 cloud_messaging서비스를 통해 firebase console에서 직접, 모든 앱사용자에게 푸시알람을 발송 가능.      
 단, 메시지가 안드로이드앱에 전송될때는, 메시지의 추가 옵션에 click_action: FLUTTER_NOTIFICATION_CLIC이 포함되어야      
-앱내에서 푸시알림을 눌렀을때의 작업을 처리할수있음.(onResume,onLaunch의 실행.)(푸시 handling작업이 없다면 물론 필요없고 탭시 단순히 앱으로 이동됨.)     
+앱내에서 푸시알림을 눌렀을때의 작업을 처리할수있음.(onResume,onLaunch등의 실행.)(푸시 handling작업이 없다면 물론 필요없고 탭 시 단순히 앱으로 이동됨.)     
 
-- *Message receiving*
-onMessage : // push가 앱이 실행되고있는 도중 오는 경우 실행. 물론 push알림이 뜨진않음.
+- *Message receiving*    
+IOS의 경우(안드로이드는 필요없음.), 앱내에서 디바이스에 push알림의 사용허가를 받아야함.       
+푸시알림을 받기 허용할 클래스(위젯) 내에서 firebase_messaging을 inport 후,(main.dart 혹은 예를들어 로그인된 경우만 푸시를 받을 것이면, chatScreen의 initState 함수 내에서)     
+FirebaseMessaging()으로 인스턴스를 생성하고, 인스턴스에서 (FirebaseMessaging.)requestNotificationPermissions()으로 허가 요청.     
+(FirebaseMessaging.)configure()로 받는 푸시 메시지에 대한 처리 가능. (안드로이드의 경우도, 해당 함수로 메시지를 handling.)     
+
+ex) 
+```Dart
+inal fbm = FirebaseMessaging();
+    fbm.requestNotificationPermissions();
+    fbm.configure(onMessage: (msg) { // 각 메시지의 처리. 알림의 configuration이 msg로 전달됨. 해당 함수들은 future를 반환해야함.
+      print(msg);
+      //..
+      return; // future로 처리하지않을거면 단순히 반환.
+    }, onLaunch: (msg) {
+      //..
+      return;
+    }, onResume: (msg) {
+      //..
+      return;
+    });
+    fbm.subscribeToTopic('chat');
+```
+onMessage : // push가 앱이 실행되고있는 도중 오는 경우 실행. 물론 push알림이 뜨진않음.    
 onResume : // push가 앱이 중단상태일때 오는 경우, 탭하면 앱이 resume되면서 호출.     
-onLaunch : // push가 앱이 종료상태일때 오는 경우, 탭하면 앱이 시작되면서 호출.     
+onLaunch : // push가 앱이 종료상태일때 오는 경우, 탭하면 앱이 시작되면서 호출.        
+(FirebaseMessaging.)subscribeToTopic(String) // 특정 topic을 subscribe. 해당 토픽으로 명시되어 전달된 알림을 현 디바이스에서 받음.        
+(FirebaseMessaging.)getToken() // device의 token을 생성. 해당 정보를 firestore에 따로 저장하고, cloud function에서 token을 바탕으로 특정 device에만 push알림을 보낼수도 있음.    
 
-- *push를 앱에서 생성. : Firebase의 Functions 사용*     
-Firebase의 firestore에 저장할때마다 해당 데이터를 바탕으로 푸시알림을 하고자하는 경우, Firebase(server side)의  cloud function을 사용.     
-firestore의 변화시마다, 자동으로 trigger되어 푸시알림을 생성하는 자바스크립트 코드를 firebase function에 생성.     
+- *push를 firebase프로젝트의 event에 따라 자동적으로 생성하는 방법. : Firebase의 Functions 사용*     
+Firebase의 firestore에 데이터터를 저장할때마다 해당 데이터를 바탕으로 푸시알림을 하고자하는 경우, Firebase(server side)의  cloud function을 사용.     
+firestore의 변화시마다, 자동으로 trigger되어 푸시알림을 생성하는 자바스크립트 코드를 앱 프로젝트내의 function내에 작성하여 firebase function에 게시.     
 firebase Function을 게시하기위한 순서: (firebase tool 설치) -> (firebase login) -> 내 앱 프로젝트내에 명령어, firebase init -> 사용할 feature로 function선택     
--> 사용할 프로젝트 선택(Use an existing project)에서 내 앱 프로젝트 선택 -> 언어 javascript선택 -> bug catch yes -> dependencies 설치 yes       
-위 단계를 통해, firebase functions 폴더가 내 프로젝트내에 생성됨. "index.js"에 function에 게시하고자 하는 함수의 코드를 작성한 후,    
+-> 사용할 프로젝트 선택(Use an existing project)에서 내 앱 프로젝트 선택 -> 언어 javascript선택 -> bug catch yes -> dependencies 설치 yes(function코드에 사용할 패키지 포함)       
+위 단계를 통해, 사용할 firebase functions 폴더가 내 프로젝트내에 생성됨. "index.js"에 function에 게시하고자 하는 함수의 코드를 작성한 후,    
 firebase deploy명령어를 입력하면 함수가 firebase에 로드됨.    
 
-- *FireStore trigger function*       
-cloud function이 firestore에 의해 trigger되고자한다면, 해당 문서 참조: https://firebase.google.com/docs/functions/firestore-events?hl=ko       
-onCreate을 통해 해당 collection/document에 데이터가 입력될때마다 실행함 함수를 명시.
-
+- *Firebase Function(javascript) & firebase-admin*       
+function에서 firebase의 event가 trigger하는 함수를 작성. 프로젝트에서 messaging을 보내기 위해 admin패키지 사용.(dependencies를 설치했다면 자동으로 설치됨.)     
+FireStore로 function을 trigger : cloud function이 firestore에 의해 trigger되고자한다면, onCreate을 통해 해당 collection/document에 데이터가 입력될때마다 실행함 함수를 명시.        
+onCreate등 사용의 자세한 코드는 문서 참조: https://firebase.google.com/docs/functions/firestore-events?hl=ko    
+admin 패키지는. 파이어베이스에 대한 권한을 관리하는 sdk로, 해당 sdk를 통해 파이어베이스의 messaging(푸시 알림) 이용 가능.     
+ex) firestore에 create할때마다, admin을 통해 firebase에서 알림 전송.     
+```JavaScript    
+// deploy할 함수 //
+const functions = require("firebase-functions");
+const admin = require("firebase-admin"); // 패키지 import    
+admin.initializeApp(); // 초기화 필요.
+exports.myFunction = functions.firestore
+    .document("chat/{message}") // listen할 곳의 path명시 chat collection내의 모든 문서. {message}는 place-holder로 chat내의 모든 document의미.(message는 사용자 지정 이름)
+    .onCreate((snap, context) => { // 데이터가 추가될때마다 호출.
+      return admin.messaging().sendToTopic("chat", { // messaging()을 통해 'chat'이라는 이름의 topic에 push(message) 전송.
+        notification: {   // payload(push알림의 데이터) 명시 // notifiacation 메시지(일반적인 푸시메시지)의 구성 명시.
+          title: snap.data().username, // 저장된 데이터의 username필드값
+          body: snap.data().text, // 저장된 데이터의 text필드값
+          clickAction: "FLUTTER_NOTIFICATION_CLICK", // 안드로이드 탭을 위한 key-value
+        },
+      });
+    });
+```
 
 # FireBase REST API without SDK.    
 
