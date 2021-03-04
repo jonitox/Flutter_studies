@@ -235,4 +235,6 @@ Widget tree의 모든 위젯은 property가 전부 final이라면 const 생성�
 (위젯트리에서 새로 instantiation되지 않음.) 즉, 큰 performance향상은 아니지만, 큰 app에서 사소한 차이는 보일 수 있기때문에,        
 const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추천. app을 완성하고 추가하는 방식으로.       
   
-
+- *ios device에 앱 실행*     
+xcode 혹은 IDE에서 실행. bulde identifier가 unique해야함.     
+빌드 에러시 앱 프로젝트 내에서 flutter clean, flutter build ios 실행. (초기화 및 ios dependencies설치)    
