@@ -16,6 +16,23 @@ ex) IconButton은 mateiral기반 위젯으로, cupertino 위젯에서 쓰려면 
 이런 경우, 변수의 공통된 type을 explicitly 명시해준다.   
 ex) final PreferredSizeWidget appBar = Platform.isIOS? CupertinoNavigationBar() : AppBar(); / appBar.preferredSized 참조가능.    
 
+- *rule: lifting state up*    
+서로 다른 위젯에서 한 state를 변경,사용할떄, 그 state를 두 위젯의 부모 위젯에서 관리함. state는 가능한 higest level의 위젯에서 관리.   
+
+- *rule: split the app into Widgets*   
+위젯 trees 생성시 여러 logic이 포함된 complex한 큰 custom위젯을 분리하여 작은 sub-Widge(class) & file로 나누어 관리.      
+main.dart을 lean하게 관리, 모든 위젯을 더 readable한 코드로 관리 가능. 한 코드에 나열하는것보다 실제 performance 상승 가능.(빌드할부분 분리)       
+
+- *rule: use final for Stateless*   
+Stateless내 (final이 아닌) 변수를 생성,변경가능. but. 객체 재생성이 아니면 UI 반영(rebuild)불가. 즉 관용적으로 모든 변수 final로 사용(stateless는 한번 생성해 보여주는위젯. EX)text )    
+
+- *Widget List made by map method*    
+리스트의 원소들로 한 종류의 위젯 리스트를 만들어 (Column같은 layout에) 이어붙이는 경우   
+ex)  ...( qa['answers'] as List< String > ).map( ( answer ) { return Answer( _answerQuestion, answer );  } ).toList(),   
+map method를 사용하여 질문의 선택지 목록(List< String >)로부터 각각의 String에 대한 버튼위젯 리스트(iterable)를 생성해 기존의 layout에 연결   
+(qa: Map, 질문(key='question', val:String)과 선택지(key='answers', val:List)를 key로 가짐)   
+(Answer: Custom 버튼 위젯, onpressed에 쓰일 함수포인터와 button에 표시할 string(answer)을 받음.) 
+
 - *flutter internal*   
 tree형태로 위젯을 관리. 내부적으로 3개의 tree구조를 유지.    
 widget tree(configuration) - element tree(widget과 render tree를 참조할수있도록 연결, state attached) - render tree(Rendering)     
