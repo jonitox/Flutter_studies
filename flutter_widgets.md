@@ -149,7 +149,7 @@ alignment: AlignmentGeometry / container내 child의 배치를 지정.
 transform: Matrix4 // container의 transform(현재 크기 및 위치로부터 회전, 확대/축소, 위치이동) 지정.     
 (Matrix4는 transformation을 표현가능한 클래스.)        
 
--*Stack위젯*   
+- *Stack위젯*   
 여러 위젯을 서로 위아래로 덮어서(3차원상에서) 표현할수 있게하는 위젯. Stack의 크기는 가장 큰 child의 크기와 동일.         
 children: [] / 포갤 위젯목록 지정. 첫번째 원소가 가장 아래에 배치.   
 overflow: Overflow // stack의 크기 밖으로 벗어나는 부분에 대해(예를들어, positioned로 top: -100을 준 경우) 어떻게 표시할지 지정. 디폴트는 .clip(자름). 보이게할경우 .visible 사용     
@@ -288,7 +288,7 @@ padding값만 부여가능한 container와 동일한 위젯. 감싼 위젯에 Pa
 Padding: EdgeInsetsGeometry / 일반적으로, 상속한 EdgeInsets.all(10)등으로 생성해 입력. .all()은 named 생성자./ padding에 대한 정보 명시.    
 child: Widget/ 감쌀 위젯   
 
--*Flexible*     
+- *Flexible*     
 감싼 위젯이 column(row) 내에서 차지할 공간을 특정 조건에 맞게 지정해주는 위젯.   
 fit: FlexFit / Flexfit은 enum으로 loose,tight 존재. child위젯이 차지할 공간을 어떻게 설정한지 지정.    
 (FLexFit.)loose / 위젯의 디폴트 값으로, explicitly 사용할 필요x. child위젯이 기존 위젯이 필요한 공간만큼만 차지하게 설정.    
