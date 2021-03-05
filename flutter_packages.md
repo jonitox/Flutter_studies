@@ -86,7 +86,7 @@ Provider.of<Products>(context)로 해당 provider 객체에 연결 및 data fetc
 현 위젯의 부모 위젯 중 Products객체 타입의 provider가 선언되어있는 가장 가까운 곳을 찾아 연결. 따라서, 반드시 provider는 상위 위젯에, listners는 자식위젯에 attach.    
 provider를 선언한 위젯은 provider가 update되면, provider가 attach된 위젯의 자식위젯 중 listner가 선언되어있는 위젯만 re-build됨.        
 ex)     
-final productsData = Provider.of<Products>(context);    // provider(data class)에 연결 및 listen.
+final productsData = Provider.of<Products>(context);    // provider(data class)에 연결 및 listen.    
 final products = productsData.items;  // provider내의 함수로 data fetching.     
 
 - *첫 생성시에만 data fetching, provider update시 re-build하지 않는 경우*    
@@ -100,7 +100,7 @@ final loadedProduct = Provider.of<Products>(context, listen: false).findById(pro
 - *provider의 소멸*    
 ChangeNotifierProvider(및 create된 data객체)는 연결된 위젯(혹은 스크린)이 사라지는 경우 알아서 provider패키지에 의해 소멸 및 관리.     
 
-- *nested Provider & ChangeNotifyProvider.value* (?)
+- *nested Provider & ChangeNotifyProvider.value* (?)         
 provider를 list나 grid의 item으로 선언하는 경우, 해당 item이 화면 밖으로 가서 사라졌다가 다시 생성되는 경우,      
 기존에 grid에서 item에 입력했던 변화를 반영하지 않는 문제 발생. 그 이유는,    
 (추측,) list의 item 같은 위젯은 다시 rendering될때 이전에 썻던 위젯을 그대로 다시 사용한다. 즉, 해당 위젯의 data와 provider를 update하더라도,     
@@ -117,8 +117,8 @@ ex) ChangeNotifierProvider.value(value: products[i], child: ...)
     Consumer<Product>( // 위젯이 provider를 listne하는 위젯임을 명시하는 위젯. generic으로 어떤 provider에 대한 연결인지 명시.      
             // builder로 (BuildContext, <T>, Widget) => Widget 메소드를 받음.     
             // <T> : 연결된 provider객체를 전달. child: 위젯이 re-build되어질때, re-build안될 위젯. 이 예제에선 사용안됨.  
-            builder: (ctx,product, child) => IconButton(   // 위젯을 반환.
-              icon: Icon(
+            builder: (ctx,product, child) => IconButton(   // 위젯을 반환.    
+              icon: Icon(     
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () {
                 product.toggleFavoriteStatus();
@@ -151,15 +151,16 @@ MultiProvider(
 
 ```
 
-- *initState& Provider.of(context)*      
+- *initState& Provider.of(context)*         
 일반적으로, initState에서 직접적으로 context를 사용하여 of메소드를 호출할수 없지만, provider의 경우, listen: false로 fetching만 하는 경우는 사용 가능.    
 ex) initState(){ Provider.of<Products>(context, listen:false).fetchAndSetProducts(); super.initState();}      
 단, listen: false가 없으면 다른 context 사용과 마찬가지로, 사용할수 없음. (-> fulture.delayed를 이용하거나 didChangeDependencies사용)          
 
 - *ProxyProvider*      
-다른 provider에 의존적인 provider. 의존하는 provider가 변할때, 해당 provider를 다시 생성 혹은 갱신. ChangeNotifierProxyProvider<T, ChangeNotifier>로 생성.    
-ChangeNotifierProxyProvider<T,ChangeNotifier>( // 첫번째 generic으로 의존할 provider객체 명시. 단, 해당 객체는 provider tree(multi Provider)에서 먼저 선언되어있어야함.  
-(가장 가까운 해당 provider객체를 찾아서 연결(의존).)   
+다른 provider에 의존적인 provider. 의존하는 provider가 변할때, 해당 provider를 다시 생성 혹은 갱신.      
+ChangeNotifierProxyProvider<T, ChangeNotifier>로 생성.      
+ChangeNotifierProxyProvider<T,ChangeNotifier>( // 첫번째 generic으로 의존할 provider객체 명시.    
+//단, 해당 객체는 provider tree(ex)multi Provider내)에서 먼저 선언되어있어야함. (가장 가까운 해당 provider객체를 찾아서 연결(의존).)      
 // 두번쨰 인자로, 현재 생성할 provider의 클래스 명시.    
 create: (ctx) => ChangeNotifier // 의존하는 provider의 변경시, 현 provider를 처음부터 다시 생성하는 경우의 builder함수. 다시 생성하지않고 update할거면 null로 명시.   
 update: (ctx, dynamic, ChangeNotifier) => ChangeNotifier // 현 provider를 update하는 경우의 builder함수. 이전의 provider를 참조하여 새로운 provider를 반환.       
