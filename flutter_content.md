@@ -70,10 +70,12 @@ appBarTheme: AppBarTheme / appBar에 사용될 별도의 theme지정. appBarThem
 ThemeData.light() / 모든 값이 default setting으로 이루어진 ThemeData 반환.      
 여러 theme을 나타내는 객체는 (theme.)copyWith({})로 특정 named argument를 overwrite하여 그대로 사용 가능.    
 ex) 기본 설정의 textTheme을 수정해서 사용할시, themeData.light().textTheme.copyWith(...)처럼 사용.   
-pageTransitionsTheme: PageTransitionsTheme // 페이지 이동시에 사용할 transitionTheme 지정. platform별로 지정 가능. custom transition사용시 명시.        
+pageTransitionsTheme: PageTransitionsTheme // 모든 페이지 이동시에 사용할 transitionTheme 지정. platform별로 지정 가능. 
+// custom transition을 작성해 사용하고자할때, 명시.    
+ex)
 (PageTransitionsTheme(   
  builders: Map<TragetPlatform, PageTransitionBuilder> // 플랫폼별 모든 페이지라우팅에 사용할 트랜지션빌더를 Map형태로 지정.      
- // ex)builders: {TargetPlatform.iOS: CustomPageTransitionBuilder(), TargetPlatform.android: CustomPageTransitionBuilder(),},      
+ // ex) builders: {TargetPlatform.iOS: CustomPageTransitionBuilder(), TargetPlatform.android: CustomPageTransitionBuilder(),},      
 ))     
 
 - *BoxDecoration*   
