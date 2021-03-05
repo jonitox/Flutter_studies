@@ -1,4 +1,4 @@
-## Function, Class, enum etc.    
+## Class, Method, enum etc.    
 
 - *runAPP()*     
 widget인스턴스를 받아 build를 호출하여 실행해 화면에 띄어주는 함수. main()에서 메인widget실행   
@@ -23,20 +23,6 @@ Color.fromRGBO(r,g,b,opacity) / Color 객체를 r,g,b값으로 생성. 직접 �
 Colors / 여러 Color객체을 static으로 선언해둔 utility class. 즉, 객체화 없이 Colors.black 등으로 여러색의 Color객체 사용 가능.    
 (Color.)withOpacity(double) // 해당 Color의 불투명도를 바꾼 Color 반환     
 
-- *rule: lifting state up*    
-서로 다른 위젯에서 한 state를 변경,사용할떄, 그 state를 두 위젯의 부모 위젯에서 관리함. state는 가능한 higest level의 위젯에서 관리.   
-
-- *rule: split the app into Widgets*   
-위젯 trees 생성시 여러 logic이 포함된 complex한 큰 custom위젯을 분리하여 작은 sub-Widge(class) & file로 나누어 관리.      
-main.dart는 깔끔한게 좋으며, 모든 위젯을 더 readable한 코드로 관리 가능. 한 코드에 나열하는것보다 실제 performance도 상승.(???)  
-
-- *Widget List made by map method*    
-리스트의 원소들로 한 종류의 위젯 리스트를 만들어 (Column같은 layout에) 이어붙이는 경우   
-ex)  ...( qa['answers'] as List< String > ).map( ( answer ) { return Answer( _answerQuestion, answer );  } ).toList(),   
-map method를 사용하여 질문의 선택지 목록(List< String >)로부터 각각의 String에 대한 버튼위젯 리스트(iterable)를 생성해 기존의 layout에 연결   
-(qa: Map, 질문(key='question', val:String)과 선택지(key='answers', val:List)를 key로 가짐)   
-(Answer: Custom 버튼 위젯, onpressed에 쓰일 함수포인터와 button에 표시할 string(answer)을 받음.) 
-
 - *setState()*    
  state클래스 내에 존재. state내의 변수를 변경한 후 UI를 re-rendering하는 함수.   
  (build()/UI에 영향이 있는)state내의 변수를 변경하는 anonymous함수를 argument로 받음.   
@@ -48,23 +34,13 @@ map method를 사용하여 질문의 선택지 목록(List< String >)로부터 �
 공통점: 생성되어 UI를 rendering. 외부에서 데이터를 받을수 있다.(생성자)   
 차이점: stateless는 외부로부터의 인풋데이터가 변할시에만 widget을 re-rendering하고 stateful은 internal state가 변할때에도 re-rendering하여 현재 UI변경 가능(ex)setState를 통해).   
 
-- *rule: use final for Stateless*   
-Stateless내 (final이 아닌) 변수를 생성,변경가능. but. 객체 재생성이 아니면 UI 반영(rebuild)불가. 즉 관용적으로 모든 변수 final로 사용(stateless는 한번 생성해 보여주는위젯. EX)text )    
-
 - *createState()*   
  Stateful은 반드시 대응 state클래스를 인스턴스화. @override createState()   
  ex) State<Statefulwidget>(= myApp) createState() => myApp(); (State객체를 return해야함!)   
  
- - *onPressed로 인자를 전달받는 함수를 실행할 때*   
-onPressed로 인자를 전달받는 함수를 실행하는 버튼을 생성할시, 해당 함수를 실행하는 void형 anonymous function를 사용.   
-ex) onPreesed : () => answerQuestion(answer['score']),   
-
 - *@required*    
 flutter가 제공하는 함수의 각 argument에 대한 decorator로 호출시 반드시 필요한 인자임을 명시. 없다면 호출불가.(error)     
 'package:flutter/foundation.dart'에 명시됨.(혹은 'package:flutter/material.dart'도 포함)   
-
-- *rule: styling*   
-전부 basic 위젯의 argument로 처리. 특정 argument가 없는 위젯이라면 container같은 위젯으로 wrap하여 styling한다.   
 
 - *showModalBottomSheet()*   
 현 화면에서 다른 위젯을 modalBottomSheet으로 띄워주는 함수. 
@@ -100,7 +76,6 @@ pageTransitionsTheme: PageTransitionsTheme // 페이지 이동시에 사용할 t
  // ex)builders: {TargetPlatform.iOS: CustomPageTransitionBuilder(), TargetPlatform.android: CustomPageTransitionBuilder(),},      
 ))     
 
-
 - *BoxDecoration*   
 container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.
 border : BoxBoarder / 일반적으로, 상속한 Boarder객체 입력. Boarder의 정보를 다음 class    
@@ -117,12 +92,10 @@ colors: List<Color> // gradient하게 표현될 색상들 지정.
 begin: AlignmentGeometry // 시작 색상 위치 지정. 일반적으로, Alignment객체 사용.    
 end: AlignmentGeomtery // 마지막 색상 위치 지정. Alignment는 여러 static값도 저장되있는 클래스로, Alignment.topLeft 등을 포함.    
  
-
 - *Border*   
 BoxDecoration의 border 인자로 들어가는 Boarder에 대한 정보를 표현한 클래스.   
 Border.all() / Border의 named생성자. color, width등 지정 가능. border의 모든 방향으로 같은 값 적용.   
 (예: 예제코드 Meals의 chart_bar에 자세히 구현.)    
- 
  
 - *BorderRadius*   
 BoxDecoration의 bolderRadius 인자 등으로 들어가는 Border 꼭짓점부분의 곡면Radius에 관한 정보를 표현한 클래스.   
@@ -131,7 +104,7 @@ BorderRadius.all() //
 
 - *showDatePicker() -> future<DateTime>*    
 현재 화면에서 달력의 날짜를 선택할수 있는 overlay창(datePicker)을 띄워주는 flutter내의 함수. (다른 package?)       
-입력을 받기위해 대기하며 입력을 받으면 저장하는 future객체를 반환. 즉, 입력을 저장할 객체(d)를 하나 선언해두고,    
+입력을 받기위해 대기하며 입력을 받으면 저장하는 future객체를 반환. 즉, 입력을 저장할 객체(d)를 하나 선언해두고, then/await등으로 처리        
 showDatePicker(...).then((DateTime){ if(d==null) return; ...})처럼 then에 전달하는 함수의 body에서 입력을 저장하는 방식으로 사용.    
 @required context: BuildContext / 현 클래스의 메타정보를 전달해주어야함.    
 @required initialDate: DateTime / 창을 띄웠을떄 선택되어있을 날짜 지정. 일반적으로, datetIme.now()   
@@ -264,8 +237,8 @@ borderRadius : BorderRadiusGeometry // 각 모서리의 반지름 지정.
 ),     
 
 - *Scaffold.of(context)*        
-현재 위젯에서 제일 가까운 Scaffold위젯(즉, 현위젯을 포함하는 페이지)에 연결하는 메소드. 해당 scaffold의 상태 참조 및 여러 호출 가능.      
-단, Scaffold를 반환하는 build내에서 직접 참조하면 error. scaffold내의 자식위젯의 build나 위젯 내에서 참조해야함.(context를 이용해 참조하므로)           
+현재 위젯에서 제일 가까운 Scaffold위젯(즉, 현위젯을 포함하는 페이지)에 연결하는 메소드. 해당 scaffold의 상태 참조 및 여러 메소드 호출 가능. (ScaffoldState반환)        
+단, Scaffold를 반환하는 build내에서 직접 참조하면 error. scaffold내의 자식위젯의 build나 위젯 내에서 참조해야함.(context를 이용해 above의 scaffold를 탐색하므로)           
 (context가 나타내는 현 위젯이 Scaffold인 경우 자신의 scaffold를 참조하는 방법:      
 https://medium.com/@ksheremet/flutter-showing-snackbar-within-the-widget-that-builds-a-scaffold-3a817635aeb2)     
 (Scaffold.of(context).)showSnackBar(SnackBar); // 해당 scaffold페이지에 snackBar를 표시.     
@@ -290,11 +263,11 @@ TextField(...,focusNode: _priceFocusNode,), // element의 Focus인자에 명시.
 // 다른 곳에서 이 Focus로 이동하려면 FocusScope.of(context).requestFocus(_priceFocusNode); 호출.    
 // 또한, state내에서 생성후, state소멸시 memory leak방지를 위해, (FocusNode.)dispose호출.    
 @override    
-void dispose(){...; _priceFocuseNode.disepose(); super.dispose();}     
+void dispose(){...; _priceFocuseNode.dispose(); super.dispose();}     
 //     
 (FocusNode.)addListner((){}) // FocusNode의 Focus상태 변화에 반응하는 리스너 생성. 리스너의 인자로, focus변할때마다 호출할 함수를 전달. 일반적으로, initState에서 리스너 생성.       
 (FocusNode.)removeListner((){}) // FocusNode의 (메모리 leak방지를 위해)리스너 소멸. 소멸할 리스너를 찾기위해 함수의 인자로, 생성시 사용한 함수포인터를 명시.     
-(단, 똑같이 dispose내에서 소멸시키는데, 해당 FocusNode자체를 dispose하기 전에 리스너부터 dispose해줌.)    
+(단, 똑같이 dispose내에서 리스너를 소멸시키는데, 해당 FocusNode자체를 dispose하기 전에 리스너부터 dispose해줌.)    
 
 
 - *FocusScope*   
