@@ -164,7 +164,8 @@ ChangeNotifierProxyProvider<T,ChangeNotifier>( // 첫번째 generic으로 의존
 // 두번쨰 인자로, 현재 생성할 provider의 클래스 명시.    
 create: (ctx) => ChangeNotifier // 의존하는 provider의 변경시, 현 provider를 처음부터 다시 생성하는 경우의 builder함수. 다시 생성하지않고 update할거면 null로 명시.   
 update: (ctx, dynamic, ChangeNotifier) => ChangeNotifier // 현 provider를 update하는 경우의 builder함수. 이전의 provider를 참조하여 새로운 provider를 반환.       
-// 해당 함수의 두번째 인자로 의존하는 provider(방금 변경된)객체 전달, 세번째 인자로, 현재까지 존재한 이전의 provider객체 전달. 처음 proxyProvider를 생성하는 경우라면, null전달.      
+// 해당 함수의 두번째 인자로 의존하는 provider(방금 변경된)객체 전달,     
+// 세번째 인자로, 현재까지 존재한 이전의 provider객체 전달. 처음 proxyProvider를 생성하는 경우라면, null이 전달됨.           
 // 함수는 이값들을 참조하여, 새로운 provider를 생성해 반환. 일반적으로, 이전의 값들중 그대로 사용할 값들은 provider의 생성자로 받아 저장.          
 
 ------------------------
