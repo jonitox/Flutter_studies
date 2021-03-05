@@ -409,7 +409,7 @@ value: dynamic // 해당 item이 가질 value 입력. 아이템이 입력됬을�
 (일반적으로, value 0~k의 index를 사용하거나 enum으로 선언해서 관리. onSelected에서도 enum으로 받음.)        
 
 - *Chip*    
-material 디자인의 클립을 표현하는 위젯.    
+material 디자인의 클립(라운드형 직사각형)을 표현하는 위젯. 클립내에 위젯을 표시.         
 label: Widget // 클립 내부의 주요 content가 되는 위젯. 일반적으로 text
 
 - *Spacer*     
