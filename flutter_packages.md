@@ -76,8 +76,10 @@ import 'package:provider/provider.dart';
       child: MaterialApp(...),
       }     
 ```      
-provider는 non-object도 선언 가능. (String, int..) 단 위젯을 provider와 감쌀때, ChangeNotifier가 아니므로,     
-Provider클래스로 위젯+provider를 생성하고, 이 provider는 일종의 global(const)변수처럼 사용 가능.     
+provider는 non-object도 선언 가능. (String, int..) 단 위젯을 Provider와 감쌀때, ChangeNotifier가 아니고, Provider클래스로 감싸야함.     
+ex) Provider<String>(builder: (ctx) => 'Hi, I am a text!', child: ...);    
+Provider클래스로 위젯+provider를 생성하고, 이 provider는 일종의 global(const)변수처럼 사용 가능.    
+    (provider가 변할수있는 object가 아니라, const String,int..이므로)    
 
 - *provider의 Listner선언*     
 한 provider의 listner를 특정 위젯에 attach하려면, 해당 위젯에서 package:provider/provider.dart를 import하고     
