@@ -252,7 +252,7 @@ context: BuildContext // 화면을 띄어주는 현 위젯의 context 전달.
 builder: (ctx) => Widget // dialog로 띄워줄 위젯을 빌드하는 함수 명시. 일반적으로, 함수는 AlertDialog반환.        
 
 - *TextEditingController*     
-TextField에서 사용되는 field의 input을 관리하는 controller.       
+TextField에서 사용되는 field의 input을 관리하는 controller. 해당 컨트롤러는       
 ex) state객체 내에서 final _myController = TextEditingController(); 선언 후, TextField의 controller의 인자에 전달하여 명시.     
 TextField의 매 key stroke마다 controller에 입력값 저장.     
 (TextEiditingController.) //text로 현재의 입력값(String) 참조 가능.       
