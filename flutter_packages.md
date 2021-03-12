@@ -28,7 +28,7 @@ flutter 여러 base위젯 및 함수 등이 포함된 flutter패키지
 ## provider     
 
 - *concept: provider & listner*.   
-특정위젯에 attach된 provider(data container)를 지정하면, 해당 위젯의 자식위젯(deep한 자식 포함)들은 이 provider에 대한 listner를 선언 가능.      
+특정위젯에 attach된 provider(data container)를 지정하면, 해당 위젯의 자식위젯(deep한 자식 포함)들은 이 provider에 대한 listner를 선언 가능.       
 그리고 이 위젯의 provider의 상태가 변하면(update), 모든 자식위젯을 다 빌드하는 것이 아닌, listner가 선언되이있는 자식위젯들만 build.      
 사용하지 않는 data임에도, 해당 data를 자식위젯이 필요로 해서, data를 deep하게 받아 계속 전달해야하는 경우 사용.    
 provider는 어느 위젯에도 선언될수 있고, 같은 위젯에 여러개의 provider를 선언할수도 있음.    
