@@ -20,18 +20,18 @@ route: {CategoryMealsScreen.routeName : (ctx)=>CategoryMealsScreen(_availableMea
 onGenerateRoute: (RouteSettings) =>Route // app내에서 pushNamed로 라우팅 시도 시, route테이블에 없는 이름으로 라우팅하는 경우 실행되는 네비게이션 액션 명시.     
 (해당 라우팅 시도의 setting을 인자로 전달. 실행할 라우팅객체를 반환. 라우팅테이블이 app사용 동안 dynamic하게 변경 및 결정되는 경우 등에 사용 가능.)     
 onUnknownRoute: (RouteSettings)=>Route // 모든 다른 알수 없는 라우팅에 대해 실행할 라우팅 명시.            
-(invalid한 라우팅이거나 pushNamed로 테이블에 없는 이름으로 라우팅하는데, onGenerateRoute가 명시되있지않는 경우 등.)       
-(일반적으로, web의 존재하지 않는페이지 접속 등의 fallback을 처리하는 것과 비슷한 역할. 에러페이지를 보여주거나, 초기화면으로 돌려줄수있음.)          
-( ex) onUnknownRoute: (settings) { return MaterialPageRoute( builder: (ctx) => CategoryMealsScreen(),  ); }, )    
+(invalid한 라우팅이거나 pushNamed로 테이블에 없는 이름으로 라우팅하는데, onGenerateRoute가 명시되있지않는 경우 등.)        
+(일반적으로, web의 존재하지 않는페이지 접속 등의 fallback을 처리하는 것과 비슷한 역할. 에러페이지를 보여주거나, 초기화면으로 돌려줄수있음.)            
+( ex) onUnknownRoute: (settings) { return MaterialPageRoute( builder: (ctx) => CategoryMealsScreen(),  ); }, )        
 
 
-- *CupertinoApp*     
-app을 Cupertino Theme으로 set up     
-theme: CupertinoThemeData /
+- *CupertinoApp*       
+app을 Cupertino Theme으로 set up       
+theme: CupertinoThemeData /     
 
 - *Scaffold*   
-material style의 페이지 Setup(스타일링)을 도와주는 스크린 위젯, 배경 색 등 지정 가능.      
-appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)     
+material style의 페이지 Setup(스타일링)을 도와주는 스크린 위젯, 배경 색 등 지정 가능.       
+appBar: preferredSizedWidget(ex)Appbar(...)) (화면 상단의 appBar위젯 지정)      
 body : Widget (appBar밑의 화면의 body부분에 표현될 위젯)       
 floatingActionButtion : Widget(일반적으로, floatingActionButton)(body를 덮어 표시될 button, 버튼의 위치 default는 우측 하단)    
 floatingActionButtonLocation: FloatingActionButtonLocation(상기 버튼의 위치 지정. floating버튼의 위치를 나타내는 객체.)    
