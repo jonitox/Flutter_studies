@@ -1,7 +1,7 @@
 ## Widgets   
 
 - *MaterialApp 위젯*    
-app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스턴스화. 여러 Theme을 지정 가능.     
+app을 Material theme으로 Setup하는 widget, named aurgments를 받아 인스턴스화. 여러 Theme을 지정 가능.      
 이 위젯 트리 내의 위젯들은 해당 theme을 따름.      
 title:    
 theme: ThemeData / app의 theme을 설정. Theme정보를 담은 클래스.    
