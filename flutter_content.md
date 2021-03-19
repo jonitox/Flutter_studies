@@ -79,7 +79,7 @@ ex)
 ))     
 
 - *BoxDecoration*   
-container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.
+container의 decoration 인자로 들어가는 decoration에 관한 정보를 표현한 클래스.    
 border : BoxBoarder / 일반적으로, 상속한 Boarder객체 입력. Boarder의 정보를 다음 class    
 color: Color / 컨테이너의 background color지정.    
 borderRadius: BorderRadiusGeometry / 일반적으로, BorderRadius객체 입력. BorderRadius의 정보를 담은 class.   
@@ -88,7 +88,7 @@ shape: BoxShape / 컨테이너의 모양 결정 BoxShape은 enum으로 circle, r
 gradient: Gradient / background를 gradient있는 색상으로 지정. 
 
 - *Gradient*    
-gradient를 표현한 객체. 상속하는 여러 class존재.
+gradient를 표현한 객체. 색상 gradient하게 표현가능. 상속하는 여러 class존재.   
 LinearGradient( // linear한 gradient생성.    
 colors: List<Color> // gradient하게 표현될 색상들 지정.    
 begin: AlignmentGeometry // 시작 색상 위치 지정. 일반적으로, Alignment객체 사용.    
