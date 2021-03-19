@@ -17,7 +17,7 @@ Stateful위젯이 re-build되어도 객체가 다시생성되지않음. data를 
 값이 변동되는 변수와 위젯의 build함수를 포함. Stateful위젯 첫 생성시뿐만 아니라 state가 변해 UI를 다시 표시할때도 build함수가 실행돼 위젯을 다시 생성.   
 getter인 widget.()로 현재 대응되는 stateful위젯에 접근가능.    
 
-- *Color & Colors*   
+- *Color & Colors*    
 Color / 색을 표현하는 binary값을 가지는 class. 각 object는 특정색깔을 표현.  
 Color.fromRGBO(r,g,b,opacity) / Color 객체를 r,g,b값으로 생성. 직접 색상의 rgb값 찾아서 생성할때 사용.      
 Colors / 여러 Color객체을 static으로 선언해둔 utility class. 즉, 객체화 없이 Colors.black 등으로 여러색의 Color객체 사용 가능.    
