@@ -255,3 +255,27 @@ const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추�
 - *ios device에 앱 실행*     
 xcode 혹은 IDE에서 실행. bulde identifier가 unique해야함.     
 빌드 에러시 앱 프로젝트 내에서 flutter clean, flutter build ios 실행. (초기화 및 ios dependencies설치)    
+
+
+-----------------
+  
+## app configuration before publishing      
+
+- app drawer에 표시될 앱의 라벨 지정. (안드로이드, ios)     
+안드로이드: app/src/main/res/AndroidManifest.xml에서 android:label에 명시.    
+ios: xcode프로젝트의 runner.xcworkspace폴더를 열어 runner탭에서 display name에 명시.    
+
+- internet permission (안드로이드)     
+user permission 중 internet permission은 debug시에 debug/AndroidManifest내에 포함되어있어 자동으로 원 androidManifest와 병합되어     
+사용되지만, publish되는 경우 앱의 internet을 필요로한다면, 원 manifest(src/main/res/AndroidManifest.xml)에 internet permission을 명시해야함.    
+(debug내의 manifest파일에 있는 user permission을 main mainfest파일로 복붙하면됨.)    
+
+- package identifier(안드로이드, ios)     
+domain/이름 형식으로 구성된 identifier는 unique해야함.(android와 ios에 명시한 identifier가 같을 필요는 x)     
+안드로이드(모두 동일한 값으로 설정해야함.) :     
+main manifest, debug폴더의 manifest, main/java내의 mainActivity(->현재는 kotlin내로 변경됨.), build.gradle내의 applicationId        
+ios (identifer가_를 포함할수없음.):      
+xcode에서 프로젝트의 runner.xcworkspace폴더를 열어 runner의 bundle identifier에 명시.     
+
+- third party service 사용시 필요한 부분 check     
+firebase의 security rules, google api의 API key, API key restrition(google cloud console의 credential탭에서 설정 가능.) 등등..     
