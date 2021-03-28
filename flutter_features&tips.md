@@ -292,6 +292,7 @@ main/java(kotlin)/res/drawable/launch_background.xml내에 명시. image의 경�
 bitmap item으로 선언. 이미지의 background color를 지정하려면, values폴더내의 color에 color값을 이름과함꼐 저장하고, 다시 background.xml에 item으로 android:color로    
 해당 컬러를 사용할것을 명시.    
 ex)    
+```Dart	     
 <item>    
    <color adnroid:color="@color/splash"  />      // value폴더 내의 color파일에 splash이름의 색깔값을 선언해야함.     
 </item>   
@@ -301,6 +302,7 @@ ex)
          android:gravity="center"      
          android:src="@drawble/splash_icon"  />    // 각 drawble폴더내에 같은 이름의 이미지 파일이 포함되야함.  
  </item>     
+ ```	     
  
  - splash scren(ios) 
  xcode에서 ios 프로젝트 열어, assets.xcassets에 launchImage에 이미지 파일을 갖다붙임.    
