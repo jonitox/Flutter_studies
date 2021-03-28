@@ -277,5 +277,31 @@ main manifest, debug폴더의 manifest, main/java내의 mainActivity(->현재는
 ios (identifer가_를 포함할수없음.):      
 xcode에서 프로젝트의 runner.xcworkspace폴더를 열어 runner의 bundle identifier에 명시.     
 
+- 지원하는 version check     
+안드로이드의 경우, build.gradle에서 minSdkVersion, targetSdkVersion등 지정 가능. https://developer.android.com/studio/publish/versioning     
+
 - third party service 사용시 필요한 부분 check     
 firebase의 security rules, google api의 API key, API key restrition(google cloud console의 credential탭에서 설정 가능.) 등등..     
+
+- app icon     
+flutter_launcher_icons패키지 사용. pubspec.yaml의 icon의 path와 background color(for 안드로이드 adaptive_icon)등과 함께       
+dev_dependecy에 명시후 run.(패키지 README참조)        
+
+- splash screen (android) 
+main/java(kotlin)/res/drawable/launch_background.xml내에 명시. image의 경우 이미지 src(소스)를 drawble폴더내에 저장하고, 경로를 명시하여,        
+bitmap item으로 선언. 이미지의 background color를 지정하려면, values폴더내의 color에 color값을 이름과함꼐 저장하고, 다시 background.xml에 item으로 android:color로    
+해당 컬러를 사용할것을 명시.    
+ex)    
+<item>    
+   <color adnroid:color="@color/splash"  />      // value폴더 내의 color파일에 splash이름의 색깔값을 선언해야함.     
+</item>   
+   
+<item> 
+   <bitmap     
+         android:gravity="center"      
+         android:src="@drawble/splash_icon"  />    // 각 drawble폴더내에 같은 이름의 이미지 파일이 포함되야함.  
+ </item>     
+ 
+ - splash scren(ios) 
+ xcode에서 ios 프로젝트 열어, assets.xcassets에 launchImage에 이미지 파일을 갖다붙임.    
+ launchScreen.storyboard의 view에서 확인 가능. 또한, view의 attribue inspector에서 이미지 외곽의 background color설정 가능.     
