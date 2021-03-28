@@ -304,6 +304,6 @@ ex)
  </item>     
  ```	     
  
- - splash scren(ios) 
+ - splash scren(ios)    
  xcode에서 ios 프로젝트 열어, assets.xcassets에 launchImage에 이미지 파일을 갖다붙임.    
  launchScreen.storyboard의 view에서 확인 가능. 또한, view의 attribue inspector에서 이미지 외곽의 background color설정 가능.     
