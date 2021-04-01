@@ -256,6 +256,8 @@ const로 생성할 수있는 위젯/객체는 const로 생성하는 습관 추�
 xcode 혹은 IDE에서 실행. bulde identifier가 unique해야함.     
 빌드 에러시 앱 프로젝트 내에서 flutter clean, flutter build ios 실행. (초기화 및 ios dependencies설치)    
 
+- flutter build ios 실패시
+https://stackoverflow.com/questions/63742891/encountered-error-while-building-for-device-flutter 참조.     
 
 -----------------
   
