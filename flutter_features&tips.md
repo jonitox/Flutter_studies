@@ -307,3 +307,7 @@ ex)
  - splash scren(ios)    
  xcode에서 ios 프로젝트 열어, assets.xcassets에 launchImage에 이미지 파일을 갖다붙임.    
  launchScreen.storyboard의 view에서 확인 가능. 또한, view의 attribue inspector에서 이미지 외곽의 background color설정 가능.     
+
+# publish       
+- 안드로이드 : https://flutter-ko.dev/docs/deployment/android    
+key-store 생성 - 앱에서 keystore 참조(key property파일이 git등의 오픈소스로 공개되지않게 git.ignore에 명시) - 터미널로 프로젝트 폴더에서 앱번들 빌드 - play console에 엡 정보와 함께 번들 등록     
