@@ -140,6 +140,10 @@ Height은 minHeight, maxHeight를 가지며, 해당 범위 내에서 rendering �
 UniqueKey() / 매 호출시 unique한 key생성.      
 ValueKey(String) / String에 따라 서로 다른 key생성. String이 다르면 다른 key가 생성됨.     
 
+- *PageStorageKey*     
+listview의 scroll위치 등을 기억하고, tab변경 시 page의 state가 사라지지않고 돌아왔을때 보존되기위해 사용.        
+ex) key: PageStorageKey<String>('uniqueString')     
+
 - *Navigator*    
 flutter앱의 화면이동을 도와주는 클래스. 현위젯과 위젯 트리의 구조를 알기 위해 Navigator.of(context)로 호출.     
 (Navigator.of(ctx).)push<T>(Route) // 현 스크린에서 다른 페이지를 생성해 페이지 스택에 추가. Route객체를 받음. T는 pop시에 resolve될 객체에 명시할 타입.        
